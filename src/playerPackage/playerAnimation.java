@@ -1,0 +1,58 @@
+package playerPackage;
+
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+
+import MainPackage.Main;
+
+public class playerAnimation {
+	ImageIcon[][] runningAnimation ;
+	int runningFrameSize = 12,currentFrame; 
+	long LastFrame = 0;
+	
+	public playerAnimation() {
+		runningAnimation = new ImageIcon[4][runningFrameSize];
+		loadImg();
+	}
+	
+	public void render(Graphics2D g2d,int x,int y ,int sizeX,int sizeY) {
+		
+		g2d.drawImage(runningAnimation[Main.player.getImageDirection()][currentFrame].getImage(), x,
+				y, sizeX, sizeY,null);
+		
+		
+		if (System.currentTimeMillis() - LastFrame > 83){ // 83 Milliseconds between frame to get 12 FPS of animation 
+			LastFrame = System.currentTimeMillis();
+			currentFrame = (currentFrame + 1)%12;
+		}
+	}
+	
+	private void loadImg() {
+		BufferedImage temp;
+		try {
+			/**
+			 * 0 = dawn
+			 * 1 = left
+			 * 2 = right
+			 * 3 = up
+				*/
+			for(int i = 0;i<4;i++) {
+				temp = ImageIO.read(new File("playerIcons/walk"+(i+1)+".png"));
+				for(int j = 0;j<runningFrameSize;j++) {
+					runningAnimation[i][j] = new ImageIcon(temp.getSubimage(j*64, 0, 64, 64));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Problem in loading player Animation [class:player]");
+		}
+	}
+	
+	public int getCurrentFrame(){
+		return currentFrame;
+	}
+}
