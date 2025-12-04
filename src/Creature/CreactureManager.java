@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 public class CreactureManager {
 	
+	
+	private static int tickMovingDelay = 0;
+	
 	static ArrayList<creature> creatureList = new ArrayList<creature>();
 	
 	public static void CreateCreature(int x,int y, String type) {
@@ -27,16 +30,21 @@ public class CreactureManager {
 	}
 	
 	//render all the creatures
-	public static  void render(Graphics2D g2d) {
+	public static void render(Graphics2D g2d) {
 		for(creature i :creatureList) {
 			i.render(g2d);
 		}
 	}
 	
-	public static boolean collision(int x,int y,int sizeX,int sizeY) {
-		//TODO add collision with player
-		return false;
+	public static void tick() {
+		tickMovingDelay = (++tickMovingDelay)%2;
+		if(tickMovingDelay == 0) {
+			for(creature i :creatureList) {
+				i.move();
+			}
+		}
 	}
+	
 	
 	
 }

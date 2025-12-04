@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Scanner;
 
+import Creature.CreactureManager;
 import Entity.Tile;
 import Entity.itemOnFloor;
 import Regeneration.RegenereationManager;
@@ -230,6 +231,8 @@ public class TilesManager {
 			}
 		}
 		mapIsReady = true;
+		
+		CreactureManager.CreateCreature(1350, 1350, "cow");
 	}
 	
 	
@@ -296,6 +299,9 @@ public class TilesManager {
 	}
 	
 	
+	public boolean IsLocationFree(int x,int y,int width,int height) {
+		return(tiles[y/tileSize][x/tileSize].isSolid(x%tileSize, y%tileSize, width, height));
+	}
 	
 	public int getTileSize() {
 		return tileSize;

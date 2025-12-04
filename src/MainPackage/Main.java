@@ -35,12 +35,12 @@ public class Main extends Canvas implements Runnable{
 	public static JFrame Frame;
 	boolean preLoad = false;
 	
-	
 	public static Player player ,player2;
 	public static Inventory inventory;
 	public static TilesManager tilesManager;
 	public static MouseManager mouseMeneger; 
 	public static BufferedImage tempScreen;
+	
 	public static startScreen startscreen;
 	public static pauseScreen pausescreen;
 	Graphics2D g2;
@@ -118,9 +118,11 @@ public class Main extends Canvas implements Runnable{
 			break;
 		case 2: 
 			if(tilesManager.isMapIsReady()) {
+
 				player.tick();
 				inventory.tick();
 				tilesManager.tick();
+				CreactureManager.tick();
 			}
 			
 			if(host && System.currentTimeMillis() >lastSave+10000) {
