@@ -1,9 +1,9 @@
 package Creature;
 
-public class slime extends creature{
+public class Slime extends Creature{
 	
 	
-	public slime(int x, int y, int sizeX, int sizeY) {
+	public Slime(int x, int y, int sizeX, int sizeY) {
 		super(x, y, sizeX, sizeY);
 		image = CreactureImage.getSlimeImage();
 		damage = 1;

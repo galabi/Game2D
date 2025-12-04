@@ -5,7 +5,7 @@ import MainPackage.Main;
 import Storage.Item;
 import playerPackage.Player;
 
-public class serverClientHandler {
+public class ServerClientHandler {
 
 	public static Server server;
 	public static Client client;

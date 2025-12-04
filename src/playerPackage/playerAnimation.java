@@ -9,12 +9,12 @@ import javax.swing.ImageIcon;
 
 import MainPackage.Main;
 
-public class playerAnimation {
+public class PlayerAnimation {
 	ImageIcon[][] runningAnimation ;
 	int runningFrameSize = 12,currentFrame; 
 	long LastFrame = 0;
 	
-	public playerAnimation() {
+	public PlayerAnimation() {
 		runningAnimation = new ImageIcon[4][runningFrameSize];
 		loadImg();
 	}
@@ -35,7 +35,7 @@ public class playerAnimation {
 		BufferedImage temp;
 		try {
 			/**
-			 * 0 = dawn
+			 * 0 = down
 			 * 1 = left
 			 * 2 = right
 			 * 3 = up

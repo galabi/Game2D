@@ -80,7 +80,7 @@ public class PlayerInteraction {
 			Main.player.cookFish(pressBlockI, pressBlockJ, itemInHand);
 			
 		//fishing
-		}else if(itemInHand.getId() == 3 && tile.isWater(Main.mouseMeneger.getMouseX(),Main.mouseMeneger.getMouseY())) {
+		}else if(itemInHand.getId() == 3 && tile.isWater(Main.mouseManeger.getMouseX(),Main.mouseManeger.getMouseY())) {
 			Main.player.startFishing(pressBlockI,pressBlockJ);
 
 		}

@@ -10,23 +10,23 @@ import javax.swing.ImageIcon;
 
 import Entity.FontLoader;
 import mutiplayer.Client;
-import mutiplayer.serverSelectScreen;
+import mutiplayer.ServerSelectScreen;
 
 
-public class startScreen{
+public class StartScreen{
 
 	int buttonSizeX = 200,buttonSizeY = 50,startButtonX = 500,startButtonY = 520,multiButtonX = 500,multiButtonY = 600;
 	int startTextX = -1, multiTextX =-1,startTextY = -1, multiTextY =-1;
 	boolean multiButton = true,startButton = true,serverScreen = false;
 	Font font = FontLoader.getPixelFont(24);
 	public static ImageIcon backgraond;
-	serverSelectScreen serverSelect;
+	ServerSelectScreen serverSelect;
 	
 	FontMetrics metrics;
 	
-	public startScreen(){
+	public StartScreen(){
 		backgraond = new ImageIcon(getClass().getResource("/backgraond.png"));
-		serverSelect = new serverSelectScreen(800,startButtonY,270,30);
+		serverSelect = new ServerSelectScreen(800,startButtonY,270,30);
 	}
 	
 	public void tick() {

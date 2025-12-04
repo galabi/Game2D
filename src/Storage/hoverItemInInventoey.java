@@ -6,13 +6,13 @@ import java.awt.Graphics2D;
 
 import Entity.FontLoader;
 
-public class hoverItemInInventoey {
+public class HoverItemInInventoey {
 	
 	int offSetX,offSetY,mouseX,mouseY,size = 64;
 	Item item;
 	Font font = FontLoader.getPixelFont(13);
 	
-	public hoverItemInInventoey(int offSetX,int offSetY,Item item) {
+	public HoverItemInInventoey(int offSetX,int offSetY,Item item) {
 		this.item = item;
 		this.offSetX = offSetX;
 		this.offSetY = offSetY;

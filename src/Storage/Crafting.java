@@ -6,7 +6,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 
 import Entity.FontLoader;
-import Entity.gameColors;
+import Entity.GameColors;
 import MainPackage.Main;
 import MainPackage.TilesManager;
 
@@ -16,9 +16,9 @@ public class Crafting {
 	final int Tilesize = TilesManager.tileSize;
 	int craftingSlots , x , y;
 	
-	Color boxColor = gameColors.inventoryBoxColor;
-	Color hoverColor = gameColors.inventoryHoverColor;
-	Color hotBarcolor = gameColors.inventoryHotBarcolor;
+	Color boxColor = GameColors.inventoryBoxColor;
+	Color hoverColor = GameColors.inventoryHoverColor;
+	Color hotBarcolor = GameColors.inventoryHotBarcolor;
 	
 	Font font = FontLoader.getPixelFont(13);
 	

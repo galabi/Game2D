@@ -13,11 +13,11 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-import Creature.CreactureManager;
+import Creature.CreatureManager;
 import Entity.GameTextures;
 import Entity.Text;
 import Storage.Inventory;
-import mutiplayer.serverClientHandler;
+import mutiplayer.ServerClientHandler;
 import playerPackage.MouseManager;
 import playerPackage.Player;
 
@@ -38,11 +38,11 @@ public class Main extends Canvas implements Runnable{
 	public static Player player ,player2;
 	public static Inventory inventory;
 	public static TilesManager tilesManager;
-	public static MouseManager mouseMeneger; 
+	public static MouseManager mouseManeger; 
 	public static BufferedImage tempScreen;
 	
-	public static startScreen startscreen;
-	public static pauseScreen pausescreen;
+	public static StartScreen startscreen;
+	public static PauseScreen pausescreen;
 	Graphics2D g2;
 	
 	Text text;
@@ -122,7 +122,7 @@ public class Main extends Canvas implements Runnable{
 				player.tick();
 				inventory.tick();
 				tilesManager.tick();
-				CreactureManager.tick();
+				CreatureManager.tick();
 			}
 			
 			if(host && System.currentTimeMillis() >lastSave+10000) {
@@ -163,9 +163,9 @@ public class Main extends Canvas implements Runnable{
 				tilesManager.renderObjects(g2);
 				tilesManager.renderDrops(g2);
 				inventory.render(g2);
-				CreactureManager.render(g2);
+				CreatureManager.render(g2);
 			}else {
-				startScreen.renderBackScreen(g2);
+				StartScreen.renderBackScreen(g2);
 			}
 			break;
 		case 3:
@@ -190,7 +190,7 @@ public class Main extends Canvas implements Runnable{
 	}
 
 	
-public void window(int width,int height,String titel,Main main){
+public void window(int width,int height,String title,Main main){
 
 	//set the game icon
 	
@@ -201,7 +201,7 @@ public void window(int width,int height,String titel,Main main){
 	      e.printStackTrace();
 	  }
 	
-	Frame = new JFrame(titel);
+	Frame = new JFrame(title);
 	Frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	Frame.setSize(width, height);
 	Frame.setMinimumSize(new Dimension(width,height));
@@ -211,11 +211,11 @@ public void window(int width,int height,String titel,Main main){
 	Frame.setVisible(true);
 	main.setFocusable(true);
 
-	startscreen = new startScreen();
-	pausescreen = new pauseScreen();
+	startscreen = new StartScreen();
+	pausescreen = new PauseScreen();
 	
 	tilesManager = new TilesManager();
-	mouseMeneger = new MouseManager();
+	mouseManeger = new MouseManager();
 	player = new Player(1470, 1330,64);
 	inventory = new Inventory(450, 630, 64);
 	tempScreen = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB_PRE);
@@ -236,7 +236,7 @@ public void window(int width,int height,String titel,Main main){
 	                tilesManager.saveMap();
 	                inventory.saveInventory();
 	            }
-	            serverClientHandler.sendDataToServer("stop");
+	            ServerClientHandler.sendDataToServer("stop");
 	        } catch (Exception ex) {
 	            ex.printStackTrace();
 	        }
@@ -248,8 +248,8 @@ public void window(int width,int height,String titel,Main main){
 	
 	main.addKeyListener(player);
 	main.addMouseWheelListener(inventory);
-	main.addMouseMotionListener(mouseMeneger);
-	main.addMouseListener(mouseMeneger);
+	main.addMouseMotionListener(mouseManeger);
+	main.addMouseListener(mouseManeger);
 
 	}
 

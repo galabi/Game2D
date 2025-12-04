@@ -19,7 +19,7 @@ import java.util.Scanner;
 import java.util.Stack;
 
 import Entity.FontLoader;
-import Entity.gameColors;
+import Entity.GameColors;
 import MainPackage.Main;
 	
 public class Inventory implements MouseWheelListener{
@@ -32,7 +32,7 @@ public class Inventory implements MouseWheelListener{
 	Stack<Item> AddItemList;
 	Item[][] items;
 	Crafting crafting;
-	hoverItemInInventoey hoverItem;
+	HoverItemInInventoey hoverItem;
 	
 	final int toolbarLength = 5;
 	final int HotBarX;
@@ -46,9 +46,9 @@ public class Inventory implements MouseWheelListener{
 	int mouseHaloX=-100,mouseHaloY=-100,mouseX=0,mouseY=0;
 	int inventoryX,inventoryY,craftingX = 800,craftingY = 350,textX=-1;
 	
-	Color boxColor = gameColors.inventoryBoxColor;
-	Color hoverColor = gameColors.inventoryHoverColor;
-	Color hotBarcolor = gameColors.inventoryHotBarcolor;
+	Color boxColor = GameColors.inventoryBoxColor;
+	Color hoverColor = GameColors.inventoryHoverColor;
+	Color hotBarcolor = GameColors.inventoryHotBarcolor;
 	
 	Font titelfont = FontLoader.getPixelFont(16),itemsfont = FontLoader.getPixelFont(13);
 	
@@ -344,12 +344,12 @@ public class Inventory implements MouseWheelListener{
 		}else {
 			//left press
 			if(mouseButton == 1) {
-				hoverItem = new hoverItemInInventoey(mouseX -itemX, mouseY - itemY, item.Clone());
+				hoverItem = new HoverItemInInventoey(mouseX -itemX, mouseY - itemY, item.Clone());
 				item.setBlank();
 	
 			//Right press
 			}else if(mouseButton == 3) {
-				hoverItem = new hoverItemInInventoey(mouseX -itemX, mouseY - itemY, item.Clone());
+				hoverItem = new HoverItemInInventoey(mouseX -itemX, mouseY - itemY, item.Clone());
 				hoverItem.item.quantity = (hoverItem.item.quantity+1)/2;
 				item.quantity /= 2;
 				

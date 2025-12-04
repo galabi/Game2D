@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import Entity.Object;
-import mutiplayer.serverClientHandler;
+import mutiplayer.ServerClientHandler;
 
-public class RegenereationManager {
+public class RegenerationManager {
 	
 	final private static int maxGrowIdRock = 33,maxGrowIdTree = 1;
-	static ArrayList<RegenereationBlock> regenereationList = new ArrayList<>();;
+	static ArrayList<RegenerationBlock> regenereationList = new ArrayList<>();;
 	
 	public static void tick() {
 		if(regenereationList.isEmpty()) return;
 			
-		RegenereationBlock temp = regenereationList.get(0);
+		RegenerationBlock temp = regenereationList.get(0);
 		if(temp.getGrowthTime() < System.currentTimeMillis()) {
 			temp.getObject().setType(temp.getNextId());
-			serverClientHandler.sendDataToServer("update_block " + temp.getY() + " " + temp.getX() + " " + temp.getObject().getId());
+			ServerClientHandler.sendDataToServer("update_block " + temp.getY() + " " + temp.getX() + " " + temp.getObject().getId());
 			if(temp.getObject().getId() == maxGrowIdRock || temp.getObject().getId() == maxGrowIdTree) {
 				regenereationList.remove(0);
 			}else {
@@ -39,7 +39,7 @@ public class RegenereationManager {
 			nextId = nextObject.getId()+1;
 			
 			//check if the rock is in the list, so it won't add the same block to the list
-			for(RegenereationBlock i : regenereationList) {
+			for(RegenerationBlock i : regenereationList) {
 				if(i.getX() == x && i.getY() == y) {
 					i.setNextGowthTime();
 					i.setNextId(nextId);
@@ -49,7 +49,7 @@ public class RegenereationManager {
 		}else {
 			return;
 		}
-		regenereationList.add(new RegenereationBlock(nextObject,x,y,nextId));
+		regenereationList.add(new RegenerationBlock(nextObject,x,y,nextId));
 	}
 	
 	public static long getNextGowthTime() {

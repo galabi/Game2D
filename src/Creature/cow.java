@@ -1,9 +1,9 @@
 package Creature;
 
-public class cow extends creature{
+public class Cow extends Creature{
 	
 	
-	public cow(int x, int y, int sizeX, int sizeY) {
+	public Cow(int x, int y, int sizeX, int sizeY) {
 		super(x, y, sizeX, sizeY);
 		image = CreactureImage.getCowImage();
 		damage = 0;

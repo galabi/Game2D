@@ -6,10 +6,10 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import Entity.FontLoader;
-import mutiplayer.serverClientHandler;
+import mutiplayer.ServerClientHandler;
 
 
-public class pauseScreen{
+public class PauseScreen{
 
 	final int buttonSizeX = 200;
 	final int buttonSizeY = 50;
@@ -45,7 +45,7 @@ public class pauseScreen{
 		if(mouseX > lanButtonX && mouseX < (lanButtonX + buttonSizeX) && mouseY > lanButtonY && mouseY < lanButtonY + buttonSizeY) {
 			
 			lanButton = false;
-			serverClientHandler.openServer();
+			ServerClientHandler.openServer();
 		}
 	}
 	

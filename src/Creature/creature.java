@@ -7,11 +7,11 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 
 import Entity.entity;
-import Entity.gameColors;
+import Entity.GameColors;
 import MainPackage.Main;
 import MainPackage.TilesManager;
 
-public class creature extends entity{
+public class Creature extends entity{
 	
 	ImageIcon[] image;
 	int creatureDirection = 0;
@@ -26,9 +26,9 @@ public class creature extends entity{
 	int CollisionBoxWidth;
 	int CollisionBoxHeight;
 	
-	final static Color SadowColor = gameColors.playerSadowColor;
+	final static Color SadowColor = GameColors.playerShadowColor;
 	
-	public creature(int x, int y ,int sizeX ,int sizeY) {
+	public Creature(int x, int y ,int sizeX ,int sizeY) {
 		super(x, y, sizeX, sizeY);
 		targetX = x;
 		targetY = y;

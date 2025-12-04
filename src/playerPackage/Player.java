@@ -14,13 +14,13 @@ import javax.swing.ImageIcon;
 import Entity.Object;
 import Entity.Tile;
 import Entity.entity;
-import Entity.fishingRod;
-import Entity.gameColors;
+import Entity.FishingRod;
+import Entity.GameColors;
 import MainPackage.Main;
 import MainPackage.TilesManager;
-import Regeneration.RegenereationManager;
+import Regeneration.RegenerationManager;
 import Storage.Item;
-import mutiplayer.serverClientHandler;
+import mutiplayer.ServerClientHandler;
 
 public class Player extends entity implements KeyListener {
 	
@@ -46,21 +46,21 @@ int tilesize = TilesManager.tileSize;
 	boolean fishing = false;
 	boolean sprint = false;
 	
-	playerAnimation playeranimation;
+	PlayerAnimation playeranimation;
 	ImageIcon[][] playerImage;
 	ImageIcon heartImage = null;
-	fishingRod rod;
+	FishingRod rod;
 	
-	final static Color playerSadowColor = gameColors.playerSadowColor;
+	final static Color playerShadowColor = GameColors.playerShadowColor;
 	
 
 	public Player(int x, int y,int size) {
 		super(x, y,size,size);	
 		playerImage = new ImageIcon[4][7];
-		playeranimation = new playerAnimation();
+		playeranimation = new PlayerAnimation();
 		
 		loadImg();
-		rod = new fishingRod();
+		rod = new FishingRod();
 		playerI = (int)((y + playerCollisionBoxY + playerCollisionBoxHeight)/tilesize);
 		playerJ = (int)((x + playerCollisionBoxX+playerCollisionBoxWidth)/tilesize);
 	}
@@ -77,7 +77,7 @@ int tilesize = TilesManager.tileSize;
 		//check if fishing
 		}else if(fishing) {
 			rod.tick();
-			serverClientHandler.sendDataToServer(toString());
+			ServerClientHandler.sendDataToServer(toString());
 		}
 		//punch animation timer
 		if(PlayerInteraction.breaking && System.currentTimeMillis() - animationTimer >= 300){
@@ -87,7 +87,7 @@ int tilesize = TilesManager.tileSize;
 				imagePosture = 2;
 			}
 			animationTimer = System.currentTimeMillis();
-			serverClientHandler.sendDataToServer(toString());
+			ServerClientHandler.sendDataToServer(toString());
 		}
 		
 		//check if the player break block
@@ -100,7 +100,7 @@ int tilesize = TilesManager.tileSize;
 	
 	@Override
 	public void render(Graphics2D g2d) {
-		g2d.setColor(playerSadowColor);
+		g2d.setColor(playerShadowColor);
 		g2d.fillOval(x - Main.tilesManager.getCameraX(false)+(sizeX-25)/2, y - Main.tilesManager.getCameraY(false)+sizeY-7, 25,15);
 		
 		try {
@@ -122,7 +122,7 @@ int tilesize = TilesManager.tileSize;
 		}
 		
 		if(fishing) {
-			rod.rander(g2d);
+			rod.render(g2d);
 		}
 		
 		for(int i = 0;i<= health;i++) {
@@ -165,7 +165,7 @@ int tilesize = TilesManager.tileSize;
 		playerI = (int)((y + playerCollisionBoxY + playerCollisionBoxHeight)/tilesize);
 		playerJ = (int)((x + playerCollisionBoxX)/tilesize);
 		
-		serverClientHandler.sendDataToServer(toString());
+		ServerClientHandler.sendDataToServer(toString());
 	}
 	
 	private void collision(){
@@ -223,7 +223,7 @@ int tilesize = TilesManager.tileSize;
 	                         || timeDelta >= PlayerInteraction.rockBreakTime;
 	        if (canBreak) {
 	            updateBlock(i, j, objId - 1);
-	            RegenereationManager.insertToGrowthList(Main.tilesManager.getObjects()[i][j], j * tilesize, i * tilesize);
+	            RegenerationManager.insertToGrowthList(Main.tilesManager.getObjects()[i][j], j * tilesize, i * tilesize);
 	            
 	            for(Integer k:itemWhenBroken) {
 	            	addDrop(i, j, k);
@@ -257,13 +257,13 @@ int tilesize = TilesManager.tileSize;
 			
 			//sapling case (grow Tree)
 			if(itemToPlace.getId() == 7) {
-				RegenereationManager.insertToGrowthList(obj,pressBlockJ*tilesize,pressBlockI*tilesize);
+				RegenerationManager.insertToGrowthList(obj,pressBlockJ*tilesize,pressBlockI*tilesize);
 			}
 			Main.inventory.decreaseItemInHand();
 			
 		}
 		
-		serverClientHandler.sendDataToServer(Main.player.toString());
+		ServerClientHandler.sendDataToServer(Main.player.toString());
 
 	}
 	
@@ -300,12 +300,12 @@ int tilesize = TilesManager.tileSize;
 	
 	private void updateBlock(int i, int j, int newType) {
 	    Main.tilesManager.getObjects()[i][j].setType(newType);
-	    serverClientHandler.sendDataToServer("update_block " + i + " " + j + " " + newType);
+	    ServerClientHandler.sendDataToServer("update_block " + i + " " + j + " " + newType);
 	}
 
 	private void addDrop(int i, int j, int itemId) {
 	    Main.tilesManager.addItemDrop(new Item(itemId), j * tilesize, i * tilesize);
-	    serverClientHandler.sendDataToServer("add_drop " + i + " " + j + " " + itemId + " " + 1);
+	    ServerClientHandler.sendDataToServer("add_drop " + i + " " + j + " " + itemId + " " + 1);
 	}
 
 	private void resetInteraction() {
@@ -419,7 +419,7 @@ int tilesize = TilesManager.tileSize;
 		if(key == KeyEvent.VK_SPACE) {
 			sprint = false;
 		}
-		serverClientHandler.sendDataToServer(toString());
+		ServerClientHandler.sendDataToServer(toString());
 	}	
 
 	@Override
@@ -457,7 +457,7 @@ int tilesize = TilesManager.tileSize;
 	public void dropOnFloor(Item item) {
 		Tile temp = getNearTile(imageDirection);
 		Main.tilesManager.addItemDrop(item.Clone(),temp.getX(),temp.getY());
-		serverClientHandler.sendDataToServer("add_drop " + item.getId()+" "+item.getQuantity()+" "+temp.getX()+" "+temp.getY());
+		ServerClientHandler.sendDataToServer("add_drop " + item.getId()+" "+item.getQuantity()+" "+temp.getX()+" "+temp.getY());
 	}
 	
 	private void loadImg() {

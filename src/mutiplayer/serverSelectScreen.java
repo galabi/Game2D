@@ -8,13 +8,13 @@ import Entity.FontLoader;
 import Entity.entity;
 import MainPackage.Main;
 
-public class serverSelectScreen extends entity {
+public class ServerSelectScreen extends entity {
 	
 	int maxServers = 3;
 	serverToJoin buttons[] = new serverToJoin[maxServers];
 	
 	
-	public serverSelectScreen(int x, int y, int sizeX, int sizeY) {
+	public ServerSelectScreen(int x, int y, int sizeX, int sizeY) {
 		super(x, y, sizeX, sizeY);
 	}
 
@@ -73,7 +73,7 @@ public class serverSelectScreen extends entity {
 		
 		private boolean ispressd(int mouseX,int mouseY){
 			if(mouseX > x && mouseX < (x + sizeX) && mouseY > y && mouseY < y + sizeY) {
-				serverClientHandler.openClient(port);
+				ServerClientHandler.openClient(port);
 				
 				
 				while(!Main.tilesManager.isMapIsReady()) {

@@ -42,7 +42,7 @@ public class Client implements Runnable{
         	do{                
         		response = in.readLine();
             	if(response != null) {
-            		serverClientHandler.responseHandeler(response);
+            		ServerClientHandler.responseHandeler(response);
             	}else {
             		response = "ok";
             	}
@@ -54,7 +54,7 @@ public class Client implements Runnable{
 		
 	}
 	
-	public void checkAvailablePorts(serverSelectScreen serverSelect) {
+	public void checkAvailablePorts(ServerSelectScreen serverSelect) {
         for (int port = 1000; port <= 2000; port++) {
             try (Socket socket = new Socket("localhost", port)) {
                 System.out.println("[client] Port " + port + " is open.");

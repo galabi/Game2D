@@ -2,12 +2,12 @@ package Regeneration;
 
 import Entity.Object;
 
-public class RegenereationBlock {
+public class RegenerationBlock {
 	private int x,y,nextId;
 	private Object objectToGrow;
 	private long GrowthTime;
 	
-	public RegenereationBlock(Object objectToGrow,int x,int y,int nextId) {
+	public RegenerationBlock(Object objectToGrow,int x,int y,int nextId) {
 		this.objectToGrow = objectToGrow;
 		this.nextId = nextId;
 		this.x = x;
@@ -34,6 +34,6 @@ public class RegenereationBlock {
 		this.nextId = nextId;
 	}
 	public void setNextGowthTime() {
-		GrowthTime = RegenereationManager.getNextGowthTime() ;
+		GrowthTime = RegenerationManager.getNextGowthTime() ;
 	}
 }

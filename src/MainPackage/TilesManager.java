@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Scanner;
 
-import Creature.CreactureManager;
+import Creature.CreatureManager;
 import Entity.Tile;
-import Entity.itemOnFloor;
-import Regeneration.RegenereationManager;
+import Entity.ItemOnFloor;
+import Regeneration.RegenerationManager;
 import Entity.Object;
 import Storage.Item;
-import mutiplayer.serverClientHandler;
+import mutiplayer.ServerClientHandler;
 import playerPackage.Player;
 
 public class TilesManager {
@@ -30,7 +30,7 @@ public class TilesManager {
 	Object[][] objects;
 	private Scanner s;
 	private Formatter x;
-	ArrayList<itemOnFloor> drops;
+	ArrayList<ItemOnFloor> drops;
 	boolean mapIsReady = false;
 	
 	String map = "";
@@ -38,21 +38,21 @@ public class TilesManager {
 	public TilesManager() {
 		tiles = new Tile[maxScreenCol][maxScreenRow];
 		objects = new Object[maxScreenCol][maxScreenRow];
-		drops = new ArrayList<itemOnFloor>();
+		drops = new ArrayList<ItemOnFloor>();
 	}
 	
 	public void tick() {
-		RegenereationManager.tick();
+		RegenerationManager.tick();
 		
 		//check if the player pick up item from the floor
 		if(!drops.isEmpty()) {
 			
 			int playerX = Main.player.getX()+(Main.player.getSizeX()/2),playerY = Main.player.getY()+(Main.player.getSizeY()/2);
-			for(itemOnFloor i:drops) {
+			for(ItemOnFloor i:drops) {
 				if(playerX >= i.getTileX()*tileSize && playerX <= i.getTileX()*tileSize+tileSize
 						&& playerY >= i.getTileY()*tileSize && playerY <= i.getTileY()*tileSize+tileSize) {
 					Main.inventory.addToItemStack(i.getItem().Clone());
-					serverClientHandler.sendDataToServer("remove_drop "+ i.getItem().getId()+" "+ i.getItem().getQuantity());
+					ServerClientHandler.sendDataToServer("remove_drop "+ i.getItem().getId()+" "+ i.getItem().getQuantity());
 					drops.remove(i);
 					return;
 				}
@@ -98,8 +98,8 @@ public class TilesManager {
 		if(!Main.inventory.IsOpen() && Main.gameState == 2) {
 			g2d.setColor(Color.black);
 			g2d.setStroke(new BasicStroke(2));
-			g2d.drawRect(((cameraX + Main.mouseMeneger.getMouseX())/tileSize)*tileSize - cameraX, 
-					((cameraY + Main.mouseMeneger.getMouseY())/tileSize)*tileSize - cameraY,
+			g2d.drawRect(((cameraX + Main.mouseManeger.getMouseX())/tileSize)*tileSize - cameraX, 
+					((cameraY + Main.mouseManeger.getMouseY())/tileSize)*tileSize - cameraY,
 					tileSize, tileSize);
 		}
 	}
@@ -162,8 +162,8 @@ public class TilesManager {
 	
 	public void renderDrops(Graphics2D g2d) {
 		if(!drops.isEmpty()) {
-			for(itemOnFloor d:drops) {
-				d.rander(g2d);
+			for(ItemOnFloor d:drops) {
+				d.render(g2d);
 			}
 		}
 	}
@@ -171,7 +171,7 @@ public class TilesManager {
 	//read from the file
 	public void readFile() {
 		mapIsReady = false;
-		RegenereationManager.resetList();
+		RegenerationManager.resetList();
 		
 		if(map.equals("cave") || map.equals("")) {
 			map = "map";
@@ -219,7 +219,7 @@ public class TilesManager {
 				for(int j=0;j<maxScreenRow;j++) {
 					objects[i][j] = new Object(s.nextInt() ,j*tileSize, i*tileSize, tileSize);
 					if(((Tile) objects[i][j]).getId() == 2 || (((Tile) objects[i][j]).getId() >= 30 && ((Tile) objects[i][j]).getId() < 34)) {
-						RegenereationManager.insertToGrowthList(objects[i][j],j*tileSize,i*tileSize);
+						RegenerationManager.insertToGrowthList(objects[i][j],j*tileSize,i*tileSize);
 					}
 				}
 			}
@@ -232,7 +232,7 @@ public class TilesManager {
 		}
 		mapIsReady = true;
 		
-		CreactureManager.CreateCreature(1350, 1350, "cow");
+		CreatureManager.CreateCreature(1350, 1350, "cow");
 	}
 	
 	
@@ -292,7 +292,7 @@ public class TilesManager {
 		int n = map.length;
 		for(int i = 1;i<n;i+=4) {
 			if(map[i] == null)return;
-			itemOnFloor temp = new itemOnFloor(new Item(Integer.parseInt(map[i])),Integer.parseInt(map[i+2]),Integer.parseInt(map[i+3]));
+			ItemOnFloor temp = new ItemOnFloor(new Item(Integer.parseInt(map[i])),Integer.parseInt(map[i+2]),Integer.parseInt(map[i+3]));
 			temp.getItem().setQuantity(Integer.parseInt(map[i+1]));
 			drops.add(temp);
 		}
@@ -346,9 +346,9 @@ public class TilesManager {
 		return objects[objectI][objectJ];
 	}
 	public void addItemDrop(Item item,int x,int y) {
-		drops.add(new itemOnFloor(item, x/tileSize, y/tileSize));
+		drops.add(new ItemOnFloor(item, x/tileSize, y/tileSize));
 	}
-	public ArrayList<itemOnFloor> getItemOnFloorList() {
+	public ArrayList<ItemOnFloor> getItemOnFloorList() {
 		return drops;
 	}
 	public int getBorderX() {
@@ -378,7 +378,7 @@ public class TilesManager {
 	
 	public String DropsToString() {
 		String map = "drops: ";
-		for(itemOnFloor i:drops) {
+		for(ItemOnFloor i:drops) {
 			map = map + i.getItem().getId()+ " "+ i.getItem().getQuantity()+ " " +i.getTileX()+ " "+i.getTileY() + " ";
 		}
 		
@@ -396,7 +396,7 @@ public class TilesManager {
 		}
 	
 	public void removeDrop(int id,int quantity) {
-		for(itemOnFloor i:drops) {
+		for(ItemOnFloor i:drops) {
 			if(i.getItem().getId() == id && i.getItem().getQuantity() == quantity) {
 				drops.remove(i);
 				return;

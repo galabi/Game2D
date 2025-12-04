@@ -11,7 +11,7 @@ import java.util.Random;
 import MainPackage.Main;
 import MainPackage.TilesManager;
 
-public class fishingRod{
+public class FishingRod{
 
 	Random rand;
 	final int tilesize = TilesManager.tileSize;
@@ -26,7 +26,7 @@ public class fishingRod{
 	
 	QuadCurve2D lineCurve , lineCurvePull;
 	
-	public fishingRod() {
+	public FishingRod() {
 		 rand = new Random();
 		 particlesList = new ArrayList<Particles>();
 		 lineCurve = new QuadCurve2D.Float();
@@ -68,7 +68,7 @@ public class fishingRod{
 		}
 	}
 	
-	public void rander(Graphics2D g2d) {
+	public void render(Graphics2D g2d) {
 		for(Particles p: particlesList) {
 			p.render(g2d);
 		}
@@ -189,8 +189,8 @@ public class fishingRod{
     }
 	
 	private void setBiteLocation() {
-		baitX = Main.mouseMeneger.getMouseX();
-		baitY = Main.mouseMeneger.getMouseY();
+		baitX = Main.mouseManeger.getMouseX();
+		baitY = Main.mouseManeger.getMouseY();
 	}
 	
 	public void setRopOffSet(int Xoffset,int Yoffset) {
