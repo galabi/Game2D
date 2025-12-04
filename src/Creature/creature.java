@@ -2,11 +2,14 @@ package Creature;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Random;
+
 import javax.swing.ImageIcon;
 
 import Entity.entity;
 import Entity.gameColors;
 import MainPackage.Main;
+import MainPackage.TilesManager;
 
 public class creature extends entity{
 	
@@ -14,12 +17,21 @@ public class creature extends entity{
 	int creatureDirection = 0;
 	int maxHealth;
 	int health;
-	int demage;
+	int damage;
+	int targetX,targetY;
+	int speed = 1;
+	
+	int CollisionBoxX;
+	int CollisionBoxY;
+	int CollisionBoxWidth;
+	int CollisionBoxHeight;
 	
 	final static Color SadowColor = gameColors.playerSadowColor;
 	
 	public creature(int x, int y ,int sizeX ,int sizeY) {
 		super(x, y, sizeX, sizeY);
+		targetX = x;
+		targetY = y;
 	}
 	
 	@Override
@@ -31,8 +43,123 @@ public class creature extends entity{
 		
 	}
 	
+	public void move() {
+		collision(creatureDirection);
+		if(x != targetX){
+			if(Math.abs(targetX-x) <= Math.abs(speed)) {
+				x = targetX;
+				return;
+			}
+			
+			x += speed;
+		}else if(y != targetY) {
+			if(Math.abs(targetY-y) <= Math.abs(speed)) {
+				y = targetY;
+				return;
+			}
+			y += speed;
+		}else {
+			setNextLocation();
+		}
+	}
+	
 	//use this to lower the creature health points
-	public void hitCreature(int demage) {
-		health -= demage;
+	public void hitCreature(int damage) {
+		health -= damage;
+	}
+	
+	
+	public void setNextLocation() {
+		Random r = new Random();
+		int Direction;
+		int target;
+		speed = Math.abs(speed);
+
+		
+		Direction = r.nextInt(4);
+		target = r.nextInt(0,64);
+		
+		/**
+		 * 0 = down
+		 * 1 = left
+		 * 2 = right
+		 * 3 = up
+			*/
+			
+			switch (Direction) {
+			case 0: 
+				targetX = x;
+				targetY = y+target;
+				speed = Math.abs(speed);
+				break;
+			case 1: 
+				targetX = x-target;
+				targetY = y;
+				speed = -Math.abs(speed);
+				break;
+			case 2: 
+				targetX = x+target;
+				targetY = y;
+				speed = Math.abs(speed);
+				break;
+			case 3: 
+				targetX = x;
+				targetY = y-target;
+				speed = -Math.abs(speed);
+				break;
+			}
+			
+			creatureDirection = Direction;
+			
+		
+		
+	}
+	
+	private void collision(int Direction){
+		int XInTile = (x + CollisionBoxX + speed) % TilesManager.tileSize;;
+		int XInTileAndWidth = (x + CollisionBoxX + CollisionBoxWidth + speed) % TilesManager.tileSize;;
+		int YInTile = (y + CollisionBoxY + speed) % TilesManager.tileSize;
+		int YInTileAndHeight = (y + CollisionBoxY + CollisionBoxHeight + speed) % TilesManager.tileSize;;
+		
+		switch(Direction){
+		case 0:
+			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + speed)/TilesManager.tileSize)]
+					[(int)((x + CollisionBoxX + speed )/TilesManager.tileSize)].isSolid(XInTile,YInTile,CollisionBoxWidth,1)) targetY = y;
+			
+			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + speed)/TilesManager.tileSize)]
+					[(int)((x + CollisionBoxX + CollisionBoxWidth + speed )/TilesManager.tileSize)].isSolid(XInTileAndWidth-CollisionBoxWidth,YInTile,CollisionBoxWidth,1))targetY = y;
+			break;
+			
+		case 1:
+			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + speed )/TilesManager.tileSize)]
+					[(int)((x + CollisionBoxX + speed)/TilesManager.tileSize)].isSolid(XInTile,YInTile,1,CollisionBoxHeight)) targetX = x;
+			
+			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + CollisionBoxHeight + speed )/TilesManager.tileSize)]
+					[(int)((x + CollisionBoxX + speed)/TilesManager.tileSize)].isSolid(XInTile,YInTileAndHeight-CollisionBoxHeight,1,CollisionBoxHeight)) targetX = x;
+			break;
+			
+		case 2:
+			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + speed)/TilesManager.tileSize)]
+					[(int)((x + CollisionBoxX + CollisionBoxWidth + speed)/TilesManager.tileSize)].isSolid(XInTileAndWidth,YInTile,1,CollisionBoxHeight)) targetX = x;			
+			
+			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + CollisionBoxHeight + speed )/TilesManager.tileSize)]
+					[(int)((x + CollisionBoxX + CollisionBoxWidth + speed)/TilesManager.tileSize)].isSolid(XInTileAndWidth,YInTileAndHeight-CollisionBoxHeight,1,CollisionBoxHeight)) targetX = x;
+			break;
+		
+		case 3:
+			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + CollisionBoxHeight + speed)/TilesManager.tileSize)]
+					[(int)((x + CollisionBoxX + speed)/TilesManager.tileSize)].isSolid(XInTile,YInTileAndHeight,CollisionBoxWidth,1)) targetY = y;
+			
+			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + CollisionBoxHeight + speed)/TilesManager.tileSize)]
+					[(int)((x + CollisionBoxX + CollisionBoxWidth + speed)/TilesManager.tileSize)].isSolid(XInTileAndWidth-CollisionBoxWidth,YInTileAndHeight,CollisionBoxWidth,1)) targetY = y;
+		break;
+		
+
+		}
+		
+	}
+	
+	public boolean IsInTarget() {
+		return (x == targetX && y == targetY);
 	}
 }

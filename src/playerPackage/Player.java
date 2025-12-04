@@ -26,10 +26,10 @@ public class Player extends entity implements KeyListener {
 	
 int tilesize = TilesManager.tileSize;
 	
-	final int playerCollisonBoxX = 20;
-	final int playerCollisonBoxY = 50;
-	final int playerCollisonBoxWidth = 24;
-	final int playerCollisonBoxHeight = 14;
+	final int playerCollisionBoxX = 20;
+	final int playerCollisionBoxY = 50;
+	final int playerCollisionBoxWidth = 24;
+	final int playerCollisionBoxHeight = 14;
 			
 	public int playerI = 0, playerJ = 0;
 	int speedX, speedY;
@@ -61,8 +61,8 @@ int tilesize = TilesManager.tileSize;
 		
 		loadImg();
 		rod = new fishingRod();
-		playerI = (int)((y + playerCollisonBoxY + playerCollisonBoxHeight)/tilesize);
-		playerJ = (int)((x + playerCollisonBoxX+playerCollisonBoxWidth)/tilesize);
+		playerI = (int)((y + playerCollisionBoxY + playerCollisionBoxHeight)/tilesize);
+		playerJ = (int)((x + playerCollisionBoxX+playerCollisionBoxWidth)/tilesize);
 	}
 	
 	@Override
@@ -117,7 +117,7 @@ int tilesize = TilesManager.tileSize;
 		//debag
 		if(Main.devmode) {
 			g2d.setColor(Color.white);
-			g2d.drawRect(x+playerCollisonBoxX-Main.tilesManager.getCameraX(false), y+playerCollisonBoxY-Main.tilesManager.getCameraY(false), playerCollisonBoxWidth, playerCollisonBoxHeight);
+			g2d.drawRect(x+playerCollisionBoxX-Main.tilesManager.getCameraX(false), y+playerCollisionBoxY-Main.tilesManager.getCameraY(false), playerCollisionBoxWidth, playerCollisionBoxHeight);
 			g2d.drawRect(getNearTile(imageDirection).getX()-Main.tilesManager.getCameraX(false), getNearTile(imageDirection).getY()-Main.tilesManager.getCameraY(false), 64,64);
 		}
 		
@@ -162,48 +162,48 @@ int tilesize = TilesManager.tileSize;
 		x += speedX;
 
 		
-		playerI = (int)((y + playerCollisonBoxY + playerCollisonBoxHeight)/tilesize);
-		playerJ = (int)((x + playerCollisonBoxX)/tilesize);
+		playerI = (int)((y + playerCollisionBoxY + playerCollisionBoxHeight)/tilesize);
+		playerJ = (int)((x + playerCollisionBoxX)/tilesize);
 		
 		serverClientHandler.sendDataToServer(toString());
 	}
 	
 	private void collision(){
-		int playerXInTile = (x + playerCollisonBoxX + speedX) % tilesize;
-		int playerYInTile = (y + playerCollisonBoxY + speedY) % tilesize;
-		int playerXInTileAndWidth = (x + playerCollisonBoxX + playerCollisonBoxWidth + speedX) % tilesize;
-		int playerYInTileAndHeight = (y + playerCollisonBoxY + playerCollisonBoxHeight + speedY) % tilesize;
+		int playerXInTile = (x + playerCollisionBoxX + speedX) % tilesize;
+		int playerYInTile = (y + playerCollisionBoxY + speedY) % tilesize;
+		int playerXInTileAndWidth = (x + playerCollisionBoxX + playerCollisionBoxWidth + speedX) % tilesize;
+		int playerYInTileAndHeight = (y + playerCollisionBoxY + playerCollisionBoxHeight + speedY) % tilesize;
 		
 		if(speedX > 0){
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisonBoxY + speedY )/tilesize)]
-					[(int)((x + playerCollisonBoxX + playerCollisonBoxWidth + speedX)/tilesize)].isSolid(playerXInTileAndWidth,playerYInTile,1,playerCollisonBoxHeight)) speedX = 0;			
+			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + speedY )/tilesize)]
+					[(int)((x + playerCollisionBoxX + playerCollisionBoxWidth + speedX)/tilesize)].isSolid(playerXInTileAndWidth,playerYInTile,1,playerCollisionBoxHeight)) speedX = 0;			
 			
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisonBoxY + playerCollisonBoxHeight + speedY )/tilesize)]
-					[(int)((x + playerCollisonBoxX + playerCollisonBoxWidth + speedX)/tilesize)].isSolid(playerXInTileAndWidth,playerYInTileAndHeight-playerCollisonBoxHeight,1,playerCollisonBoxHeight)) speedX = 0;
+			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + playerCollisionBoxHeight + speedY )/tilesize)]
+					[(int)((x + playerCollisionBoxX + playerCollisionBoxWidth + speedX)/tilesize)].isSolid(playerXInTileAndWidth,playerYInTileAndHeight-playerCollisionBoxHeight,1,playerCollisionBoxHeight)) speedX = 0;
 		}
 		
 		if(speedX < 0){
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisonBoxY + speedY )/tilesize)]
-					[(int)((x + playerCollisonBoxX + speedX)/tilesize)].isSolid(playerXInTile,playerYInTile,1,playerCollisonBoxHeight)) speedX = 0;
+			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + speedY )/tilesize)]
+					[(int)((x + playerCollisionBoxX + speedX)/tilesize)].isSolid(playerXInTile,playerYInTile,1,playerCollisionBoxHeight)) speedX = 0;
 			
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisonBoxY + playerCollisonBoxHeight + speedY )/tilesize)]
-					[(int)((x + playerCollisonBoxX + speedX)/tilesize)].isSolid(playerXInTile,playerYInTileAndHeight-playerCollisonBoxHeight,1,playerCollisonBoxHeight)) speedX = 0;
+			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + playerCollisionBoxHeight + speedY )/tilesize)]
+					[(int)((x + playerCollisionBoxX + speedX)/tilesize)].isSolid(playerXInTile,playerYInTileAndHeight-playerCollisionBoxHeight,1,playerCollisionBoxHeight)) speedX = 0;
 		}
 		
 		if(speedY > 0){
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisonBoxY + playerCollisonBoxHeight + speedY)/tilesize)]
-					[(int)((x + playerCollisonBoxX + speedX)/tilesize)].isSolid(playerXInTile,playerYInTileAndHeight,playerCollisonBoxWidth,1)) speedY = 0;
+			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + playerCollisionBoxHeight + speedY)/tilesize)]
+					[(int)((x + playerCollisionBoxX + speedX)/tilesize)].isSolid(playerXInTile,playerYInTileAndHeight,playerCollisionBoxWidth,1)) speedY = 0;
 			
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisonBoxY + playerCollisonBoxHeight + speedY)/tilesize)]
-					[(int)((x + playerCollisonBoxX + playerCollisonBoxWidth + speedX)/tilesize)].isSolid(playerXInTileAndWidth-playerCollisonBoxWidth,playerYInTileAndHeight,playerCollisonBoxWidth,1)) speedY = 0;
+			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + playerCollisionBoxHeight + speedY)/tilesize)]
+					[(int)((x + playerCollisionBoxX + playerCollisionBoxWidth + speedX)/tilesize)].isSolid(playerXInTileAndWidth-playerCollisionBoxWidth,playerYInTileAndHeight,playerCollisionBoxWidth,1)) speedY = 0;
 		}
 		
 		if(speedY < 0){
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisonBoxY + speedY)/tilesize)]
-					[(int)((x + playerCollisonBoxX + speedX )/tilesize)].isSolid(playerXInTile,playerYInTile,playerCollisonBoxWidth,1)) speedY = 0;
+			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + speedY)/tilesize)]
+					[(int)((x + playerCollisionBoxX + speedX )/tilesize)].isSolid(playerXInTile,playerYInTile,playerCollisionBoxWidth,1)) speedY = 0;
 			
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisonBoxY + speedY)/tilesize)]
-					[(int)((x + playerCollisonBoxX + playerCollisonBoxWidth + speedX )/tilesize)].isSolid(playerXInTileAndWidth-playerCollisonBoxWidth,playerYInTile,playerCollisonBoxWidth,1)) speedY = 0;
+			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + speedY)/tilesize)]
+					[(int)((x + playerCollisionBoxX + playerCollisionBoxWidth + speedX )/tilesize)].isSolid(playerXInTileAndWidth-playerCollisionBoxWidth,playerYInTile,playerCollisionBoxWidth,1)) speedY = 0;
 		
 		}
 		
@@ -429,7 +429,7 @@ int tilesize = TilesManager.tileSize;
 	private Tile getNearTile(int playerPosition) {
 		float offsetX=0,offsetY=0;
 		switch (playerPosition) {
-		//dawn
+		//down
 			case 0: 
 				offsetX = 0;
 				offsetY = 1;
@@ -464,7 +464,7 @@ int tilesize = TilesManager.tileSize;
 		BufferedImage temp;
 		try {
 			/**
-			 * 0 = dawn
+			 * 0 = down
 			 * 1 = left
 			 * 2 = right
 			 * 3 = up
