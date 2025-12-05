@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -469,14 +468,13 @@ int tilesize = TilesManager.tileSize;
 			 * 2 = right
 			 * 3 = up
 				*/
-			temp = ImageIO.read(new File("playerIcons/player.png"));
+			temp = ImageIO.read(getClass().getResourceAsStream("/player.png"));
 			for(int i = 0;i<4;i++) {
 				for(int j = 0; j<5;j++) {
 					playerImage[i][j] = new ImageIcon(temp.getSubimage(j*64, i*64, 64, 64));
 				}
 			}
-			
-			heartImage = new ImageIcon(ImageIO.read(new File("playerIcons/heart.png")));
+			heartImage = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/heart.png")));
 			
 		} catch (Exception e) {
 			e.printStackTrace();

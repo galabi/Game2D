@@ -1,8 +1,6 @@
 package Creature;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
@@ -14,10 +12,10 @@ public class CreactureImage {
 	final static ImageIcon[] sheepImage = new ImageIcon[4];
 	
 	static {
-		loadImage(slimeImage,"Creature_image_file/slime.png");
-		loadImage(cowImage,"Creature_image_file/cow.png");
-		loadImage(chickenImage,"Creature_image_file/chicken.png");
-		loadImage(sheepImage,"Creature_image_file/sheep.png");
+		loadImage(slimeImage,"/slime.png");
+		loadImage(cowImage,"/cow.png");
+		loadImage(chickenImage,"/chicken.png");
+		loadImage(sheepImage,"/sheep.png");
 		
 	}
 	
@@ -30,7 +28,7 @@ public class CreactureImage {
 			 * 2 = right
 			 * 3 = up
 				*/
-			temp = ImageIO.read(new File(fileLoaction));
+			temp = ImageIO.read(CreactureImage.class.getResourceAsStream(fileLoaction));
 			for(int i = 0;i<4;i++) {
 				Creacture[i] = new ImageIcon(temp.getSubimage(i*32, 0, 32, 32));
 			}

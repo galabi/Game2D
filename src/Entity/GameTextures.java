@@ -2,14 +2,13 @@ package Entity;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import MainPackage.TilesManager;
 
 public class GameTextures {
 	private static ImageIcon[] itemIcons,tileIcons,objectIcons,frontObjectIcon;
-
+	
 	static{
 		int itemIconSize = 11,tileIconSize = 61,objectIconSize = 34;
 		itemIcons = new ImageIcon[itemIconSize];
@@ -31,41 +30,39 @@ public class GameTextures {
 		itemIcons[10] = pickaxe
 		*/
 		
-		BufferedImage image;
 		try {
-			image = ImageIO.read(new File("itemicon/items.png"));
-			for(int i = 0;i<3 ;i++) {
-				for(int j = 0; j<4 && i*4+j < 11;j++) {
-					itemIcons[i*4+j] = new ImageIcon(image.getSubimage(j*64, i*64, 64, 64));
-				}
-			}
 			
-			image = ImageIO.read(new File("tiles_source/tiles.png"));
-			for(int i = 0;i<8;i++) {
-				for(int j = 0; j<8 && j + i*8 < tileIconSize;j++) {
-					tileIcons[i*8+j] = new ImageIcon(image.getSubimage(j*64, i*64, 64, 64));
-				}
-			}
+			// loading items.png
+	        loadSheet(itemIcons, "/items.png", 3, 4, itemIconSize);
+
+	        // loading tiles.png
+	        loadSheet(tileIcons, "/tiles.png", 8, 8, tileIconSize);
+
+	        // loading objects.png
+	        loadSheet(objectIcons, "/objects.png", 6, 6, objectIconSize);
+
+	        // loading objectsFront.png
+	        loadSheet(frontObjectIcon, "/objectsFront.png", 6, 6, objectIconSize);
 			
-			image = ImageIO.read(new File("tiles_source/objects.png"));
-			for(int i = 0;i<6;i++) {
-				for(int j = 0; j<6 && j + i*6 < objectIconSize;j++) {
-					objectIcons[i*6+j] = new ImageIcon(image.getSubimage(j*64, i*64, 64, 64));
-				}
-			}
-			
-			image = ImageIO.read(new File("tiles_source/objectsFront.png"));
-			for(int i = 0;i<6;i++) {
-				for(int j = 0; j<6 && j + i*6 < objectIconSize;j++) {
-					frontObjectIcon[i*6+j] = new ImageIcon(image.getSubimage(j*64, i*64, 64, 64));
-				}
-			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	private static void loadSheet(ImageIcon[] targetArray, String path, int rows, int cols, int maxIcons) {
+        try {
+        	BufferedImage temp = ImageIO.read(GameTextures.class.getResourceAsStream(path));
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols && (i * cols + j) < maxIcons; j++) {
+                    targetArray[i * cols + j] = new ImageIcon(temp.getSubimage(j * TilesManager.tileSize, i * TilesManager.tileSize, TilesManager.tileSize, TilesManager.tileSize));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error while loading GameTexture: "+path);
+            e.printStackTrace();
+        }
+    }
 	
 	public static ImageIcon getItemIcon(int id) {
 		return itemIcons[id];

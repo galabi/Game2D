@@ -2,8 +2,6 @@ package playerPackage;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
@@ -41,7 +39,7 @@ public class PlayerAnimation {
 			 * 3 = up
 				*/
 			for(int i = 0;i<4;i++) {
-				temp = ImageIO.read(new File("playerIcons/walk"+(i+1)+".png"));
+				temp = ImageIO.read(getClass().getResourceAsStream("/walk"+(i+1)+".png"));
 				for(int j = 0;j<runningFrameSize;j++) {
 					runningAnimation[i][j] = new ImageIcon(temp.getSubimage(j*64, 0, 64, 64));
 				}

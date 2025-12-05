@@ -2,8 +2,6 @@ package Entity;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
@@ -24,7 +22,7 @@ public class Particles extends entity {
 		
 		BufferedImage temp;
 		try {
-			temp = ImageIO.read(new File("tiles_source/particals.png"));
+			temp = ImageIO.read(GameTextures.class.getResourceAsStream("/particals.png"));
 			for(int i = 0;i<1 ;i++) {
 				particalsImg[i] = new ImageIcon(temp.getSubimage(i*16,0, 16, 16));
 			}
