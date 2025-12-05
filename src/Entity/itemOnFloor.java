@@ -19,6 +19,7 @@ public class ItemOnFloor {
 	
 	public void render(Graphics2D g2d) {
 		g2d.drawImage(item.getImage(), (tileX*tileSize)-Main.tilesManager.getCameraX(false),(tileY*tileSize)-Main.tilesManager.getCameraY(false),tileSize,tileSize, null);
+		
 	}
 	
 	public int getTileX() {
