@@ -23,13 +23,14 @@ import mutiplayer.ServerClientHandler;
 
 public class Player extends entity implements KeyListener {
 	
-int tilesize = TilesManager.tileSize;
+	int tilesize = TilesManager.tileSize;
 	
-	final int playerCollisionBoxX = 20;
-	final int playerCollisionBoxY = 50;
-	final int playerCollisionBoxWidth = 24;
-	final int playerCollisionBoxHeight = 14;
-			
+	final static int playerCollisionBoxX = 20;
+	final static int playerCollisionBoxY = 50;
+	final static int playerCollisionBoxWidth = 24;
+	final static int playerCollisionBoxHeight = 14;
+	final static int playerSpritSize = 64;		
+	
 	public int playerI = 0, playerJ = 0;
 	int speedX, speedY;
 	final int speed = 2;
@@ -117,7 +118,6 @@ int tilesize = TilesManager.tileSize;
 		if(Main.devmode) {
 			g2d.setColor(Color.white);
 			g2d.drawRect(x+playerCollisionBoxX-Main.tilesManager.getCameraX(false), y+playerCollisionBoxY-Main.tilesManager.getCameraY(false), playerCollisionBoxWidth, playerCollisionBoxHeight);
-			g2d.drawRect(getNearTile(imageDirection).getX()-Main.tilesManager.getCameraX(false), getNearTile(imageDirection).getY()-Main.tilesManager.getCameraY(false), 64,64);
 		}
 		
 		if(fishing) {
@@ -460,18 +460,17 @@ int tilesize = TilesManager.tileSize;
 	}
 	
 	private void loadImg() {
-		BufferedImage temp;
+		/**
+		 * 0 = down
+		 * 1 = left
+		 * 2 = right
+		 * 3 = up
+			*/
 		try {
-			/**
-			 * 0 = down
-			 * 1 = left
-			 * 2 = right
-			 * 3 = up
-				*/
-			temp = ImageIO.read(getClass().getResourceAsStream("/player.png"));
+			BufferedImage temp = ImageIO.read(getClass().getResourceAsStream("/player.png"));
 			for(int i = 0;i<4;i++) {
 				for(int j = 0; j<5;j++) {
-					playerImage[i][j] = new ImageIcon(temp.getSubimage(j*64, i*64, 64, 64));
+					playerImage[i][j] = new ImageIcon(temp.getSubimage(j*playerSpritSize, i*playerSpritSize, playerSpritSize, playerSpritSize));
 				}
 			}
 			heartImage = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/heart.png")));

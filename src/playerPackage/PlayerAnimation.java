@@ -11,6 +11,8 @@ public class PlayerAnimation {
 	ImageIcon[][] runningAnimation ;
 	int runningFrameSize = 12,currentFrame; 
 	long LastFrame = 0;
+	final static int playerSpritSize =  Player.playerSpritSize; 
+	
 	
 	public PlayerAnimation() {
 		runningAnimation = new ImageIcon[4][runningFrameSize];
@@ -41,7 +43,7 @@ public class PlayerAnimation {
 			for(int i = 0;i<4;i++) {
 				temp = ImageIO.read(getClass().getResourceAsStream("/walk"+(i+1)+".png"));
 				for(int j = 0;j<runningFrameSize;j++) {
-					runningAnimation[i][j] = new ImageIcon(temp.getSubimage(j*64, 0, 64, 64));
+					runningAnimation[i][j] = new ImageIcon(temp.getSubimage(j*playerSpritSize, 0, playerSpritSize, playerSpritSize));
 				}
 			}
 		} catch (Exception e) {
