@@ -400,7 +400,7 @@ public class Object extends Tile{
 			itemWhenBroken.add(9);
 			break;
 		case 74:
-			objectName = "Rock";
+			objectName = "Rock Min";
 			solid = true;
 			breakable = true;
 			solidInTile.add(new Rectangle(16 ,20 ,36 ,30));

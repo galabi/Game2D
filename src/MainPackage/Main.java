@@ -146,7 +146,7 @@ public class Main extends Canvas implements Runnable{
 		}
 
 		
-		//pre-load all the items
+		//pre-load all the images
 		if(!preLoad) {
 			preLoad = true;
 			GameTextures.preloadImages(g2);

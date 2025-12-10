@@ -5,11 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-
 import Entity.Object;
 import Entity.Tile;
 import Entity.entity;
@@ -92,7 +89,7 @@ public class Player extends entity implements KeyListener {
 		
 		//check if the player break block
 		if(PlayerInteraction.timeOfFirstHitToObject != 0) {
-			breakBlock();
+			PlayerBreakBlock.breakBlock();
 		}
 		
 		
@@ -208,40 +205,6 @@ public class Player extends entity implements KeyListener {
 		
 	}
 	
-	//break block 
-	public void breakBlock() {
-	    long timeDelta = System.currentTimeMillis() - PlayerInteraction.timeOfFirstHitToObject;
-	    int objId = PlayerInteraction.objectToBreakId;
-	    int i = PlayerInteraction.objectI;
-	    int j = PlayerInteraction.objectJ;
-	    int handItemId = Main.inventory.getItemInHand().getId();
-	    ArrayList<Integer> itemWhenBroken = Main.tilesManager.getObjects(i, j).getItemWhenBroken();
-	    
-	    if (objId > 30 && objId <= 33) {
-	        boolean canBreak = (handItemId == 10 && timeDelta >= PlayerInteraction.BreakTime / 2)
-	                         || timeDelta >= PlayerInteraction.rockBreakTime;
-	        if (canBreak) {
-	            updateBlock(i, j, objId - 1);
-	            RegenerationManager.insertToGrowthList(Main.tilesManager.getObjects()[i][j], j * tilesize, i * tilesize);
-	            
-	            for(Integer k:itemWhenBroken) {
-	            	addDrop(i, j, k);
-	            }
-	            resetInteraction();
-	        }
-	    } 
-	    else if (Main.tilesManager.getObjects(i, j).isBreakable()) {
-	        boolean canBreak = (handItemId == 2 && timeDelta >= PlayerInteraction.BreakTime / 2)
-	                         || timeDelta >= PlayerInteraction.BreakTime;
-	        if (canBreak) {
-	            updateBlock(i, j, 0);
-	            for(Integer k:itemWhenBroken) {
-	            	addDrop(i, j, k);
-	            }
-	            resetInteraction();
-	        }
-	    }
-	}
 	
 	//player placing a block
 	public void placeBlock(int pressBlockI,int pressBlockJ,Item itemToPlace) {
@@ -252,11 +215,13 @@ public class Player extends entity implements KeyListener {
 		if(obj.getId() == 0 && !tile.IsSolid()) {
 			Main.player.imagePosture = 2;
 			Main.player.animationTimer = System.currentTimeMillis();
-			updateBlock(pressBlockI,pressBlockJ,itemToPlace.getIdToPlace());
+			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,itemToPlace.getIdToPlace());
 			
 			//sapling case (grow Tree)
-			if(itemToPlace.getId() == 7) {
+			if(itemToPlace.getIdToPlace() == 16) {
 				RegenerationManager.insertToGrowthList(obj,pressBlockJ*tilesize,pressBlockI*tilesize);
+				Main.tilesManager.updateBlock(pressBlockI-1,pressBlockJ,4);
+
 			}
 			Main.inventory.decreaseItemInHand();
 			
@@ -269,10 +234,10 @@ public class Player extends entity implements KeyListener {
 	//player interaction with camp Fire
 	public void cookFish(int pressBlockI,int pressBlockJ,Item itemInhand) {
 		if(itemInhand.getId() == 4) {
-			updateBlock(pressBlockI,pressBlockJ,5);
+			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,5);
 			Main.inventory.addToItemStack(new Item(5));
 		}else {
-			updateBlock(pressBlockI,pressBlockJ,4);
+			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,4);
 		}
 		Main.inventory.decreaseItemInHand();
 	}
@@ -296,21 +261,7 @@ public class Player extends entity implements KeyListener {
 		
 		}
 	}
-	
-	private void updateBlock(int i, int j, int newType) {
-	    Main.tilesManager.getObjects()[i][j].setType(newType);
-	    ServerClientHandler.sendDataToServer("update_block " + i + " " + j + " " + newType);
-	}
 
-	private void addDrop(int i, int j, int itemId) {
-	    Main.tilesManager.addItemDrop(new Item(itemId), j * tilesize, i * tilesize);
-	    ServerClientHandler.sendDataToServer("add_drop " + i + " " + j + " " + itemId + " " + 1);
-	}
-
-	private void resetInteraction() {
-	    PlayerInteraction.objectToBreakId = 0;
-	    PlayerInteraction.timeOfFirstHitToObject = 0;
-	}
 	
 	//use this to lower the creature health points
 	public void hitCreature(int demage) {

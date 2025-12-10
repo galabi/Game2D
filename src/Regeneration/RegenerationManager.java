@@ -6,7 +6,6 @@ import java.util.Random;
 import Entity.Object;
 import MainPackage.Main;
 import MainPackage.TilesManager;
-import mutiplayer.ServerClientHandler;
 
 public class RegenerationManager {
 	
@@ -57,42 +56,36 @@ public class RegenerationManager {
 	
 	private static void GrowTree(int rootMapI,int rootMapJ,Object[][] objectsMap) {
 		//tree base
-		objectsMap[rootMapI][rootMapJ].setType(14); 
-		objectsMap[rootMapI-1][rootMapJ].setType(2); 
+    	Main.tilesManager.updateBlock(rootMapI, rootMapJ, 14);
+    	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ, 2);
 		
 		//left tree 
 		if(objectsMap[rootMapI][rootMapJ-1].getName().equals("Tree")) {
-			objectsMap[rootMapI][rootMapJ-1].setType(17);
-			objectsMap[rootMapI-1][rootMapJ-1].setType(5);
+        	Main.tilesManager.updateBlock(rootMapI, rootMapJ-1, 17);
+        	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ-1, 5);
+
 		}else {
-			objectsMap[rootMapI][rootMapJ-1].setType(13);
-			objectsMap[rootMapI-1][rootMapJ-1].setType(1);
+        	Main.tilesManager.updateBlock(rootMapI, rootMapJ-1, 13);
+        	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ-1, 1);
 		}
 		
 		//right tree
 		if(objectsMap[rootMapI][rootMapJ+1].getName().equals("Tree")) {
-			objectsMap[rootMapI][rootMapJ+1].setType(17);
-			objectsMap[rootMapI-1][rootMapJ+1].setType(5);
+        	Main.tilesManager.updateBlock(rootMapI, rootMapJ+1, 17);
+        	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ+1, 5);
 		}else {
-			objectsMap[rootMapI][rootMapJ+1].setType(15);
-			objectsMap[rootMapI-1][rootMapJ+1].setType(3);
+        	Main.tilesManager.updateBlock(rootMapI, rootMapJ+1, 15);
+        	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ+1, 3);
 		}
-		
-		ServerClientHandler.sendDataToServer("update_block " + rootMapJ*TilesManager.tileSize + " " + rootMapI*TilesManager.tileSize + " " + objectsMap[rootMapI][rootMapJ].getId());
-		ServerClientHandler.sendDataToServer("update_block " + rootMapJ*TilesManager.tileSize + " " + (rootMapI-1)*TilesManager.tileSize + " " + objectsMap[rootMapI-1][rootMapJ].getId());
-		ServerClientHandler.sendDataToServer("update_block " + (rootMapJ+1)*TilesManager.tileSize + " " + rootMapI*TilesManager.tileSize + " " + objectsMap[rootMapI][rootMapJ+1].getId());
-		ServerClientHandler.sendDataToServer("update_block " + (rootMapJ+1)*TilesManager.tileSize + " " + (rootMapI-1)*TilesManager.tileSize + " " + objectsMap[rootMapI-1][rootMapJ+1].getId());
-		ServerClientHandler.sendDataToServer("update_block " + (rootMapJ-1)*TilesManager.tileSize + " " + rootMapI*TilesManager.tileSize + " " + objectsMap[rootMapI][rootMapJ-1].getId());
-		ServerClientHandler.sendDataToServer("update_block " + (rootMapJ-1)*TilesManager.tileSize + " " + (rootMapI-1)*TilesManager.tileSize + " " + objectsMap[rootMapI-1][rootMapJ-1].getId());
 		
 	}
 	
 	private static void GrowRock(int rockMapI,int rockMapJ,Object[][] objectsMap) {
-		objectsMap[rockMapI][rockMapJ].setType(objectsMap[rockMapI][rockMapJ].getId()-1);
+    	Main.tilesManager.updateBlock(rockMapI, rockMapJ, objectsMap[rockMapI][rockMapJ].getId()-1);
+    	
 		if(objectsMap[rockMapI][rockMapJ].getName().equals("Rock Max") == false) {
 			insertToGrowthList(objectsMap[rockMapI][rockMapJ],rockMapJ*TilesManager.tileSize,rockMapI*TilesManager.tileSize);
 		}
-		ServerClientHandler.sendDataToServer("update_block " + rockMapJ*TilesManager.tileSize + " " + rockMapI*TilesManager.tileSize + " " + objectsMap[rockMapI][rockMapJ].getId());
-	}
 	
+	}
 }

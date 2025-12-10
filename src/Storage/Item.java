@@ -75,14 +75,14 @@ public class Item {
 			stackable = false;
 			strength = 1;
 			placeable = true;
-			idToPlace = 5;
+			idToPlace = 19;
 			break;
 		case 7:
 			name = "Tree sapling";
 			stackable = true;
 			strength = 1;
 			placeable = true;
-			idToPlace = 2;
+			idToPlace = 16;
 			break;
 		case 8:
 			name = "Stick";

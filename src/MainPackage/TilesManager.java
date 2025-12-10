@@ -358,6 +358,17 @@ public class TilesManager {
 		this.mapIsReady = mapIsReady;
 	}
 	
+	public void updateBlock(int mapI,int mapJ, int newId) {
+	    objects[mapI][mapJ].setType(newId);
+	    ServerClientHandler.sendDataToServer("update_block " + mapI + " " + mapJ + " " + newId);
+	    }
+	
+	public void addDrop(int mapI, int mapJ, int itemId) {
+	    Main.tilesManager.addItemDrop(new Item(itemId), mapJ * tileSize, mapI * tileSize);
+	    ServerClientHandler.sendDataToServer("add_drop " + mapI + " " + mapI + " " + itemId + " " + 1);
+	}
+
+	
 	@Override
 		public String toString() {
 		String map = "";
