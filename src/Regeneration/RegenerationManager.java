@@ -13,7 +13,6 @@ public class RegenerationManager {
 	static ArrayList<RegenerationBlock> regenerationList = new ArrayList<>();
 	
 	public static void tick() {
-		
 		if(regenerationList.isEmpty()) return;
 			
 		RegenerationBlock temp = regenerationList.get(0);

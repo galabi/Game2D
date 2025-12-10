@@ -8,21 +8,24 @@ public class CreatureManager {
 	
 	private static int tickMovingDelay = 0;
 	
+	final static int CreatureSize = 64;
+	
+	
 	static ArrayList<Creature> creatureList = new ArrayList<Creature>();
 	
 	public static void CreateCreature(int x,int y, String type) {
 		switch (type) {
 		case "slime": 
-			creatureList.add(new Slime(x, y, 32, 32));
+			creatureList.add(new Slime(x, y, CreatureSize, CreatureSize));
 			break;
 		case "cow": 
-			creatureList.add(new Cow(x, y, 32, 32));
+			creatureList.add(new Cow(x, y, CreatureSize, CreatureSize));
 			break;
 		case "sheep": 
-			creatureList.add(new Sheep(x, y, 32, 32));
+			creatureList.add(new Sheep(x, y, CreatureSize, CreatureSize));
 			break;
 		case "chicken": 
-			creatureList.add(new Chicken(x, y, 32, 32));
+			creatureList.add(new Chicken(x, y, CreatureSize, CreatureSize));
 			break;
 		default:
 			return;

@@ -90,7 +90,6 @@ public class TilesManager {
 		        	continue;
 		        }else {
 			        objects[i][j].render(g2d);
-		            objects[i][j].drawFront(g2d);
 		        }
 		    }
 			
@@ -125,9 +124,6 @@ public class TilesManager {
 			Main.player.render(g2d);
 			Main.player2.render(g2d);
 			
-		  	objects[i][j].drawFront(g2d);
-		    objects[i][j+1].drawFront(g2d);
-		    objects[i][j+2].drawFront(g2d);
 			return 2;
 		}else {
 			objects[i][j].render(g2d);
@@ -144,9 +140,6 @@ public class TilesManager {
 			}
 		}
 		
-	    // Draw the front layers of both objects to appear in front of the player
-	  	objects[i][j].drawFront(g2d);
-	    objects[i][j+1].drawFront(g2d);
 
 		return 1;
 	}
@@ -218,7 +211,7 @@ public class TilesManager {
 			for(int i=0;i<maxScreenCol;i++) {
 				for(int j=0;j<maxScreenRow;j++) {
 					objects[i][j] = new Object(s.nextInt() ,j*tileSize, i*tileSize, tileSize);
-					if(((Tile) objects[i][j]).getId() == 2 || (((Tile) objects[i][j]).getId() >= 30 && ((Tile) objects[i][j]).getId() < 34)) {
+					if(objects[i][j].getName().equals("Tree sapling") || objects[i][j].getName().equals("Rock")) {
 						RegenerationManager.insertToGrowthList(objects[i][j],j*tileSize,i*tileSize);
 					}
 				}

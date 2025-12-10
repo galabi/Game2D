@@ -4,17 +4,17 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import MainPackage.TilesManager;
 
 public class GameTextures {
-	private static ImageIcon[] itemIcons,tileIcons,objectIcons,frontObjectIcon;
+	private static ImageIcon[] itemIcons,tileIcons,objectIcons;
+	
+	static final int TileSize = 32;
 	
 	static{
-		int itemIconSize = 11,tileIconSize = 61,objectIconSize = 34;
+		int itemIconSize = 11,tileIconSize = 85,objectIconSize = 74;
 		itemIcons = new ImageIcon[itemIconSize];
 		tileIcons = new ImageIcon[tileIconSize];
 		objectIcons = new ImageIcon[objectIconSize];
-		frontObjectIcon = new ImageIcon[objectIconSize];
 		
 		/*
     	itemIcons[0] = clear;
@@ -33,16 +33,14 @@ public class GameTextures {
 		try {
 			
 			// loading items.png
-	        loadSheet(itemIcons, "/items.png", 3, 4, itemIconSize);
+	        loadSheet(itemIcons, "/items.png", 3, 4, itemIconSize,64);
 
 	        // loading tiles.png
-	        loadSheet(tileIcons, "/tiles.png", 8, 8, tileIconSize);
+	        loadSheet(tileIcons, "/tiles.png", 11, 8, tileIconSize,TileSize);
 
 	        // loading objects.png
-	        loadSheet(objectIcons, "/objects.png", 6, 6, objectIconSize);
+	        loadSheet(objectIcons, "/objects.png", 7, 12, objectIconSize,TileSize);
 
-	        // loading objectsFront.png
-	        loadSheet(frontObjectIcon, "/objectsFront.png", 6, 6, objectIconSize);
 			
 			
 		} catch (Exception e) {
@@ -50,12 +48,12 @@ public class GameTextures {
 		}
 	}
 	
-	private static void loadSheet(ImageIcon[] targetArray, String path, int rows, int cols, int maxIcons) {
+	private static void loadSheet(ImageIcon[] targetArray, String path, int rows, int cols, int maxIcons,int TileSize) {
         try {
         	BufferedImage temp = ImageIO.read(GameTextures.class.getResourceAsStream(path));
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols && (i * cols + j) < maxIcons; j++) {
-                    targetArray[i * cols + j] = new ImageIcon(temp.getSubimage(j * TilesManager.tileSize, i * TilesManager.tileSize, TilesManager.tileSize, TilesManager.tileSize));
+                    targetArray[i * cols + j] = new ImageIcon(temp.getSubimage(j * TileSize, i * TileSize, TileSize, TileSize));
                 }
             }
         } catch (Exception e) {
@@ -78,9 +76,6 @@ public class GameTextures {
 		return objectIcons[id];
 	}
 	
-	public static ImageIcon getFrontObjectIcon(int id) {
-		return frontObjectIcon[id];
-	}
 	
 	public static void preloadImages(Graphics2D g2d) {
 	    for (ImageIcon icon : itemIcons) {
@@ -94,11 +89,6 @@ public class GameTextures {
 	        }
 	    }
 		for (ImageIcon icon : objectIcons) {
-	        if (icon != null) {
-	           g2d.drawImage(icon.getImage(), -1000, -1000, null);
-	        }
-	    }
-		for (ImageIcon icon : frontObjectIcon) {
 	        if (icon != null) {
 	           g2d.drawImage(icon.getImage(), -1000, -1000, null);
 	        }

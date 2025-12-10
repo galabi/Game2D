@@ -71,14 +71,14 @@ public class Item {
 			idToPlace = 0;
 			break;
 		case 6:
-			name = "Fire pit";
+			name = "Campfire";
 			stackable = false;
 			strength = 1;
 			placeable = true;
 			idToPlace = 5;
 			break;
 		case 7:
-			name = "Tree seed";
+			name = "Tree sapling";
 			stackable = true;
 			strength = 1;
 			placeable = true;

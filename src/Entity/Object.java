@@ -1,36 +1,25 @@
 package Entity;
 
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import javax.swing.ImageIcon;
-import MainPackage.Main;
 
 public class Object extends Tile{
-	ImageIcon frontImg;
 	boolean gate, breakable;
 	ArrayList<Integer> itemWhenBroken;
+	String objectName = "";
 	
 	public Object(int id, int x, int y, int size) {
 		super(id, x, y, size);
-	}
-	
-	public void drawFront(Graphics2D g2d) {
-		int screenX = Main.tilesManager.getCameraX(false),screenY = Main.tilesManager.getCameraY(false);
-		try {
-			g2d.drawImage(frontImg.getImage(), x-screenX,y-screenY, sizeX,sizeY,null);
-		} catch (Exception e) {
-			System.out.println(x/sizeX +" "+y/sizeY+" "+id);
-		}
+		setType(id);
 	}
 	
 	
 	public void setType(int id) {
 		this.id  = id;
 		image = GameTextures.getObjectIcon(id);
-		frontImg = GameTextures.getFrontObjectIcon(id);
 		solidInTile.clear();
 		gate = false;
+		water = false;
 		breakable = false;
 		itemWhenBroken = new ArrayList<Integer>();
 		itemWhenBroken.clear();
@@ -38,189 +27,389 @@ public class Object extends Tile{
 		switch (id) {
 		case 0: 
 			solid = false;
-			water = false;
 			break;
 		case 1: 
-			solid = true;
-			water = false;
-			breakable = true;
-			itemWhenBroken.add(1);
-			itemWhenBroken.add(7);
-			solidInTile.add(new Rectangle(26 ,40 ,14 ,22));
+			objectName = "Tree";
+			solid = false;
 			break;
 		case 2: 
+			objectName = "Tree";
 			water = false;
-			solid = false;
-			itemWhenBroken.add(7);
-			breakable = true;
 			break;
 		case 3:
-			water = false;
-			solid = true;
-			solidInTile.add(new Rectangle(20 ,60 ,21 ,4));
+			objectName = "Tree";
+			solid = false;
 			break;
 		case 4:
-			water = false;
-			solid = true;
-			breakable = true;
-			itemWhenBroken.add(6);
-			solidInTile.add(new Rectangle(20 ,20 ,27 ,27));
+			objectName = "Tree sapling head";
+			solid = false;
 			break;
 		case 5:
-			water = false;
-			solid = true;
-			breakable = true;
-			itemWhenBroken.add(6);
-			solidInTile.add(new Rectangle(20 ,20 ,27 ,27));
+			objectName = "Tree";
+			solid = false;
 			break;
 		case 6:
-			water = false;
+			objectName = "Street lamp";
 			solid = false;
 			break;
 		case 7:
-			water = false;
-			solid = false;
+			objectName = "Campfire";
+			solid = true;
+			breakable = true;
+			solidInTile.add(new Rectangle(6 ,6 ,48 ,48));
+			itemWhenBroken.add(6);
 			break;
 		case 8:
-			water = false;
-			solid = false;
+			objectName = "Well";
+			solid = true;
+			solidInTile.add(new Rectangle(10 ,46 ,46 ,20));
 			break;
 		case 9:
-			water = false;
-			solid = false;
+			objectName = "Up ladder";
+			solid = true;
+			gate = true;
+			solidInTile.add(new Rectangle(0 ,60 ,64 ,4));
 			break;
 		case 10:
-			water = false;
-			solid = false;
+			objectName = "Down ladder";
+			solid = true;
+			gate = true;
+			solidInTile.add(new Rectangle(0 ,24 ,40 ,40));
 			break;
 		case 11:
-			water = false;
-			solid = false;
+			objectName = "Down ladder";
+			solid = true;
+			gate = true;
+			solidInTile.add(new Rectangle(24 ,24 ,40 ,40));
 			break;
 		case 12:
-			water = false;
+			objectName = "Garbage container";
 			solid = true;
-			solidInTile.add(new Rectangle(16 ,0 ,49 ,64));
+			gate = true;
+			solidInTile.add(new Rectangle(0 ,23 ,40 ,40));
 			break;
 		case 13:
-			water = false;
-			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
+			objectName = "Tree";
+			solid = false;
 			break;
 		case 14:
-			water = false;
+			objectName = "Tree";
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,49 ,64));
+			itemWhenBroken.add(1);
+			itemWhenBroken.add(7);
+			breakable = true;
+			solidInTile.add(new Rectangle(16 ,20 ,40 ,42));
 			break;
 		case 15:
-			water = false;
-			solid = true;
-			solidInTile.add(new Rectangle(16 ,0 ,49 ,64));
+			objectName = "Tree";
+			solid = false;
 			break;
 		case 16:
-			water = false;
+			objectName = "Tree sapling";
+			solid = false;
+			breakable = true;
+			itemWhenBroken.add(7);
+			break;
+		case 17:
+			objectName = "Tree";
+			solid = false;
+			break;
+		case 18:
+			objectName = "Street lamp";
+			solid = true;
+			solidInTile.add(new Rectangle(16 ,52 ,36 ,12));
+			break;
+		case 19:
+			objectName = "Campfire";
+			solid = true;
+			breakable = true;
+			solidInTile.add(new Rectangle(6 ,6 ,58 ,58));
+			itemWhenBroken.add(6);
+			break;
+		case 20:
+			objectName = "Well";
+			solid = true;
+			solidInTile.add(new Rectangle(10 ,0 ,46 ,30));
+			break;
+		case 21:
+			objectName = "Up ladder";
+			solid = true;
+			gate = true;
+			solidInTile.add(new Rectangle(12 ,0 ,44 ,56));
+			break;
+		case 22:
+			objectName = "Down ladder";
+			solid = true;
+			gate = true;
+			solidInTile.add(new Rectangle(26 ,0 ,40 ,40));
+			break;
+		case 23:
+			objectName = "Down ladder";
+			solid = true;
+			gate = true;
+			solidInTile.add(new Rectangle(0 ,0 ,40 ,40));
+			break;
+		case 24:
+			objectName = "House 1";
+			solid = false;
+			break;
+		case 25:
+			objectName = "House 1";
+			solid = false;
+			break;
+		case 26:
+			objectName = "House 1";
+			solid = false;
+			break;
+		case 27:
+			objectName = "House 1";
+			solid = false;
+			break;
+		case 28:
+			objectName = "House 1";
+			solid = false;
+			break;
+		case 29:
+			objectName = "House 1";
+			solid = false;
+			break;
+		case 30:
+			objectName = "House 2";
+			solid = false;
+			break;
+		case 31:
+			objectName = "House 2";
+			solid = false;
+			break;
+		case 32:
+			objectName = "House 2";
+			solid = false;
+			break;
+		case 33:
+			objectName = "House 2";
+			solid = false;
+			break;
+		case 34:
+			objectName = "House 2";
+			solid = false;
+			break;
+		case 35:
+			objectName = "House 2";
+			solid = false;
+			break;
+		case 36:
+			objectName = "House 1";
+			solid = true;
+			solidInTile.add(new Rectangle(22 ,16 ,42 ,48));
+			solidInTile.add(new Rectangle(38 ,0 ,26 ,16));
+			break;
+		case 37:
+			objectName = "House 1";
 			solid = true;
 			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
 			break;
-		case 17:
-			water = false;
+		case 38:
+			objectName = "House 1";
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,49 ,64));
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
 			break;
-		case 18:
-			water = false;
+		case 39:
+			objectName = "House 1";
 			solid = true;
-			solidInTile.add(new Rectangle(16 ,0 ,49 ,34));
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
 			break;
-		case 19:
-			water = false;
+		case 40:
+			objectName = "House 1";
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,64 ,34));
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
 			break;
-		case 20:
-			water = false;
+		case 41:
+			objectName = "House 1";
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,49 ,34));
+			solidInTile.add(new Rectangle(0 ,0 ,126 ,18));
+			solidInTile.add(new Rectangle(0 ,0 ,42 ,48));
 			break;
-		case 21:
-			water = false;
+		case 42:
+			objectName = "House 2";
 			solid = true;
-			solidInTile.add(new Rectangle(16 ,0 ,49 ,34));
+			solidInTile.add(new Rectangle(22 ,16 ,42 ,48));
+			solidInTile.add(new Rectangle(38 ,0 ,26 ,16));
 			break;
-		case 22:
-			water = false;
+		case 43:
+			objectName = "House 2";
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,64 ,34));
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
 			break;
-		case 23:
-			water = false;
+		case 44:
+			objectName = "House 2";
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,49 ,34));
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
 			break;
-		case 24:
-			water = false;
+		case 45:
+			objectName = "House 2";
 			solid = true;
-			solidInTile.add(new Rectangle(26 ,42 ,13 ,10));
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
 			break;
-		case 25:
-			water = true;
+		case 46:
+			objectName = "House 2";
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,64 ,6));
-			solidInTile.add(new Rectangle(23 ,49 ,42 ,15));
-			solidInTile.add(new Rectangle(10 ,48 ,18 ,12));
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
 			break;
-		case 26:
-			water = true;
+		case 47:
+			objectName = "House 2";
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,64 ,6));
-			solidInTile.add(new Rectangle(0 ,49 ,64 ,15));
+			solidInTile.add(new Rectangle(0 ,0 ,26 ,18));
+			solidInTile.add(new Rectangle(0 ,0 ,42 ,48));
 			break;
-		case 27:
-			water = true;
+		case 48:
+			objectName = "House 1";
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,64 ,6));
-			solidInTile.add(new Rectangle(0 ,49 ,42 ,15));
-			solidInTile.add(new Rectangle(43 ,48 ,15 ,12));
+			solidInTile.add(new Rectangle(30 ,0 ,34 ,64));
 			break;
-		case 28:
-			water = false;
+		case 49:
+			objectName = "House 1";
 			solid = true;
-			gate = true;
-			solidInTile.add(new Rectangle(20 ,20 ,27 ,27));
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
 			break;
-		case 29:
-			water = false;
+		case 50:
+			objectName = "House 1";
 			solid = true;
-			gate = true;
-			solidInTile.add(new Rectangle(26 ,52 ,14 ,12));
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
 			break;
-		case 30:
-			water = false;
+		case 51:
+			objectName = "House 1";
 			solid = true;
-			solidInTile.add(new Rectangle(24 ,24 ,17 ,15));
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
 			break;
-		case 31:
-			water = false;
+		case 52:
+			objectName = "House 1";
 			solid = true;
-			solidInTile.add(new Rectangle(21 ,2 ,20 ,25));
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
+			break;
+		case 53:
+			objectName = "House 1";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,34 ,64));
+			break;
+		case 54:
+			objectName = "House 2";
+			solid = true;
+			solidInTile.add(new Rectangle(32 ,0 ,34 ,64));
+			break;
+		case 55:
+			objectName = "House 2";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
+			break;
+		case 56:
+			objectName = "House 2";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
+			break;
+		case 57:
+			objectName = "House 2";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
+			break;
+		case 58:
+			objectName = "House 2";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
+			break;
+		case 59:
+			objectName = "House 2";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,34 ,64));
+			break;
+		case 60:
+			objectName = "House 1";
+			solid = true;
+			solidInTile.add(new Rectangle(30 ,0 ,34 ,50));
+			break;
+		case 61:
+			objectName = "House 1";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,50));
+			solidInTile.add(new Rectangle(42 ,50 ,18 ,10));
+			break;
+		case 62:
+			objectName = "House 1";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,50));
+			solidInTile.add(new Rectangle(0 ,50 ,20 ,10));
+			break;
+		case 63:
+			objectName = "House 1";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,50));
+			break;
+		case 64:
+			objectName = "House 1";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,50));
+			break;
+		case 65:
+			objectName = "House 1";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,34 ,50));
+			break;
+		case 66:
+			objectName = "House 2";
+			solid = true;
+			solidInTile.add(new Rectangle(32 ,0 ,34 ,50));
+			break;
+		case 67:
+			objectName = "House 2";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,50));
+			solidInTile.add(new Rectangle(62 ,50 ,4 ,10));
+			break;
+		case 68:
+			objectName = "House 2";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,50));
+			solidInTile.add(new Rectangle(0 ,50 ,6 ,10));
+			break;
+		case 69:
+			objectName = "House 2";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,50));
+			break;
+		case 70:
+			objectName = "House 2";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,50));
+			break;
+		case 71:
+			objectName = "House 2";
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,34 ,50));
+			break;
+		case 72:
+			objectName = "Rock Max";
+			solid = true;
+			breakable = true;
+			solidInTile.add(new Rectangle(16 ,20 ,36 ,30));
 			itemWhenBroken.add(9);
-			breakable = true;
 			break;
-		case 32:
-			water = false;
+		case 73:
+			objectName = "Rock";
 			solid = true;
-			solidInTile.add(new Rectangle(21 ,1 ,20 ,25));
 			breakable = true;
+			solidInTile.add(new Rectangle(16 ,20 ,36 ,30));
 			itemWhenBroken.add(9);
 			break;
-		case 33:
-			water = false;
+		case 74:
+			objectName = "Rock";
 			solid = true;
-			solidInTile.add(new Rectangle(18 ,1 ,38 ,41));
 			breakable = true;
+			solidInTile.add(new Rectangle(16 ,20 ,36 ,30));
 			itemWhenBroken.add(9);
 			break;
 		}
+		
+
+		
 	}
 	public boolean isBreakable(){
 		return breakable;
@@ -234,4 +423,7 @@ public class Object extends Tile{
 	return gate;	
 	}
 	
+	public String getName() {
+		return objectName;
+	}
 }

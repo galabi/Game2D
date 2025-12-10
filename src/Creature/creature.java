@@ -37,7 +37,7 @@ public class Creature extends entity{
 	@Override
 	public void render(Graphics2D g2d) {
 		g2d.setColor(SadowColor);
-		g2d.fillOval(x - Main.tilesManager.getCameraX(false)+(sizeX-23)/2, y - Main.tilesManager.getCameraY(false)+sizeY-7, 25,15);
+		g2d.fillOval(x - Main.tilesManager.getCameraX(false) + (sizeX - 44) / 2, y - Main.tilesManager.getCameraY(false) + sizeY - 10, 44, 20);
 		g2d.drawImage(image[creatureDirection].getImage(), x - Main.tilesManager.getCameraX(false) ,
 				y - Main.tilesManager.getCameraY(false), sizeX, sizeY,null);
 		
