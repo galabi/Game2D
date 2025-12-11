@@ -16,7 +16,6 @@ import Regeneration.RegenerationManager;
 import Entity.Object;
 import Storage.Item;
 import mutiplayer.ServerClientHandler;
-import playerPackage.Player;
 
 public class TilesManager {
 	
@@ -31,7 +30,9 @@ public class TilesManager {
 	private Scanner s;
 	private Formatter x;
 	ArrayList<ItemOnFloor> drops;
+	private ArrayList<Entity.entity> renderList = new ArrayList<>();
 	boolean mapIsReady = false;
+	
 	
 	String map = "";
 	
@@ -63,9 +64,11 @@ public class TilesManager {
 	public void renderTile(Graphics2D g2d) {
 		int endRow = (cameraX/tileSize+borderX);
 		int endCol = (cameraY/tileSize+borderY);
+		int startCol = (int)(cameraY / tileSize);
+		int startRow = (int)(cameraX / tileSize);
 		g2d.setStroke(new BasicStroke(2));
-		for(int i = (int)(cameraY/tileSize);i<endCol && i<maxScreenCol;i++) {
-			for(int j = (int)(cameraX/tileSize);j<endRow  && j<maxScreenRow;j++) {
+		for(int i = startCol;i<endCol && i<maxScreenCol;i++) {
+			for(int j = startRow;j<endRow  && j<maxScreenRow;j++) {
 		        if (i < 0 || j < 0) continue;
 				tiles[i][j].render(g2d);
 			}
@@ -74,76 +77,74 @@ public class TilesManager {
 	
 	
 	
-	public void renderObjects(Graphics2D g2d) {
-		int endRow = (cameraX/tileSize+borderX);
-		int endCol = (cameraY/tileSize+borderY);
-		
-		for(int i = (int)(cameraY/tileSize);i<endCol && i<maxScreenCol;i++) {
-			for(int j = (int)(cameraX/tileSize);j<endRow  && j<maxScreenRow;j++) {
-		        if (i < 0 || j < 0) continue;
-		        
-		        if (Main.player != null && Main.player.playerI == i && Main.player.playerJ == j) {
-		        	j += renderPlayerAndSurroundingObjects(g2d,Main.player,i,j);
-		        	continue;
-		        } if (Main.player2 != null && Main.player2.playerI == i && Main.player2.playerJ == j) {
-		        	j += renderPlayerAndSurroundingObjects(g2d,Main.player2,i,j);
-		        	continue;
-		        }else {
-			        objects[i][j].render(g2d);
-		        }
-		    }
+		public void renderObjects(Graphics2D g2d) {
+			renderList.clear(); // Clear the list for the new frame
+
+			int startCol = (int)(cameraY / tileSize);
+			int endCol = (int)(cameraY / tileSize + borderY);
+			int startRow = (int)(cameraX / tileSize);
+			int endRow = (int)(cameraX / tileSize + borderX);
+
+			for (int i = startCol; i < endCol && i < maxScreenCol; i++) {
+				for (int j = startRow; j < endRow && j < maxScreenRow; j++) {
+					if (i < 0 || j < 0) continue;
+					
+					// Only add objects that exist (ID != 0)
+					if (objects[i][j].getId() != 0) {
+						renderList.add(objects[i][j]);
+					}
+				}
+			}
+
+			//Add Players to the list
+			if (Main.player != null) renderList.add(Main.player);
+			if (Main.player2 != null) renderList.add(Main.player2);
+			 renderList.addAll(Creature.CreatureManager.getCreatures()); 
+
+			// Sort the list based on Y depth
+			renderList.sort((e1, e2) -> {
+				int y1 = getSortY(e1);
+				int y2 = getSortY(e2);
+				return Integer.compare(y1, y2);
+			});
+
+			//Render everything in order
+			for (Entity.entity e : renderList) {
+				e.render(g2d);
+			}
 			
-		}
-		if(!Main.inventory.IsOpen() && Main.gameState == 2) {
-			g2d.setColor(Color.black);
-			g2d.setStroke(new BasicStroke(2));
-			g2d.drawRect(((cameraX + Main.mouseManeger.getMouseX())/tileSize)*tileSize - cameraX, 
-					((cameraY + Main.mouseManeger.getMouseY())/tileSize)*tileSize - cameraY,
-					tileSize, tileSize);
-		}
-	}
-	
-	
-	// Renders the player and nearby objects at position [i][j],
-	// ensuring correct drawing order to avoid graphical overlap between players and tiles.
-	private int renderPlayerAndSurroundingObjects(Graphics2D g2d, Player p,int i,int j) {
-		int playersDistance = isPlayersClose();
-	    // If the two players are not close (not 1 tile apart horizontally)
-		if(playersDistance > 1) {
-	        // Render the background tiles before the player
-			objects[i][j].render(g2d);
-			objects[i][j+1].render(g2d);
-	        // Render the player on top
-			p.render(g2d);
-			
-		}else if(playersDistance == 1){
-			objects[i][j].render(g2d);
-			objects[i][j+1].render(g2d);
-			objects[i][j+2].render(g2d);
-			
-			Main.player.render(g2d);
-			Main.player2.render(g2d);
-			
-			return 2;
-		}else {
-			objects[i][j].render(g2d);
-			objects[i][j+1].render(g2d);
-				
-			// Determine render order based on Y-position (vertical)
-            // The one with greater Y is farther back, so should be rendered first
-			if(Main.player2 != null && Main.player2.getY()>Main.player.getY()) {
-				if(Main.player2 != null)Main.player.render(g2d);
-				if(Main.player != null)Main.player2.render(g2d);
-			}else {
-				if(Main.player2 != null)Main.player2.render(g2d);
-				if(Main.player != null)Main.player.render(g2d);
+			// Draw mouse cursor selection box
+			if(!Main.inventory.IsOpen() && Main.gameState == 2) {
+				g2d.setColor(Color.black);
+				g2d.setStroke(new BasicStroke(2));
+				g2d.drawRect(((cameraX + Main.mouseManeger.getMouseX())/tileSize)*tileSize - cameraX, 
+						((cameraY + Main.mouseManeger.getMouseY())/tileSize)*tileSize - cameraY,
+						tileSize, tileSize);
 			}
 		}
-		
 
-		return 1;
-	}
-	
+		
+		// Helper function to calculate the sorting Y position.
+		//It handles the "Depth" logic.
+		private int getSortY(Entity.entity e) {
+	    	// Default sort Y is the bottom of the sprite (the feet)
+	    	 int sortY = e.getY() + e.getSizeY();
+
+	    	 // Special handling for multi-tile objects (like Trees)
+	    	 if (e instanceof Entity.Object) {
+				Entity.Object obj = (Entity.Object) e;
+				int id = obj.getId();
+
+				// If this object is a "Top" part of a tree (Leaves)
+	            // we treat its depth as if it were one tile lower (at the Trunk level)
+				if (id == 1 || id == 2 || id == 3 || id == 5) {
+					sortY += tileSize;
+				}
+				
+			}
+			
+			return sortY;
+		}
 	
 	public int isPlayersClose() {
 		if(Main.player2 == null || ( Main.player2 != null && Main.player2.playerI != Main.player.playerI)) {

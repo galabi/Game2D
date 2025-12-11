@@ -71,6 +71,7 @@ public class RegenerationManager {
 		
 		//right tree
 		if(objectsMap[rootMapI][rootMapJ+1].getName().equals("Tree")) {
+			System.out.println("sss");
         	Main.tilesManager.updateBlock(rootMapI, rootMapJ+1, 17);
         	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ+1, 5);
 		}else {

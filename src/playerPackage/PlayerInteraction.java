@@ -68,8 +68,8 @@ public class PlayerInteraction {
 		Object obj = Main.tilesManager.getObjects()[pressBlockI][pressBlockJ];
 		Tile tile = Main.tilesManager.getTiles()[pressBlockI][pressBlockJ];
 		
-		boolean isCookFish = (obj.getId() == 4 && itemInHand.getId() == 4) ||
-				(obj.getId() == 5 && itemInHand.getId() == 1);
+		boolean isCookFish = (obj.getName().equals("Campfire on") && itemInHand.getName().equals("Fish")) ||
+				(obj.getName().equals("Campfire") && itemInHand.getName().equals("Wood"));
 		
 		//place block
 		if(itemInHand.IsPlaceable()) {

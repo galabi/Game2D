@@ -114,66 +114,66 @@ public class Tile extends entity{
 		case 18:
 			water = true;
 			solid = true;
-			solidInTile.add(new Rectangle(20 ,20 ,44 ,44));
+			solidInTile.add(new Rectangle(42 ,42 ,24 ,24));
 			break;
 		case 19:
 			water = true;
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,20 ,64 ,44));
+			solidInTile.add(new Rectangle(0 ,42 ,64 ,24));
 			break;
 		case 20:
 			water = true;
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,20 ,44 ,44));
+			solidInTile.add(new Rectangle(0 ,42 ,24 ,24));
 			break;
 		case 21:
 			water = true;
 			solid = true;
-			solidInTile.add(new Rectangle(20 ,0 ,44 ,64));
+			solidInTile.add(new Rectangle(42 ,0 ,24 ,64));
 			break;
 		case 22:
 			water = true;
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,44 ,64));
+			solidInTile.add(new Rectangle(0 ,0 ,24 ,64));
 			break;
 		case 23:
 			water = true;
 			solid = true;
-			solidInTile.add(new Rectangle(20 ,0 ,44 ,44));
+			solidInTile.add(new Rectangle(42 ,0 ,24 ,24));
 			break;
 		case 24:
 			water = true;
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,64 ,44));
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,24));
 			break;
 		case 25:
 			water = true;
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,44 ,44));
+			solidInTile.add(new Rectangle(0 ,0 ,24 ,24));
 			break;
 		case 26:
 			water = true;
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,64 ,44));
-			solidInTile.add(new Rectangle(0 ,0 ,44 ,64));
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,24));
+			solidInTile.add(new Rectangle(0 ,0 ,24 ,64));
 			break;
 		case 27:
 			water = true;
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,64 ,44));
-			solidInTile.add(new Rectangle(20 ,0 ,44 ,64));
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,24));
+			solidInTile.add(new Rectangle(42 ,0 ,24 ,64));
 			break;
 		case 28:
 			water = true;
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,44 ,64));
-			solidInTile.add(new Rectangle(0 ,20 ,64 ,44));
+			solidInTile.add(new Rectangle(0 ,0 ,24 ,64));
+			solidInTile.add(new Rectangle(0 ,42 ,64 ,24));
 			break;
 		case 29:
 			water = true;
 			solid = true;
-			solidInTile.add(new Rectangle(20 ,0 ,44 ,64));
-			solidInTile.add(new Rectangle(0 ,20 ,64 ,44));
+			solidInTile.add(new Rectangle(42 ,0 ,24 ,64));
+			solidInTile.add(new Rectangle(0 ,42 ,64 ,24));
 			break;
 		case 30:
 			water = false;
@@ -181,109 +181,102 @@ public class Tile extends entity{
 			break;
 		case 31:
 			water = false;
-			solid = false;
-			
+			solid = false;			
 			break;
 		case 32:
 			water = false;
-			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,30 ,64));
-			solidInTile.add(new Rectangle(0 ,0 ,64 ,56));
+			solid = false;	
 			break;
 		case 33:
 			water = false;
-			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,64 ,56));
+			solid = false;	
 			break;
 		case 34:
 			water = false;
-			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,64 ,56));
-			solidInTile.add(new Rectangle(34 ,0 ,30 ,64));
+			solid = false;	
 			break;
 		case 35:
 			water = false;
-			solid = true;
-			solidInTile.add(new Rectangle(0 ,47 ,30 ,17));
+			solid = false;	
 			break;
 		case 36:
 			water = false;
-			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,30 ,64));
+			solid = false;	
 			break;
 		case 37:
 			water = false;
-			solid = false;
+			solid = false;	
 			break;
 		case 38:
 			water = false;
-			solid = true;
-			solidInTile.add(new Rectangle(34 ,0 ,30 ,64));
+			solid = false;	
 			break;
 		case 39:
 			water = false;
-			solid = true;
-			solidInTile.add(new Rectangle(34 ,47 ,30 ,17));
+			solid = false;	
 			break;
 		case 40:
 			water = false;
-			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,30 ,64));
-			solidInTile.add(new Rectangle(0 ,46 ,64 ,18));
+			solid = false;	
 			break;
 		case 41:
 			water = false;
-			solid = true;
-			solidInTile.add(new Rectangle(0 ,46 ,64 ,18));
+			solid = false;	
 			break;
 		case 42:
-			water = false;
+			water = true;
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,46 ,64 ,18));
-			solidInTile.add(new Rectangle(34 ,0 ,30 ,64));
+			solidInTile.add(new Rectangle(36 ,0 ,30 ,26));
 			break;
 		case 43:
-			water = false;
+			water = true;
 			solid = true;
-			solidInTile.add(new Rectangle(36 ,0 ,30 ,56));
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,26));
 			break;
 		case 44:
-			water = false;
+			water = true;
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,30 ,56));
+			solidInTile.add(new Rectangle(0 ,0 ,30 ,26));
 			break;
 		case 45:
+			water = true;
+			solid = true;
+			solidInTile.add(new Rectangle(40 ,34 ,26 ,32));
+			break;
+		case 46:
+			water = true;
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,34 ,64 ,32));
+			break;
+		case 47:
+			water = true;
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,34 ,26 ,32));
+			break;
+		case 48:
 			water = false;
 			solid = true;
 			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
 			break;
-		case 46:
-			water = false;
-			solid = false;
-			break;
-		case 47:
-			water = false;
-			solid = false;
-			break;
-		case 48:
-			water = false;
-			solid = false;
-			break;
 		case 49:
 			water = false;
-			solid = false;
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
 			break;
 		case 50:
 			water = false;
-			solid = false;
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
 			break;
 		case 51:
 			water = false;
-			solid = false;
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,30 ,58 ,36));
 			break;
 		case 52:
 			water = false;
-			solid = false;
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,58 ,64));
 			break;
 		case 53:
 			water = false;
@@ -291,41 +284,70 @@ public class Tile extends entity{
 			break;
 		case 54:
 			water = false;
-			solid = false;
+			solid = true;
+			solidInTile.add(new Rectangle(6 ,0 ,58 ,64));
 			break;
 		case 55:
 			water = false;
-			solid = false;
+			solid = true;
+			solidInTile.add(new Rectangle(6 ,30 ,58 ,36));
 			break;
 		case 56:
 			water = false;
-			solid = false;
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,58 ,64));
 			break;
 		case 57:
 			water = false;
 			solid = false;
 			break;
 		case 58:
-			water = true;
+			water = false;
 			solid = true;
-			solidInTile.add(new Rectangle(23 ,0 ,42 ,11));
-			solidInTile.add(new Rectangle(23 ,59 ,42 ,6));
-			solidInTile.add(new Rectangle(9 ,7 ,17 ,7));
-			solidInTile.add(new Rectangle(9 ,48 ,18 ,12));
+			solidInTile.add(new Rectangle(6 ,0 ,58 ,64));
 			break;
 		case 59:
-			water = true;
+			water = false;
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,64 ,11));
-			solidInTile.add(new Rectangle(0 ,59 ,64 ,6));
+			solidInTile.add(new Rectangle(0 ,0 ,58 ,64));
+			solidInTile.add(new Rectangle(0 ,28 ,64 ,36));
+
 			break;
 		case 60:
-			water = true;
+			water = false;
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,43 ,11));
-			solidInTile.add(new Rectangle(0 ,59 ,42 ,6));
-			solidInTile.add(new Rectangle(43 ,47 ,15 ,14));
-			solidInTile.add(new Rectangle(43 ,7 ,15 ,7));
+			solidInTile.add(new Rectangle(0 ,28 ,64 ,36));
+			break;
+		case 61:
+			water = false;
+			solid = true;
+			solidInTile.add(new Rectangle(6 ,0 ,58 ,64));
+			solidInTile.add(new Rectangle(0 ,28 ,64 ,36));
+			break;
+		case 62:
+			water = false;
+			solid = true;
+			solidInTile.add(new Rectangle(6 ,0 ,58 ,64));
+			break;
+		case 63:
+			water = false;
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,58 ,64));
+			break;
+		case 64:
+			water = false;
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,64 ,64));
+			break;
+		case 65:
+			water = false;
+			solid = true;
+			solidInTile.add(new Rectangle(6 ,0 ,58 ,48));
+			break;
+		case 66:
+			water = false;
+			solid = true;
+			solidInTile.add(new Rectangle(0 ,0 ,58 ,48));
 			break;
 		}
 	}

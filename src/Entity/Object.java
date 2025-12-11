@@ -53,7 +53,7 @@ public class Object extends Tile{
 			solid = false;
 			break;
 		case 7:
-			objectName = "Campfire";
+			objectName = "Campfire on";
 			solid = true;
 			breakable = true;
 			solidInTile.add(new Rectangle(6 ,6 ,48 ,48));
@@ -98,7 +98,7 @@ public class Object extends Tile{
 			itemWhenBroken.add(1);
 			itemWhenBroken.add(7);
 			breakable = true;
-			solidInTile.add(new Rectangle(16 ,20 ,40 ,42));
+			solidInTile.add(new Rectangle(12 ,20 ,40 ,42));
 			break;
 		case 15:
 			objectName = "Tree";
@@ -226,8 +226,8 @@ public class Object extends Tile{
 		case 41:
 			objectName = "House 1";
 			solid = true;
-			solidInTile.add(new Rectangle(0 ,0 ,126 ,18));
-			solidInTile.add(new Rectangle(0 ,0 ,42 ,48));
+			solidInTile.add(new Rectangle(0 ,0 ,26 ,18));
+			solidInTile.add(new Rectangle(0 ,18 ,42 ,48));
 			break;
 		case 42:
 			objectName = "House 2";

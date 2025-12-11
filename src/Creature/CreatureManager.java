@@ -48,6 +48,10 @@ public class CreatureManager {
 		}
 	}
 	
+	public static ArrayList<Creature> getCreatures(){
+		return creatureList;
+	}
+	
 	
 	
 }

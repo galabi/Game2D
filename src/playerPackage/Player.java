@@ -22,10 +22,10 @@ public class Player extends entity implements KeyListener {
 	
 	int tilesize = TilesManager.tileSize;
 	
-	final static int playerCollisionBoxX = 20;
-	final static int playerCollisionBoxY = 50;
-	final static int playerCollisionBoxWidth = 24;
-	final static int playerCollisionBoxHeight = 14;
+	public final static int playerCollisionBoxX = 20;
+	public final static int playerCollisionBoxY = 50;
+	public final static int playerCollisionBoxWidth = 24;
+	public final static int playerCollisionBoxHeight = 14;
 	final static int playerSpritSize = 64;		
 	
 	public int playerI = 0, playerJ = 0;
@@ -233,19 +233,19 @@ public class Player extends entity implements KeyListener {
 	
 	//player interaction with camp Fire
 	public void cookFish(int pressBlockI,int pressBlockJ,Item itemInhand) {
-		if(itemInhand.getId() == 4) {
-			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,5);
+		if(itemInhand.getName().equals("Fish")) {
+			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,19);
 			Main.inventory.addToItemStack(new Item(5));
 		}else {
-			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,4);
+			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,7);
 		}
 		Main.inventory.decreaseItemInHand();
 	}
 	
 	//player fishing
 	public void startFishing(int BlockI,int BlockJ) {
-		if(playerI ==  BlockI && playerJ == BlockJ) return; // add an  later
-			
+		if(playerI ==  BlockI && playerJ == BlockJ) return; // add later
+		
 		rod.startFishingAtClosestDirection();
 	
 		if(!fishing) {
@@ -263,7 +263,7 @@ public class Player extends entity implements KeyListener {
 	}
 
 	
-	//use this to lower the creature health points
+	//use this to lower the player health points
 	public void hitCreature(int demage) {
 		health -= demage;
 	}
