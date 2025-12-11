@@ -1,4 +1,4 @@
-package Creature;
+	package Creature;
 
 public class Cow extends Creature{
 	
@@ -8,10 +8,10 @@ public class Cow extends Creature{
 		image = CreactureImage.getCowImage();
 		damage = 0;
 		health = 5;
-		CollisionBoxX = 11;
-		CollisionBoxY = 2;
-		CollisionBoxWidth = 13;
-		CollisionBoxHeight = 30;
+		CollisionBoxX = 12;
+		CollisionBoxY = 32;
+		CollisionBoxWidth = 40;
+		CollisionBoxHeight = 32;
 	}
 
 }

@@ -41,6 +41,11 @@ public class Creature extends entity{
 		g2d.drawImage(image[creatureDirection].getImage(), x - Main.tilesManager.getCameraX(false) ,
 				y - Main.tilesManager.getCameraY(false), sizeX, sizeY,null);
 		
+		//debag
+		if(Main.devmode) {
+			g2d.setColor(Color.white);
+			g2d.drawRect(x+CollisionBoxX-Main.tilesManager.getCameraX(false), y+CollisionBoxY-Main.tilesManager.getCameraY(false), CollisionBoxWidth, CollisionBoxHeight);
+		}
 	}
 	
 	public void move() {
