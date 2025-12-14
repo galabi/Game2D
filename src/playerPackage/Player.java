@@ -130,6 +130,8 @@ public class Player extends Entity implements KeyListener {
 	private void moving() {
 		imagePosture = 1;
 		fishing = false;
+		
+		
 		if(sprint) {
 			if(Math.abs(speedY) == speed) {
 				speedY*=2;		

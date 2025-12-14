@@ -12,8 +12,8 @@ import java.util.Scanner;
 import Regeneration.RegenerationManager;
 import Storage.Item;
 import creature.CreatureManager;
-import entity.ItemOnFloor;
 import entity.GameObject;
+import entity.ItemOnFloor;
 import entity.Tile;
 import multiplayer.ServerClientHandler;
 
@@ -66,10 +66,14 @@ public class TilesManager {
 		int endCol = (cameraY/tileSize+borderY);
 		int startCol = (int)(cameraY / tileSize);
 		int startRow = (int)(cameraX / tileSize);
+		
+		startRow = Math.max(0,startRow);
+		startCol = Math.max(0,startCol);
+
+		
 		g2d.setStroke(new BasicStroke(2));
 		for(int i = startCol;i<endCol && i<maxScreenCol;i++) {
 			for(int j = startRow;j<endRow  && j<maxScreenRow;j++) {
-		        if (i < 0 || j < 0) continue;
 				tiles[i][j].render(g2d);
 			}
 		}
@@ -85,9 +89,11 @@ public class TilesManager {
 			int startRow = (int)(cameraX / tileSize);
 			int endRow = (int)(cameraX / tileSize + borderX);
 
+			startRow = Math.max(0,startRow);
+			startCol = Math.max(0,startCol);
+			
 			for (int i = startCol; i < endCol && i < maxScreenCol; i++) {
 				for (int j = startRow; j < endRow && j < maxScreenRow; j++) {
-					if (i < 0 || j < 0) continue;
 					
 					// Only add objects that exist (ID != 0)
 					if (objects[i][j].getId() != 0) {
