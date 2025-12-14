@@ -18,9 +18,9 @@ import java.util.Formatter;
 import java.util.Scanner;
 import java.util.Stack;
 
-import Entity.FontLoader;
-import Entity.GameColors;
 import MainPackage.Main;
+import entity.FontLoader;
+import entity.GameColors;
 	
 public class Inventory implements MouseWheelListener{
 

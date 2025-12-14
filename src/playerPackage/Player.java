@@ -7,18 +7,19 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import Entity.Object;
-import Entity.Tile;
-import Entity.entity;
-import Entity.FishingRod;
-import Entity.GameColors;
+
 import MainPackage.Main;
 import MainPackage.TilesManager;
 import Regeneration.RegenerationManager;
 import Storage.Item;
-import mutiplayer.ServerClientHandler;
+import entity.Entity;
+import entity.FishingRod;
+import entity.GameColors;
+import entity.GameObject;
+import entity.Tile;
+import multiplayer.ServerClientHandler;
 
-public class Player extends entity implements KeyListener {
+public class Player extends Entity implements KeyListener {
 	
 	int tilesize = TilesManager.tileSize;
 	
@@ -209,7 +210,7 @@ public class Player extends entity implements KeyListener {
 	//player placing a block
 	public void placeBlock(int pressBlockI,int pressBlockJ,Item itemToPlace) {
 		
-		Object obj = Main.tilesManager.getObjects(pressBlockI,pressBlockJ);
+		GameObject obj = Main.tilesManager.getObjects(pressBlockI,pressBlockJ);
 		Tile tile = Main.tilesManager.getTiles(pressBlockI,pressBlockJ);		
 		
 		//sapling case (grow Tree)

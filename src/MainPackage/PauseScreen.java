@@ -5,8 +5,9 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
-import Entity.FontLoader;
-import mutiplayer.ServerClientHandler;
+
+import entity.FontLoader;
+import multiplayer.ServerClientHandler;
 
 
 public class PauseScreen{

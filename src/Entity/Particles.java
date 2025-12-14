@@ -1,4 +1,4 @@
-package Entity;
+package entity;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 
 import MainPackage.Main;
 
-public class Particles extends entity {
+public class Particles extends Entity {
 	
 	int id;
 	long time;

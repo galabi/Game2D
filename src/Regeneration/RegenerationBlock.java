@@ -1,15 +1,15 @@
 package Regeneration;
 
-import Entity.Object;
 import MainPackage.TilesManager;
+import entity.GameObject;
 
-public class RegenerationBlock {
+public class RegenerationBlock implements Comparable<RegenerationBlock> {
 	private int x,y,mapI,mapJ;
-	private Object objectToGrow;
+	private GameObject objectToGrow;
 	private long GrowthTime;
 	private String targetGrow;
 	
-	public RegenerationBlock(Object objectToGrow,int x,int y,String targetGrow) {
+	public RegenerationBlock(GameObject objectToGrow,int x,int y,String targetGrow) {
 		this.objectToGrow = objectToGrow;
 		this.targetGrow = targetGrow;
 		this.x = x;
@@ -31,7 +31,7 @@ public class RegenerationBlock {
 	public int getMapJ() {
 		return mapJ;
 	}
-	public Object getObject() {
+	public GameObject getObject() {
 		return objectToGrow;
 	}
 	public long getGrowthTime() {
@@ -49,5 +49,10 @@ public class RegenerationBlock {
 	
 	public boolean isReadyToGrow() {
 		return (GrowthTime <= System.currentTimeMillis());
+	}
+
+	@Override
+	public int compareTo(RegenerationBlock other) {
+		return Long.compare(this.GrowthTime, other.GrowthTime);
 	}
 }

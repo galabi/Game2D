@@ -13,11 +13,11 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-import Creature.CreatureManager;
-import Entity.GameTextures;
-import Entity.Text;
 import Storage.Inventory;
-import mutiplayer.ServerClientHandler;
+import creature.CreatureManager;
+import entity.GameTextures;
+import entity.Text;
+import multiplayer.ServerClientHandler;
 import playerPackage.MouseManager;
 import playerPackage.Player;
 

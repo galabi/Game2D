@@ -8,9 +8,9 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 
-import Entity.FontLoader;
-import mutiplayer.Client;
-import mutiplayer.ServerSelectScreen;
+import entity.FontLoader;
+import multiplayer.Client;
+import multiplayer.ServerSelectScreen;
 
 
 public class StartScreen{

@@ -1,14 +1,14 @@
-package Entity;
+package entity;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
-public class Object extends Tile{
+public class GameObject extends Tile{
 	boolean gate, breakable,topPart = false;
 	ArrayList<Integer> itemWhenBroken;
 	String objectName = "";
 	
-	public Object(int id, int x, int y, int size) {
+	public GameObject(int id, int x, int y, int size) {
 		super(id, x, y, size);
 		setType(id);
 	}
@@ -27,6 +27,7 @@ public class Object extends Tile{
 		switch (id) {
 		case 0: 
 			solid = false;
+			objectName = "";
 			break;
 		case 1: 
 			objectName = "Tree";

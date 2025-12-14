@@ -1,4 +1,4 @@
-package Creature;
+package creature;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -6,12 +6,12 @@ import java.util.Random;
 
 import javax.swing.ImageIcon;
 
-import Entity.entity;
-import Entity.GameColors;
 import MainPackage.Main;
 import MainPackage.TilesManager;
+import entity.Entity;
+import entity.GameColors;
 
-public class Creature extends entity{
+public class Creature extends Entity{
 	
 	ImageIcon[] image;
 	int creatureDirection = 0;

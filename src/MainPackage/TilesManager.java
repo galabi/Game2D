@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Scanner;
 
-import Creature.CreatureManager;
-import Entity.Tile;
-import Entity.ItemOnFloor;
 import Regeneration.RegenerationManager;
-import Entity.Object;
 import Storage.Item;
-import mutiplayer.ServerClientHandler;
+import creature.CreatureManager;
+import entity.ItemOnFloor;
+import entity.GameObject;
+import entity.Tile;
+import multiplayer.ServerClientHandler;
 
 public class TilesManager {
 	
@@ -26,11 +26,11 @@ public class TilesManager {
 	final int maxScreenRow = 50;
 	int borderX=20,borderY=13,cameraY = 1000,cameraX = 900;
 	Tile[][] tiles;
-	Object[][] objects;
+	GameObject[][] objects;
 	private Scanner s;
 	private Formatter x;
 	ArrayList<ItemOnFloor> drops;
-	private ArrayList<Entity.entity> renderList = new ArrayList<>();
+	private ArrayList<entity.Entity> renderList = new ArrayList<>();
 	boolean mapIsReady = false;
 	
 	
@@ -38,7 +38,7 @@ public class TilesManager {
 	
 	public TilesManager() {
 		tiles = new Tile[maxScreenCol][maxScreenRow];
-		objects = new Object[maxScreenCol][maxScreenRow];
+		objects = new GameObject[maxScreenCol][maxScreenRow];
 		drops = new ArrayList<ItemOnFloor>();
 	}
 	
@@ -99,7 +99,7 @@ public class TilesManager {
 			//Add Players to the list
 			if (Main.player != null) renderList.add(Main.player);
 			if (Main.player2 != null) renderList.add(Main.player2);
-			 renderList.addAll(Creature.CreatureManager.getCreatures()); 
+			 renderList.addAll(creature.CreatureManager.getCreatures()); 
 
 			// Sort the list based on Y depth
 			renderList.sort((e1, e2) -> {
@@ -109,7 +109,7 @@ public class TilesManager {
 			});
 
 			//Render everything in order
-			for (Entity.entity e : renderList) {
+			for (entity.Entity e : renderList) {
 				e.render(g2d);
 			}
 			
@@ -126,13 +126,13 @@ public class TilesManager {
 		
 		// Helper function to calculate the sorting Y position.
 		//It handles the "Depth" logic.
-		private int getSortY(Entity.entity e) {
+		private int getSortY(entity.Entity e) {
 	    	// Default sort Y is the bottom of the sprite (the feet)
 	    	 int sortY = e.getY() + e.getSizeY();
 
 	    	 // Special handling for multi-tile objects (like Trees)
-	    	 if (e instanceof Entity.Object) {
-				Entity.Object obj = (Entity.Object) e;
+	    	 if (e instanceof entity.GameObject) {
+				entity.GameObject obj = (entity.GameObject) e;
 				
 				// If this object is a "Top" part of a tree (Leaves)
 	            // we treat its depth as if it were one tile lower (at the Trunk level)
@@ -210,7 +210,7 @@ public class TilesManager {
 			//adding items to the screen from map
 			for(int i=0;i<maxScreenCol;i++) {
 				for(int j=0;j<maxScreenRow;j++) {
-					objects[i][j] = new Object(s.nextInt() ,j*tileSize, i*tileSize, tileSize);
+					objects[i][j] = new GameObject(s.nextInt() ,j*tileSize, i*tileSize, tileSize);
 					if(objects[i][j].getName().equals("Tree sapling") || objects[i][j].getName().equals("Rock")) {
 						RegenerationManager.insertToGrowthList(objects[i][j],j*tileSize,i*tileSize);
 					}
@@ -276,7 +276,7 @@ public class TilesManager {
 	public void setItemsOnTilesFromMultiplayer(String[] map) {
 		for(int i=0;i<maxScreenCol;i++) {
 			for(int j=0;j<maxScreenRow;j++) {
-				objects[i][j] = new Object(Integer.parseInt(map[i*maxScreenRow + j + 1]), j*tileSize, i*tileSize, tileSize); 
+				objects[i][j] = new GameObject(Integer.parseInt(map[i*maxScreenRow + j + 1]), j*tileSize, i*tileSize, tileSize); 
 			}
 		}
 	}
@@ -342,10 +342,10 @@ public class TilesManager {
 	public Tile getTiles(int TileI,int TileJ) {
 		return tiles[TileI][TileJ];
 	}
-	public Object[][] getObjects(){
+	public GameObject[][] getObjects(){
 		return objects;
 	}
-	public Object getObjects(int objectI,int objectJ){
+	public GameObject getObjects(int objectI,int objectJ){
 		return objects[objectI][objectJ];
 	}
 	public void addItemDrop(Item item,int x,int y) {

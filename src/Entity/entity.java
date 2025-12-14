@@ -1,4 +1,4 @@
-package Entity;
+package entity;
 
 import java.awt.Graphics2D;
 
@@ -6,19 +6,19 @@ import javax.swing.ImageIcon;
 
 import MainPackage.Main;
 
-public class entity {
+public class Entity {
 	protected int x,y,sizeX,sizeY;
 	
 	ImageIcon image;
 
 	
-	public entity(int x, int y ,int sizeX ,int sizeY) {
+	public Entity(int x, int y ,int sizeX ,int sizeY) {
 		this.x = x;
 		this.y = y;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 	}
-	public entity(int x, int y ,int size,String FileLocation) {
+	public Entity(int x, int y ,int size,String FileLocation) {
 		this.x = x;
 		this.y = y;
 		image = new ImageIcon(getClass().getResource(FileLocation));

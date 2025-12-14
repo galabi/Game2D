@@ -5,10 +5,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
-import Entity.FontLoader;
-import Entity.GameColors;
 import MainPackage.Main;
 import MainPackage.TilesManager;
+import entity.FontLoader;
+import entity.GameColors;
 
 public class Crafting {
 	Item[][] craftingItems;

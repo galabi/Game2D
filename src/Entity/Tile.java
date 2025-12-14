@@ -1,4 +1,4 @@
-package Entity;
+package entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import MainPackage.Main;
 
-public class Tile extends entity{
+public class Tile extends Entity{
 	
 	int id=0;
 	boolean solid,water = false;
@@ -360,9 +360,9 @@ public class Tile extends entity{
 				if(i.intersects(r))return true;
 			}
 		}
-		for(Rectangle i : ((Object) Main.tilesManager.getObjects()[y/sizeY][x/sizeX]).getRectangles()) {
+		for(Rectangle i : ((GameObject) Main.tilesManager.getObjects()[y/sizeY][x/sizeX]).getRectangles()) {
 			if(i.intersects(r)) {
-				if(((Object) Main.tilesManager.getObjects()[y/sizeY][x/sizeX]).isGate()) {
+				if(((GameObject) Main.tilesManager.getObjects()[y/sizeY][x/sizeX]).isGate()) {
 					Main.tilesManager.readFile();
 				}
 				

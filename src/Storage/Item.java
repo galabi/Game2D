@@ -3,7 +3,7 @@ package Storage;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 
-import Entity.GameTextures;
+import entity.GameTextures;
 
 public class Item {
 	

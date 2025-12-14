@@ -1,10 +1,10 @@
 package playerPackage;
 
-import Entity.Object;
-import Entity.Tile;
 import MainPackage.Main;
 import MainPackage.TilesManager;
 import Storage.Item;
+import entity.GameObject;
+import entity.Tile;
 
 public class PlayerInteraction {
 	
@@ -65,7 +65,7 @@ public class PlayerInteraction {
 	
 	private static void rightMousePress(int pressBlockI,int pressBlockJ) {
 		Item itemInHand = Main.inventory.getItemInHand();
-		Object obj = Main.tilesManager.getObjects()[pressBlockI][pressBlockJ];
+		GameObject obj = Main.tilesManager.getObjects()[pressBlockI][pressBlockJ];
 		Tile tile = Main.tilesManager.getTiles()[pressBlockI][pressBlockJ];
 		
 		boolean isCookFish = (obj.getName().equals("Campfire on") && itemInHand.getName().equals("Fish")) ||

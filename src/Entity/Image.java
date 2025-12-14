@@ -1,4 +1,4 @@
-package Entity;
+package entity;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 
 import MainPackage.Main;
 
-public class Image extends entity{
+public class Image extends Entity{
 	
 	int sizeX,sizeY;
 	String FileLocation;

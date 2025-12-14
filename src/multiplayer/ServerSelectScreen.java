@@ -1,14 +1,14 @@
-package mutiplayer;
+package multiplayer;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
-import Entity.FontLoader;
-import Entity.entity;
 import MainPackage.Main;
+import entity.Entity;
+import entity.FontLoader;
 
-public class ServerSelectScreen extends entity {
+public class ServerSelectScreen extends Entity {
 	
 	int maxServers = 3;
 	serverToJoin buttons[] = new serverToJoin[maxServers];
@@ -48,7 +48,7 @@ public class ServerSelectScreen extends entity {
 	
 	
 	//sub_class
-	private class serverToJoin extends entity{
+	private class serverToJoin extends Entity{
 		String ip;
 		int port;
 		boolean press = true;
