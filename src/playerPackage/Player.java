@@ -209,22 +209,26 @@ public class Player extends entity implements KeyListener {
 	//player placing a block
 	public void placeBlock(int pressBlockI,int pressBlockJ,Item itemToPlace) {
 		
-		Object obj = Main.tilesManager.getObjects()[pressBlockI][pressBlockJ];
-		Tile tile = Main.tilesManager.getTiles()[pressBlockI][pressBlockJ];		
-
-		if(obj.getId() == 0 && !tile.IsSolid()) {
+		Object obj = Main.tilesManager.getObjects(pressBlockI,pressBlockJ);
+		Tile tile = Main.tilesManager.getTiles(pressBlockI,pressBlockJ);		
+		
+		//sapling case (grow Tree)
+		if(itemToPlace.getId() == 7 && Main.tilesManager.canPlaceTree(pressBlockI, pressBlockJ)) {
 			Main.player.imagePosture = 2;
 			Main.player.animationTimer = System.currentTimeMillis();
 			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,itemToPlace.getIdToPlace());
-			
-			//sapling case (grow Tree)
-			if(itemToPlace.getIdToPlace() == 16) {
-				RegenerationManager.insertToGrowthList(obj,pressBlockJ*tilesize,pressBlockI*tilesize);
-				Main.tilesManager.updateBlock(pressBlockI-1,pressBlockJ,4);
-
-			}
+			Main.tilesManager.updateBlock(pressBlockI-1,pressBlockJ,4);
+			RegenerationManager.insertToGrowthList(obj,pressBlockJ*tilesize,pressBlockI*tilesize);
 			Main.inventory.decreaseItemInHand();
+
 			
+		//general case
+		}else if(obj.getId() == 0 && !tile.IsSolid()) {
+			Main.player.imagePosture = 2;
+			Main.player.animationTimer = System.currentTimeMillis();
+			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,itemToPlace.getIdToPlace());
+		
+			Main.inventory.decreaseItemInHand();			
 		}
 		
 		ServerClientHandler.sendDataToServer(Main.player.toString());
@@ -243,9 +247,7 @@ public class Player extends entity implements KeyListener {
 	}
 	
 	//player fishing
-	public void startFishing(int BlockI,int BlockJ) {
-		if(playerI ==  BlockI && playerJ == BlockJ) return; // add later
-		
+	public void startFishing(int BlockI,int BlockJ) {		
 		rod.startFishingAtClosestDirection();
 	
 		if(!fishing) {

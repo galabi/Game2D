@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 
 public class Object extends Tile{
-	boolean gate, breakable;
+	boolean gate, breakable,topPart = false;
 	ArrayList<Integer> itemWhenBroken;
 	String objectName = "";
 	
@@ -31,14 +31,17 @@ public class Object extends Tile{
 		case 1: 
 			objectName = "Tree";
 			solid = false;
+			topPart = true;
 			break;
 		case 2: 
 			objectName = "Tree";
 			water = false;
+			topPart = true;
 			break;
 		case 3:
 			objectName = "Tree";
 			solid = false;
+			topPart = true;
 			break;
 		case 4:
 			objectName = "Tree sapling head";
@@ -47,10 +50,12 @@ public class Object extends Tile{
 		case 5:
 			objectName = "Tree";
 			solid = false;
+			topPart = true;
 			break;
 		case 6:
 			objectName = "Street lamp";
 			solid = false;
+			topPart = true;
 			break;
 		case 7:
 			objectName = "Campfire on";
@@ -200,8 +205,9 @@ public class Object extends Tile{
 		case 36:
 			objectName = "House 1";
 			solid = true;
-			solidInTile.add(new Rectangle(22 ,16 ,42 ,48));
+			solidInTile.add(new Rectangle(30 ,16 ,34 ,48));
 			solidInTile.add(new Rectangle(38 ,0 ,26 ,16));
+			topPart = true;
 			break;
 		case 37:
 			objectName = "House 1";
@@ -227,13 +233,15 @@ public class Object extends Tile{
 			objectName = "House 1";
 			solid = true;
 			solidInTile.add(new Rectangle(0 ,0 ,26 ,18));
-			solidInTile.add(new Rectangle(0 ,18 ,42 ,48));
+			solidInTile.add(new Rectangle(0 ,18 ,34 ,48));
+			topPart = true;
 			break;
 		case 42:
 			objectName = "House 2";
 			solid = true;
-			solidInTile.add(new Rectangle(22 ,16 ,42 ,48));
+			solidInTile.add(new Rectangle(30 ,16 ,34 ,48));
 			solidInTile.add(new Rectangle(38 ,0 ,26 ,16));
+			topPart = true;
 			break;
 		case 43:
 			objectName = "House 2";
@@ -259,7 +267,8 @@ public class Object extends Tile{
 			objectName = "House 2";
 			solid = true;
 			solidInTile.add(new Rectangle(0 ,0 ,26 ,18));
-			solidInTile.add(new Rectangle(0 ,0 ,42 ,48));
+			solidInTile.add(new Rectangle(0 ,18 ,34 ,48));
+			topPart = true;
 			break;
 		case 48:
 			objectName = "House 1";
@@ -425,5 +434,9 @@ public class Object extends Tile{
 	
 	public String getName() {
 		return objectName;
+	}
+	
+	public boolean isTopPart() {
+		return topPart;
 	}
 }

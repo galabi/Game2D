@@ -133,11 +133,10 @@ public class TilesManager {
 	    	 // Special handling for multi-tile objects (like Trees)
 	    	 if (e instanceof Entity.Object) {
 				Entity.Object obj = (Entity.Object) e;
-				int id = obj.getId();
-
+				
 				// If this object is a "Top" part of a tree (Leaves)
 	            // we treat its depth as if it were one tile lower (at the Trunk level)
-				if (id == 1 || id == 2 || id == 3 || id == 5) {
+				if (obj.isTopPart()) {
 					sortY += tileSize;
 				}
 				
@@ -295,6 +294,16 @@ public class TilesManager {
 	
 	public boolean IsLocationFree(int x,int y,int width,int height) {
 		return(tiles[y/tileSize][x/tileSize].isSolid(x%tileSize, y%tileSize, width, height));
+	}
+	
+	//check if the player can place a tree in the location
+	public boolean canPlaceTree(int objectI,int objectJ) {
+		boolean canPlace = objects[objectI][objectJ].getId() == 0 && objects[objectI-1][objectJ].getId() == 0 && //middle
+				(objects[objectI][objectJ+1].getId() == 0 || objects[objectI][objectJ+1].getId() == 17) && // right
+				(objects[objectI-1][objectJ+1].getId() == 0 || objects[objectI-1][objectJ+1].getId() == 5) && // right
+				(objects[objectI][objectJ-1].getId() == 0 || objects[objectI][objectJ-1].getId() == 17) && // left
+				(objects[objectI-1][objectJ-1].getId() == 0 || objects[objectI-1][objectJ-1].getId() == 5); // left
+		return !canPlace;
 	}
 	
 	public int getTileSize() {

@@ -39,9 +39,18 @@ public class PlayerBreakBlock {
             	resetInteraction();
             	}
 	    	
-	    	
-	    	
-	    	
+	    }else if(Main.tilesManager.getObjects(i, j).getName().equals("Tree sapling")&& Main.tilesManager.getObjects(i, j).isBreakable()) {
+	        boolean canBreak = (handItemId == 2 && timeDelta >= PlayerInteraction.BreakTime / 2)
+	        		|| timeDelta >= PlayerInteraction.BreakTime;
+            if (canBreak) {
+            	for(Integer k:itemWhenBroken) {
+            		Main.tilesManager.addDrop(i, j, k);
+            		}
+            	 Main.tilesManager.updateBlock(i, j, 0);
+            	 Main.tilesManager.updateBlock(i-1, j, 0);
+            	resetInteraction();
+            }
+            
 	    }else if (Main.tilesManager.getObjects(i, j).isBreakable()) {
 	        boolean canBreak = (handItemId == 2 && timeDelta >= PlayerInteraction.BreakTime / 2)
 	                         || timeDelta >= PlayerInteraction.BreakTime;
