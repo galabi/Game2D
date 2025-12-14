@@ -2,16 +2,17 @@ package Storage;
 
 public class RecipeBook {
 	
-	static int recipesSize = 5; 
+	static int recipesSize = 6; 
 	private static Recipe[] recipes = new Recipe[recipesSize];
 	
 	//all the recipes
 	static {
-		recipes[0] = new Recipe(new int[][]{{1,1},{1,1}}, 6,1);
-		recipes[1] = new Recipe(new int[][]{{8,9},{8,0}}, 2,1);
-		recipes[2] = new Recipe(new int[][]{{8},{8}}, 3,1);
-		recipes[3] = new Recipe(new int[][]{{1}}, 8,1);
-		recipes[4] = new Recipe(new int[][]{{9,8},{8,9}}, 10,1);
+		recipes[0] = new Recipe(new int[][]{{1,1},{1,1}}, 6,1); //Camp-fire
+		recipes[1] = new Recipe(new int[][]{{8,9},{8,0}}, 2,1); //axe
+		recipes[2] = new Recipe(new int[][]{{8},{8}}, 3,1); //fishing rod
+		recipes[3] = new Recipe(new int[][]{{1}}, 8,1); // stick
+		recipes[4] = new Recipe(new int[][]{{9,8},{8,9}}, 10,1); //Pick-axe
+		recipes[5] = new Recipe(new int[][]{{0,9},{8,0}}, 11,1); //Sword
 
 	}
 	

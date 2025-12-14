@@ -105,6 +105,13 @@ public class Item {
 			placeable = false;
 			idToPlace = 0;
 			break;
+		case 11:
+			name = "Sword";
+			stackable = false;
+			strength = 2;
+			placeable = false;
+			idToPlace = 0;
+			break;
 		default:
 			name = " ";
 			id = 0;

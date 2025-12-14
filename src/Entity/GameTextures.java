@@ -11,7 +11,7 @@ public class GameTextures {
 	static final int TileSize = 32;
 	
 	static{
-		int itemIconSize = 11,tileIconSize = 85,objectIconSize = 74;
+		int itemIconSize = 12,tileIconSize = 85,objectIconSize = 74;
 		itemIcons = new ImageIcon[itemIconSize];
 		tileIcons = new ImageIcon[tileIconSize];
 		objectIcons = new ImageIcon[objectIconSize];
