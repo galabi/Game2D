@@ -31,7 +31,7 @@ public class Player extends Entity implements KeyListener {
 	
 	public int playerI = 0, playerJ = 0;
 	int speedX, speedY;
-	final int speed = 2;
+	final int walkSpeed = 2,runSpeed = 4;
 	int maxHealth = 10;
 	int health = maxHealth;
 	
@@ -128,25 +128,20 @@ public class Player extends Entity implements KeyListener {
 	}
 	
 	private void moving() {
+		int speed;
 		imagePosture = 1;
 		fishing = false;
 		
 		
-		if(sprint) {
-			if(Math.abs(speedY) == speed) {
-				speedY*=2;		
-			}
-			if(Math.abs(speedX) == speed) {
-				speedX*=2;
-			}
-		}else {
-			if(Math.abs(speedY) == speed*2) {
-				speedY/=2;		
-			}
-			if(Math.abs(speedX) == speed*2) {
-				speedX/=2;
-			}
-		}
+	    speed = sprint ? runSpeed : walkSpeed;
+
+	    if (speedX != 0) {
+	        speedX = (speedX > 0) ? speed : -speed;
+	    }
+	    if (speedY != 0) {
+	        speedY = (speedY > 0) ? speed : -speed;
+	    }
+	    
 		collision();
 		
 		if(x+speedX >= Main.tilesManager.getCameraX(true) - 350 || x+speedX <= Main.tilesManager.getCameraX(false) + 350 - sizeX) {
@@ -292,30 +287,31 @@ public class Player extends Entity implements KeyListener {
 		if(Main.gameState != 2) return;
 
 		if(key == KeyEvent.VK_A) {
-			speedX = -speed;
+			speedX = -walkSpeed;
 			speedY = 0;
 			imageDirection = 1;
 			return;
 		}
 		if(key == KeyEvent.VK_D) {
-			speedX = speed;
+			speedX = walkSpeed;
 			speedY = 0;
 			imageDirection = 2;
 			return;
 		}
 		if(key == KeyEvent.VK_W) {
-			speedY = -speed;
+			speedY = -walkSpeed;
 			speedX = 0;
 			imageDirection = 3;
 			return;
 		}
 		if(key == KeyEvent.VK_S) {
-			speedY = speed;
+			speedY = walkSpeed;
 			speedX = 0;
 			imageDirection = 0;
 			return;
 		}if(key == KeyEvent.VK_SPACE) {
 			sprint = true;
+			playeranimation.setRunningAnimationSpeed(sprint);
 		}
 		
 		//1-5 numpad
@@ -373,6 +369,7 @@ public class Player extends Entity implements KeyListener {
 		}
 		if(key == KeyEvent.VK_SPACE) {
 			sprint = false;
+			playeranimation.setRunningAnimationSpeed(sprint);
 		}
 		ServerClientHandler.sendDataToServer(toString());
 	}	
@@ -472,6 +469,10 @@ public class Player extends Entity implements KeyListener {
 
 	public void setHealth(int health) {
 		this.health = health;
+	}
+	
+	public boolean isSprint() {
+		return sprint;
 	}
 	
 	@Override

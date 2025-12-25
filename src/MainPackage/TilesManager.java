@@ -140,11 +140,9 @@ public class TilesManager {
 	    	 if (e instanceof entity.GameObject) {
 				entity.GameObject obj = (entity.GameObject) e;
 				
-				// If this object is a "Top" part of a tree (Leaves)
+				// If this object is a "Top" part of a tree (Leaves) or "Low" part (Fence)
 	            // we treat its depth as if it were one tile lower (at the Trunk level)
-				if (obj.isTopPart()) {
-					sortY += tileSize;
-				}
+				sortY = (int) (sortY + obj.getObjectRenderOffSet()*tileSize);
 				
 			}
 			

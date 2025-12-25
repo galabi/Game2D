@@ -4,9 +4,10 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 
 public class GameObject extends Tile{
-	boolean gate, breakable,topPart = false;
+	boolean gate, breakable;
 	ArrayList<Integer> itemWhenBroken;
 	String objectName = "";
+	float renderOffSet;
 	
 	public GameObject(int id, int x, int y, int size) {
 		super(id, x, y, size);
@@ -23,6 +24,7 @@ public class GameObject extends Tile{
 		breakable = false;
 		itemWhenBroken = new ArrayList<Integer>();
 		itemWhenBroken.clear();
+		renderOffSet = 0;
 		
 		switch (id) {
 		case 0: 
@@ -32,17 +34,17 @@ public class GameObject extends Tile{
 		case 1: 
 			objectName = "Tree";
 			solid = false;
-			topPart = true;
+			renderOffSet = 1;
 			break;
 		case 2: 
 			objectName = "Tree";
 			water = false;
-			topPart = true;
+			renderOffSet = 1;
 			break;
 		case 3:
 			objectName = "Tree";
 			solid = false;
-			topPart = true;
+			renderOffSet = 1;
 			break;
 		case 4:
 			objectName = "Tree sapling head";
@@ -51,12 +53,12 @@ public class GameObject extends Tile{
 		case 5:
 			objectName = "Tree";
 			solid = false;
-			topPart = true;
+			renderOffSet = 1;
 			break;
 		case 6:
 			objectName = "Street lamp";
 			solid = false;
-			topPart = true;
+			renderOffSet = 1;
 			break;
 		case 7:
 			objectName = "Campfire on";
@@ -80,13 +82,13 @@ public class GameObject extends Tile{
 			objectName = "Down ladder";
 			solid = true;
 			gate = true;
-			solidInTile.add(new Rectangle(0 ,24 ,40 ,40));
+			solidInTile.add(new Rectangle(24 ,24 ,40 ,40));
 			break;
 		case 11:
 			objectName = "Down ladder";
 			solid = true;
 			gate = true;
-			solidInTile.add(new Rectangle(24 ,24 ,40 ,40));
+			solidInTile.add(new Rectangle(0 ,24 ,40 ,40));
 			break;
 		case 12:
 			objectName = "Garbage container";
@@ -148,12 +150,14 @@ public class GameObject extends Tile{
 			solid = true;
 			gate = true;
 			solidInTile.add(new Rectangle(26 ,0 ,40 ,40));
+			renderOffSet = -1;
 			break;
 		case 23:
 			objectName = "Down ladder";
 			solid = true;
 			gate = true;
 			solidInTile.add(new Rectangle(0 ,0 ,40 ,40));
+			renderOffSet = -1;
 			break;
 		case 24:
 			objectName = "House 1";
@@ -208,7 +212,7 @@ public class GameObject extends Tile{
 			solid = true;
 			solidInTile.add(new Rectangle(30 ,16 ,34 ,48));
 			solidInTile.add(new Rectangle(38 ,0 ,26 ,16));
-			topPart = true;
+			renderOffSet = 1;
 			break;
 		case 37:
 			objectName = "House 1";
@@ -235,14 +239,14 @@ public class GameObject extends Tile{
 			solid = true;
 			solidInTile.add(new Rectangle(0 ,0 ,26 ,18));
 			solidInTile.add(new Rectangle(0 ,18 ,34 ,48));
-			topPart = true;
+			renderOffSet = 1;
 			break;
 		case 42:
 			objectName = "House 2";
 			solid = true;
 			solidInTile.add(new Rectangle(30 ,16 ,34 ,48));
 			solidInTile.add(new Rectangle(38 ,0 ,26 ,16));
-			topPart = true;
+			renderOffSet = 1;
 			break;
 		case 43:
 			objectName = "House 2";
@@ -269,7 +273,7 @@ public class GameObject extends Tile{
 			solid = true;
 			solidInTile.add(new Rectangle(0 ,0 ,26 ,18));
 			solidInTile.add(new Rectangle(0 ,18 ,34 ,48));
-			topPart = true;
+			renderOffSet = 1;
 			break;
 		case 48:
 			objectName = "House 1";
@@ -416,6 +420,66 @@ public class GameObject extends Tile{
 			solidInTile.add(new Rectangle(16 ,20 ,36 ,30));
 			itemWhenBroken.add(9);
 			break;
+		case 75:
+			objectName = "Fence";
+			solid = true;
+			breakable = false;
+			solidInTile.add(new Rectangle(18 ,28 ,48 ,22));
+			renderOffSet = -0.5f;
+			break;
+		case 76:
+			objectName = "Fence";
+			solid = true;
+			breakable = false;
+			solidInTile.add(new Rectangle(0 ,28 ,64 ,14));
+			renderOffSet = -0.5f;
+			break;
+		case 77:
+			objectName = "Fence";
+			solid = true;
+			breakable = false;
+			solidInTile.add(new Rectangle(0 ,28 ,48 ,22));
+			renderOffSet = -0.5f;
+			break;
+		case 78:
+			objectName = "Fence";
+			solid = true;
+			breakable = false;
+			solidInTile.add(new Rectangle(26 ,0 ,14 ,64));
+			renderOffSet = -0.5f;
+			break;
+		case 79:
+			objectName = "Fence";
+			solid = true;
+			breakable = false;
+			solidInTile.add(new Rectangle(26 ,0 ,14 ,42));
+			solidInTile.add(new Rectangle(26 ,28 ,40 ,14));
+			renderOffSet = -0.5f;
+			break;
+		case 80:
+			objectName = "Fence";
+			solid = true;
+			breakable = false;
+			solidInTile.add(new Rectangle(26 ,0 ,14 ,42));
+			solidInTile.add(new Rectangle(0 ,28 ,40 ,14));
+			renderOffSet = -0.5f;
+			break;
+		case 81:
+			objectName = "Fence";
+			solid = true;
+			breakable = false;
+			solidInTile.add(new Rectangle(26 ,28 ,14 ,36));
+			solidInTile.add(new Rectangle(26 ,28 ,40 ,14));
+			renderOffSet = -0.5f;
+			break;
+		case 82:
+			objectName = "Fence";
+			solid = true;
+			breakable = false;
+			solidInTile.add(new Rectangle(26 ,28 ,14 ,36));
+			solidInTile.add(new Rectangle(0 ,28 ,40 ,14));
+			renderOffSet = -0.5f;
+			break;
 		}
 		
 
@@ -437,7 +501,7 @@ public class GameObject extends Tile{
 		return objectName;
 	}
 	
-	public boolean isTopPart() {
-		return topPart;
+	public float getObjectRenderOffSet() {
+		return renderOffSet;
 	}
 }

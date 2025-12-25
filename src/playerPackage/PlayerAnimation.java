@@ -13,6 +13,7 @@ public class PlayerAnimation {
 	long LastFrame = 0;
 	final static int playerSpritSize =  Player.playerSpritSize; 
 	
+	int millSecBetweenFrame = 83;// 83 Milliseconds between frame to get 12 FPS of animation 
 	
 	public PlayerAnimation() {
 		runningAnimation = new ImageIcon[4][runningFrameSize];
@@ -25,7 +26,7 @@ public class PlayerAnimation {
 				y, sizeX, sizeY,null);
 		
 		
-		if (System.currentTimeMillis() - LastFrame > 83){ // 83 Milliseconds between frame to get 12 FPS of animation 
+		if (System.currentTimeMillis() - LastFrame > millSecBetweenFrame){ 
 			LastFrame = System.currentTimeMillis();
 			currentFrame = (currentFrame + 1)%12;
 		}
@@ -54,5 +55,13 @@ public class PlayerAnimation {
 	
 	public int getCurrentFrame(){
 		return currentFrame;
+	}
+	
+	public void setRunningAnimationSpeed(Boolean isRunning) {
+		if(isRunning) {
+			millSecBetweenFrame = 40;
+		}else{
+			millSecBetweenFrame = 83;
+		}
 	}
 }

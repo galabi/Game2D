@@ -12,7 +12,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-
 import Storage.Inventory;
 import creature.CreatureManager;
 import entity.GameTextures;
@@ -146,7 +145,7 @@ public class Main extends Canvas implements Runnable{
 		}
 
 		
-		//pre-load all the images
+		//pre-load all the items
 		if(!preLoad) {
 			preLoad = true;
 			GameTextures.preloadImages(g2);
@@ -163,6 +162,7 @@ public class Main extends Canvas implements Runnable{
 				tilesManager.renderObjects(g2);
 				tilesManager.renderDrops(g2);
 				inventory.render(g2);
+				CreatureManager.render(g2);
 			}else {
 				StartScreen.renderBackScreen(g2);
 			}
