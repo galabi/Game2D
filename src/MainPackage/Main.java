@@ -162,7 +162,6 @@ public class Main extends Canvas implements Runnable{
 				tilesManager.renderObjects(g2);
 				tilesManager.renderDrops(g2);
 				inventory.render(g2);
-				CreatureManager.render(g2);
 			}else {
 				StartScreen.renderBackScreen(g2);
 			}

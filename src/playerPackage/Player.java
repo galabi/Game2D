@@ -17,6 +17,7 @@ import entity.FishingRod;
 import entity.GameColors;
 import entity.GameObject;
 import entity.Tile;
+import mapRender.TilePropertiesManager;
 import multiplayer.ServerClientHandler;
 
 public class Player extends Entity implements KeyListener {
@@ -63,7 +64,6 @@ public class Player extends Entity implements KeyListener {
 		playerJ = (int)((x + playerCollisionBoxX+playerCollisionBoxWidth)/tilesize);
 	}
 	
-	@Override
 	public void tick() {
 		//check if the player need to move
 		if(speedX != 0 || speedY != 0) {
@@ -221,7 +221,7 @@ public class Player extends Entity implements KeyListener {
 
 			
 		//general case
-		}else if(obj.getId() == 0 && !tile.IsSolid()) {
+		}else if(obj.getId() == 0 && ! TilePropertiesManager.getTile(tile.getId()).IsSolid()) {
 			Main.player.imagePosture = 2;
 			Main.player.animationTimer = System.currentTimeMillis();
 			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,itemToPlace.getIdToPlace());

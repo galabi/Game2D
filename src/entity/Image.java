@@ -9,7 +9,6 @@ import MainPackage.Main;
 
 public class Image extends Entity{
 	
-	int sizeX,sizeY;
 	String FileLocation;
 	ImageIcon image;
 	
@@ -19,7 +18,7 @@ public class Image extends Entity{
 		image = new ImageIcon(getClass().getResource(FileLocation));		
 		this.sizeX = size*image.getIconWidth()/image.getIconHeight();
 	}
-	@Override
+	
 	public void render(Graphics2D g2d) {
 		AffineTransform old = g2d.getTransform();
 		g2d.drawImage(image.getImage(), (int)(Main.width*x), (int)(Main.height*y), (int)(Main.width*sizeX), (int)(Main.width*sizeY),null);

@@ -1,0 +1,198 @@
+[
+  { "id": 0, "solid": false, "water": false },
+  { "id": 1, "solid": false, "water": false },
+  { "id": 2, "solid": false, "water": false },
+  { "id": 3, "solid": false, "water": false },
+  { "id": 4, "solid": false, "water": false },
+  { "id": 5, "solid": false, "water": false },
+  { "id": 6, "solid": false, "water": false },
+  { "id": 7, "solid": false, "water": false },
+  { "id": 8, "solid": false, "water": false },
+  { "id": 9, "solid": false, "water": false },
+  { "id": 10, "solid": false, "water": false },
+  { "id": 11, "solid": false, "water": false },
+  { "id": 12, "solid": false, "water": false },
+  { "id": 13, "solid": false, "water": false },
+  { "id": 14, "solid": false, "water": false },
+  { "id": 15, "solid": false, "water": false },
+  { 
+    "id": 16, "solid": true, "water": true,
+    "solidInTile": [{ "x": 0, "y": 0, "width": 64, "height": 64 }]
+  },
+  { 
+    "id": 17, "solid": true, "water": true,
+    "solidInTile": [{ "x": 0, "y": 0, "width": 64, "height": 64 }]
+  },
+  { 
+    "id": 18, "solid": true, "water": true,
+    "solidInTile": [{ "x": 42, "y": 42, "width": 24, "height": 24 }]
+  },
+  { 
+    "id": 19, "solid": true, "water": true,
+    "solidInTile": [{ "x": 0, "y": 42, "width": 64, "height": 24 }]
+  },
+  { 
+    "id": 20, "solid": true, "water": true,
+    "solidInTile": [{ "x": 0, "y": 42, "width": 24, "height": 24 }]
+  },
+  { 
+    "id": 21, "solid": true, "water": true,
+    "solidInTile": [{ "x": 42, "y": 0, "width": 24, "height": 64 }]
+  },
+  { 
+    "id": 22, "solid": true, "water": true,
+    "solidInTile": [{ "x": 0, "y": 0, "width": 24, "height": 64 }]
+  },
+  { 
+    "id": 23, "solid": true, "water": true,
+    "solidInTile": [{ "x": 42, "y": 0, "width": 24, "height": 24 }]
+  },
+  { 
+    "id": 24, "solid": true, "water": true,
+    "solidInTile": [{ "x": 0, "y": 0, "width": 64, "height": 24 }]
+  },
+  { 
+    "id": 25, "solid": true, "water": true,
+    "solidInTile": [{ "x": 0, "y": 0, "width": 24, "height": 24 }]
+  },
+  { 
+    "id": 26, "solid": true, "water": true,
+    "solidInTile": [
+      { "x": 0, "y": 0, "width": 64, "height": 24 },
+      { "x": 0, "y": 0, "width": 24, "height": 64 }
+    ]
+  },
+  { 
+    "id": 27, "solid": true, "water": true,
+    "solidInTile": [
+      { "x": 0, "y": 0, "width": 64, "height": 24 },
+      { "x": 42, "y": 0, "width": 24, "height": 64 }
+    ]
+  },
+  { 
+    "id": 28, "solid": true, "water": true,
+    "solidInTile": [
+      { "x": 0, "y": 0, "width": 24, "height": 64 },
+      { "x": 0, "y": 42, "width": 64, "height": 24 }
+    ]
+  },
+  { 
+    "id": 29, "solid": true, "water": true,
+    "solidInTile": [
+      { "x": 42, "y": 0, "width": 24, "height": 64 },
+      { "x": 0, "y": 42, "width": 64, "height": 24 }
+    ]
+  },
+  { "id": 30, "solid": false, "water": false },
+  { "id": 31, "solid": false, "water": false },
+  { "id": 32, "solid": false, "water": false },
+  { "id": 33, "solid": false, "water": false },
+  { "id": 34, "solid": false, "water": false },
+  { "id": 35, "solid": false, "water": false },
+  { "id": 36, "solid": false, "water": false },
+  { "id": 37, "solid": false, "water": false },
+  { "id": 38, "solid": false, "water": false },
+  { "id": 39, "solid": false, "water": false },
+  { "id": 40, "solid": false, "water": false },
+  { "id": 41, "solid": false, "water": false },
+  { 
+    "id": 42, "solid": true, "water": true,
+    "solidInTile": [{ "x": 36, "y": 0, "width": 30, "height": 26 }]
+  },
+  { 
+    "id": 43, "solid": true, "water": true,
+    "solidInTile": [{ "x": 0, "y": 0, "width": 64, "height": 26 }]
+  },
+  { 
+    "id": 44, "solid": true, "water": true,
+    "solidInTile": [{ "x": 0, "y": 0, "width": 30, "height": 26 }]
+  },
+  { 
+    "id": 45, "solid": true, "water": true,
+    "solidInTile": [{ "x": 40, "y": 34, "width": 26, "height": 32 }]
+  },
+  { 
+    "id": 46, "solid": true, "water": true,
+    "solidInTile": [{ "x": 0, "y": 34, "width": 64, "height": 32 }]
+  },
+  { 
+    "id": 47, "solid": true, "water": true,
+    "solidInTile": [{ "x": 0, "y": 34, "width": 26, "height": 32 }]
+  },
+  { 
+    "id": 48, "solid": true, "water": false,
+    "solidInTile": [{ "x": 0, "y": 0, "width": 64, "height": 64 }]
+  },
+  { 
+    "id": 49, "solid": true, "water": false,
+    "solidInTile": [{ "x": 0, "y": 0, "width": 64, "height": 64 }]
+  },
+  { 
+    "id": 50, "solid": true, "water": false,
+    "solidInTile": [{ "x": 0, "y": 0, "width": 64, "height": 64 }]
+  },
+  { 
+    "id": 51, "solid": true, "water": false,
+    "solidInTile": [{ "x": 0, "y": 30, "width": 58, "height": 36 }]
+  },
+  { 
+    "id": 52, "solid": true, "water": false,
+    "solidInTile": [{ "x": 0, "y": 0, "width": 58, "height": 64 }]
+  },
+  { "id": 53, "solid": false, "water": false },
+  { 
+    "id": 54, "solid": true, "water": false,
+    "solidInTile": [{ "x": 6, "y": 0, "width": 58, "height": 64 }]
+  },
+  { 
+    "id": 55, "solid": true, "water": false,
+    "solidInTile": [{ "x": 6, "y": 30, "width": 58, "height": 36 }]
+  },
+  { 
+    "id": 56, "solid": true, "water": false,
+    "solidInTile": [{ "x": 0, "y": 0, "width": 58, "height": 64 }]
+  },
+  { "id": 57, "solid": false, "water": false },
+  { 
+    "id": 58, "solid": true, "water": false,
+    "solidInTile": [{ "x": 6, "y": 0, "width": 58, "height": 64 }]
+  },
+  { 
+    "id": 59, "solid": true, "water": false,
+    "solidInTile": [
+      { "x": 0, "y": 0, "width": 58, "height": 64 },
+      { "x": 0, "y": 28, "width": 64, "height": 36 }
+    ]
+  },
+  { 
+    "id": 60, "solid": true, "water": false,
+    "solidInTile": [{ "x": 0, "y": 28, "width": 64, "height": 36 }]
+  },
+  { 
+    "id": 61, "solid": true, "water": false,
+    "solidInTile": [
+      { "x": 6, "y": 0, "width": 58, "height": 64 },
+      { "x": 0, "y": 28, "width": 64, "height": 36 }
+    ]
+  },
+  { 
+    "id": 62, "solid": true, "water": false,
+    "solidInTile": [{ "x": 6, "y": 0, "width": 58, "height": 64 }]
+  },
+  { 
+    "id": 63, "solid": true, "water": false,
+    "solidInTile": [{ "x": 0, "y": 0, "width": 58, "height": 64 }]
+  },
+  { 
+    "id": 64, "solid": true, "water": false,
+    "solidInTile": [{ "x": 0, "y": 0, "width": 64, "height": 64 }]
+  },
+  { 
+    "id": 65, "solid": true, "water": false,
+    "solidInTile": [{ "x": 6, "y": 0, "width": 58, "height": 48 }]
+  },
+  { 
+    "id": 66, "solid": true, "water": false,
+    "solidInTile": [{ "x": 0, "y": 0, "width": 58, "height": 48 }]
+  }
+]

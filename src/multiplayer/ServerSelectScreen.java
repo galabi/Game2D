@@ -3,19 +3,21 @@ package multiplayer;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-
 import MainPackage.Main;
-import entity.Entity;
 import entity.FontLoader;
 
-public class ServerSelectScreen extends Entity {
+public class ServerSelectScreen{
 	
+	int x,y,sizeX,sizeY;
 	int maxServers = 3;
 	serverToJoin buttons[] = new serverToJoin[maxServers];
 	
 	
 	public ServerSelectScreen(int x, int y, int sizeX, int sizeY) {
-		super(x, y, sizeX, sizeY);
+		this.x = x;
+		this.y = y;
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
 	}
 
 	//make from an available server a button so the player can press
@@ -28,7 +30,6 @@ public class ServerSelectScreen extends Entity {
 		}
 	}
 	
-	@Override
 	public void render(Graphics2D g2d) {
 		for(int i = 0;i<maxServers;i++) {
 			if(buttons[i] != null){
@@ -48,19 +49,21 @@ public class ServerSelectScreen extends Entity {
 	
 	
 	//sub_class
-	private class serverToJoin extends Entity{
+	private class serverToJoin{
 		String ip;
-		int port;
+		int port,x,y,sizeX,sizeY;
 		boolean press = true;
 		Font font = FontLoader.getPixelFont(16);
 
 		
 		public serverToJoin(int x, int y, int sizeX,int sizeY, String ip,int port) {
-			super(x, y, sizeX,sizeY);
+			this.x = x;
+			this.y = y;
+			this.sizeX = sizeX;
+			this.sizeY = sizeY;
 			this.ip = ip;
 			this.port = port;
 		}
-		@Override
 		public void render(Graphics2D g2d) {
 
 			g2d.setFont(font);

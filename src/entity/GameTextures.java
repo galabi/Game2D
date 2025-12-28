@@ -5,6 +5,10 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import mapRender.MapEntity;
+import mapRender.MapObject;
+import mapRender.MapTile;
+
 public class GameTextures {
 	private static ImageIcon[] itemIcons,tileIcons,objectIcons;
 	
@@ -76,6 +80,14 @@ public class GameTextures {
 		return objectIcons[id];
 	}
 	
+	public static ImageIcon getMapRenderImage(MapEntity e) {
+		if(e instanceof MapTile) {
+			return getTileIcon(e.getId());
+		}else if(e instanceof MapObject) {
+			return getObjectIcon(e.getId());
+		}else return null;
+		
+	}
 	
 	public static void preloadImages(Graphics2D g2d) {
 	    for (ImageIcon icon : itemIcons) {

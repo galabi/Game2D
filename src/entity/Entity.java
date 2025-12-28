@@ -2,44 +2,19 @@ package entity;
 
 import java.awt.Graphics2D;
 
-import javax.swing.ImageIcon;
-
-import MainPackage.Main;
-
 public class Entity {
+	
 	protected int x,y,sizeX,sizeY;
 	
-	ImageIcon image;
-
-	
-	public Entity(int x, int y ,int sizeX ,int sizeY) {
+	public Entity(int x,int y,int sizeX,int sizeY) {
 		this.x = x;
 		this.y = y;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 	}
-	public Entity(int x, int y ,int size,String FileLocation) {
-		this.x = x;
-		this.y = y;
-		image = new ImageIcon(getClass().getResource(FileLocation));
-		this.sizeX = size*image.getIconWidth()/image.getIconHeight();
-		this.sizeY = size;
-	}
-
-	public void tick() {
-
-	}
 	
 	public void render(Graphics2D g2d) {
-		int screenX = Main.tilesManager.getCameraX(false),screenY = Main.tilesManager.getCameraY(false);
-		try {
-			g2d.drawImage(image.getImage(), x-screenX,y-screenY, sizeX,sizeY,null);
-		} catch (Exception e) {
-			System.out.println(x/sizeX +" "+y/sizeY);
-		}
-		if(Main.devmode) {
-			g2d.drawRect(x-screenX, y-screenY, sizeX,sizeY);
-		}
+		
 	}
 	
 	public void setLocation(int x,int y) {
@@ -58,7 +33,6 @@ public class Entity {
 	public int getY() {
 		return y;
 	}
-
 	public int getSizeX() {
 		return sizeX;
 	}
@@ -72,5 +46,4 @@ public class Entity {
 	public void setSizeY(int sizeY) {
 		this.sizeY = sizeY;
 	}
-
 }

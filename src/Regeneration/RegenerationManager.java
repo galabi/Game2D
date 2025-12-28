@@ -6,6 +6,7 @@ import java.util.Random;
 import MainPackage.Main;
 import MainPackage.TilesManager;
 import entity.GameObject;
+import mapRender.ObjectPropertiesManager;
 
 public class RegenerationManager {
 	
@@ -26,12 +27,13 @@ public class RegenerationManager {
 	
 	//add the object to the growth list;
 	public static void insertToGrowthList(GameObject nextObject,int x,int y) {
+		String ObjName = ObjectPropertiesManager.getObject(nextObject.getId()).getName();
 		String targetGrow = "";
 		
 		//tree case
-		if(nextObject.getName().equals("Tree sapling")) {
+		if(ObjName.equals("Tree sapling")) {
 			targetGrow = "Tree";
-		}else if(nextObject.getName().equals("Rock")) {
+		}else if(ObjName.equals("Rock")) {
 			targetGrow = "Rock Max";
 		}
 		regenerationList.add(new RegenerationBlock(nextObject,x,y,targetGrow));
@@ -52,7 +54,7 @@ public class RegenerationManager {
     	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ, 2);
 		
 		//left tree 
-		if(objectsMap[rootMapI][rootMapJ-1].getName().equals("Tree")) {
+		if(ObjectPropertiesManager.getObject(objectsMap[rootMapI][rootMapJ-1].getId()).getName().equals("Tree")) {
         	Main.tilesManager.updateBlock(rootMapI, rootMapJ-1, 17);
         	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ-1, 5);
 
@@ -62,7 +64,7 @@ public class RegenerationManager {
 		}
 		
 		//right tree
-		if(objectsMap[rootMapI][rootMapJ+1].getName().equals("Tree")) {
+		if(ObjectPropertiesManager.getObject(objectsMap[rootMapI][rootMapJ+1].getId()).getName().equals("Tree")) {
         	Main.tilesManager.updateBlock(rootMapI, rootMapJ+1, 17);
         	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ+1, 5);
 		}else {
@@ -75,7 +77,7 @@ public class RegenerationManager {
 	private static void GrowRock(int rockMapI,int rockMapJ,GameObject[][] objectsMap) {
     	Main.tilesManager.updateBlock(rockMapI, rockMapJ, objectsMap[rockMapI][rockMapJ].getId()-1);
     	
-		if(objectsMap[rockMapI][rockMapJ].getName().equals("Rock Max") == false) {
+		if(ObjectPropertiesManager.getObject(objectsMap[rockMapI][rockMapJ].getId()).getName().equals("Rock Max") == false) {
 			insertToGrowthList(objectsMap[rockMapI][rockMapJ],rockMapJ*TilesManager.tileSize,rockMapI*TilesManager.tileSize);
 		}
 	

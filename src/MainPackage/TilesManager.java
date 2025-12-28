@@ -3,6 +3,7 @@ package MainPackage;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -13,8 +14,12 @@ import Regeneration.RegenerationManager;
 import Storage.Item;
 import creature.CreatureManager;
 import entity.GameObject;
+import entity.GameTextures;
 import entity.ItemOnFloor;
 import entity.Tile;
+import mapRender.MapEntity;
+import mapRender.ObjectPropertiesManager;
+import mapRender.TilePropertiesManager;
 import multiplayer.ServerClientHandler;
 
 public class TilesManager {
@@ -37,9 +42,12 @@ public class TilesManager {
 	String map = "";
 	
 	public TilesManager() {
+		ObjectPropertiesManager.loadObjects();
+		TilePropertiesManager.loadTiles();
 		tiles = new Tile[maxScreenCol][maxScreenRow];
 		objects = new GameObject[maxScreenCol][maxScreenRow];
 		drops = new ArrayList<ItemOnFloor>();
+		
 	}
 	
 	public void tick() {
@@ -81,73 +89,89 @@ public class TilesManager {
 	
 	
 	
-		public void renderObjects(Graphics2D g2d) {
-			renderList.clear(); // Clear the list for the new frame
+	public void renderObjects(Graphics2D g2d) {
+		renderList.clear(); // Clear the list for the new frame
 
-			int startCol = (int)(cameraY / tileSize);
-			int endCol = (int)(cameraY / tileSize + borderY);
-			int startRow = (int)(cameraX / tileSize);
-			int endRow = (int)(cameraX / tileSize + borderX);
+		int startCol = (int)(cameraY / tileSize);
+		int endCol = (int)(cameraY / tileSize + borderY);
+		int startRow = (int)(cameraX / tileSize);
+		int endRow = (int)(cameraX / tileSize + borderX);
 
-			startRow = Math.max(0,startRow);
-			startCol = Math.max(0,startCol);
+		startRow = Math.max(0,startRow);
+		startCol = Math.max(0,startCol);
 			
-			for (int i = startCol; i < endCol && i < maxScreenCol; i++) {
-				for (int j = startRow; j < endRow && j < maxScreenRow; j++) {
+		for (int i = startCol; i < endCol && i < maxScreenCol; i++) {
+			for (int j = startRow; j < endRow && j < maxScreenRow; j++) {
 					
-					// Only add objects that exist (ID != 0)
-					if (objects[i][j].getId() != 0) {
-						renderList.add(objects[i][j]);
-					}
+				// Only add objects that exist (ID != 0)
+				if (objects[i][j].getId() != 0) {
+					renderList.add(objects[i][j]);
 				}
 			}
-
-			//Add Players to the list
-			if (Main.player != null) renderList.add(Main.player);
-			if (Main.player2 != null) renderList.add(Main.player2);
-			 renderList.addAll(creature.CreatureManager.getCreatures()); 
-
-			// Sort the list based on Y depth
-			renderList.sort((e1, e2) -> {
-				int y1 = getSortY(e1);
-				int y2 = getSortY(e2);
-				return Integer.compare(y1, y2);
-			});
-
-			//Render everything in order
-			for (entity.Entity e : renderList) {
-				e.render(g2d);
-			}
-			
-			// Draw mouse cursor selection box
-			if(!Main.inventory.IsOpen() && Main.gameState == 2) {
-				g2d.setColor(Color.black);
-				g2d.setStroke(new BasicStroke(2));
-				g2d.drawRect(((cameraX + Main.mouseManeger.getMouseX())/tileSize)*tileSize - cameraX, 
-						((cameraY + Main.mouseManeger.getMouseY())/tileSize)*tileSize - cameraY,
-						tileSize, tileSize);
-			}
 		}
+			
+		//Add Players to the list
+		if (Main.player != null) renderList.add(Main.player);
+		if (Main.player2 != null) renderList.add(Main.player2);
+		renderList.addAll(creature.CreatureManager.getCreatures()); 
+
+		// Sort the list based on Y depth
+		renderList.sort((e1, e2) -> {
+			int y1 = getSortY(e1);
+			int y2 = getSortY(e2);
+			return Integer.compare(y1, y2);
+		});
+
+		//Render everything in order
+		for (entity.Entity e : renderList) {
+			e.render(g2d);
+		}
+			
+		// Draw mouse cursor selection box
+		if(!Main.inventory.IsOpen() && Main.gameState == 2) {
+			g2d.setColor(Color.black);
+			g2d.setStroke(new BasicStroke(2));
+			g2d.drawRect(((cameraX + Main.mouseManeger.getMouseX())/tileSize)*tileSize - cameraX, 
+					((cameraY + Main.mouseManeger.getMouseY())/tileSize)*tileSize - cameraY,
+					tileSize, tileSize);
+		}
+	}
 
 		
 		// Helper function to calculate the sorting Y position.
 		//It handles the "Depth" logic.
-		private int getSortY(entity.Entity e) {
-	    	// Default sort Y is the bottom of the sprite (the feet)
-	    	 int sortY = e.getY() + e.getSizeY();
+	private int getSortY(entity.Entity e) {
+	    // Default sort Y is the bottom of the sprite (the feet)
+		int sortY = e.getY() + e.getSizeY();
 
-	    	 // Special handling for multi-tile objects (like Trees)
-	    	 if (e instanceof entity.GameObject) {
-				entity.GameObject obj = (entity.GameObject) e;
+		// Special handling for multi-tile objects (like Trees)
+		if (e instanceof entity.GameObject) {
+			entity.GameObject obj = (entity.GameObject) e;
 				
-				// If this object is a "Top" part of a tree (Leaves) or "Low" part (Fence)
-	            // we treat its depth as if it were one tile lower (at the Trunk level)
-				sortY = (int) (sortY + obj.getObjectRenderOffSet()*tileSize);
+			// If this object is a "Top" part of a tree (Leaves) or "Low" part (Fence)
+	        // we treat its depth as if it were one tile lower (at the Trunk level)
+			sortY = (int) (sortY + ObjectPropertiesManager.getObject(obj.getId()).getObjectRenderOffSet()*tileSize);
 				
-			}
-			
-			return sortY;
 		}
+			
+		return sortY;
+	}
+	
+	public void render(Graphics2D g2d,MapEntity e,int x,int y) {
+		try {
+			g2d.drawImage(GameTextures.getMapRenderImage(e).getImage(), x-cameraX,y-cameraY, tileSize,tileSize,null);
+		} catch (Exception ex) {
+			System.out.println(x/tileSize +" "+y/tileSize);
+		}
+		if(Main.devmode) {
+			g2d.setColor(Color.white);
+			g2d.drawRect(x-cameraX, y-cameraY, tileSize,tileSize);
+			for(Rectangle i: e.getSolidInTile()) {
+				g2d.drawRect(x+i.x - cameraX,y+i.y- cameraY, i.width, i.height);
+
+			}
+		}
+	}
 	
 	public int isPlayersClose() {
 		if(Main.player2 == null || ( Main.player2 != null && Main.player2.playerI != Main.player.playerI)) {
@@ -215,7 +239,8 @@ public class TilesManager {
 			for(int i=0;i<maxScreenCol;i++) {
 				for(int j=0;j<maxScreenRow;j++) {
 					objects[i][j] = new GameObject(s.nextInt() ,j*tileSize, i*tileSize, tileSize);
-					if(objects[i][j].getName().equals("Tree sapling") || objects[i][j].getName().equals("Rock")) {
+					if(ObjectPropertiesManager.getObject(objects[i][j].getId()).getName().equals("Tree sapling") ||
+							ObjectPropertiesManager.getObject(objects[i][j].getId()).getName().equals("Rock")) {
 						RegenerationManager.insertToGrowthList(objects[i][j],j*tileSize,i*tileSize);
 					}
 				}
@@ -373,7 +398,7 @@ public class TilesManager {
 	}
 	
 	public void updateBlock(int mapI,int mapJ, int newId) {
-	    objects[mapI][mapJ].setType(newId);
+	    objects[mapI][mapJ].setId(newId);
 	    ServerClientHandler.sendDataToServer("update_block " + mapI + " " + mapJ + " " + newId);
 	    }
 	

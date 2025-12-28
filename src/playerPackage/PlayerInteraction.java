@@ -3,8 +3,8 @@ package playerPackage;
 import MainPackage.Main;
 import MainPackage.TilesManager;
 import Storage.Item;
-import entity.GameObject;
-import entity.Tile;
+import mapRender.ObjectPropertiesManager;
+import mapRender.TilePropertiesManager;
 
 public class PlayerInteraction {
 	
@@ -65,11 +65,11 @@ public class PlayerInteraction {
 	
 	private static void rightMousePress(int pressBlockI,int pressBlockJ) {
 		Item itemInHand = Main.inventory.getItemInHand();
-		GameObject obj = Main.tilesManager.getObjects()[pressBlockI][pressBlockJ];
-		Tile tile = Main.tilesManager.getTiles()[pressBlockI][pressBlockJ];
+		int objId = Main.tilesManager.getObjects()[pressBlockI][pressBlockJ].getId();
+		int tileId = Main.tilesManager.getTiles()[pressBlockI][pressBlockJ].getId();
 		
-		boolean isCookFish = (obj.getName().equals("Campfire on") && itemInHand.getName().equals("Fish")) ||
-				(obj.getName().equals("Campfire") && itemInHand.getName().equals("Wood"));
+		boolean isCookFish = (ObjectPropertiesManager.getObject(objId).getName().equals("Campfire on") && itemInHand.getName().equals("Fish")) ||
+				(ObjectPropertiesManager.getObject(objId).getName().equals("Campfire") && itemInHand.getName().equals("Wood"));
 		
 		//place block
 		if(itemInHand.IsPlaceable()) {
@@ -80,7 +80,7 @@ public class PlayerInteraction {
 			Main.player.cookFish(pressBlockI, pressBlockJ, itemInHand);
 			
 		//fishing
-		}else if(itemInHand.getId() == 3 && tile.isWater(Main.mouseManeger.getMouseX(),Main.mouseManeger.getMouseY())) {
+		}else if(itemInHand.getId() == 3 && TilePropertiesManager.getTile(tileId).isWater(Main.mouseManeger.getMouseX(),Main.mouseManeger.getMouseY())) {
 			Main.player.startFishing(pressBlockI,pressBlockJ);
 
 		}

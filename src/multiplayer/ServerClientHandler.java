@@ -50,7 +50,7 @@ public class ServerClientHandler {
 			Main.tilesManager.setMapFromMultiplayer(responseArr);
 			break;
 		case "update_block":
-			((GameObject) Main.tilesManager.getObjects()[Integer.parseInt(responseArr[1])][Integer.parseInt(responseArr[2])]).setType(Integer.parseInt(responseArr[3]));
+			((GameObject) Main.tilesManager.getObjects()[Integer.parseInt(responseArr[1])][Integer.parseInt(responseArr[2])]).setId(Integer.parseInt(responseArr[3]));
 			break;
 		case "items:":
 			Main.tilesManager.setItemsOnTilesFromMultiplayer(responseArr);

@@ -34,7 +34,6 @@ public class Creature extends Entity{
 		targetY = y;
 	}
 	
-	@Override
 	public void render(Graphics2D g2d) {
 		g2d.setColor(SadowColor);
 		g2d.fillOval(x - Main.tilesManager.getCameraX(false) + (sizeX - 44) / 2, y - Main.tilesManager.getCameraY(false) + sizeY - 10, 44, 20);

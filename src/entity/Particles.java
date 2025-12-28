@@ -37,7 +37,6 @@ public class Particles extends Entity {
 		time = System.currentTimeMillis();
 	}
 	
-	@Override
 	public void render(Graphics2D g2d) {
 		int screenX = Main.tilesManager.getCameraX(false),screenY = Main.tilesManager.getCameraY(false);
 		g2d.drawImage(particalsImg[id].getImage(),x-screenX,y-screenY,sizeX ,sizeY,null);

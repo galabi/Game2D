@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import MainPackage.Main;
 import MainPackage.TilesManager;
 import Regeneration.RegenerationManager;
+import mapRender.ObjectPropertiesManager;
 
 public class PlayerBreakBlock {
 	
@@ -14,9 +15,9 @@ public class PlayerBreakBlock {
 	    int i = PlayerInteraction.objectI;
 	    int j = PlayerInteraction.objectJ;
 	    int handItemId = Main.inventory.getItemInHand().getId();
-	    ArrayList<Integer> itemWhenBroken = Main.tilesManager.getObjects(i, j).getItemWhenBroken();
+	    ArrayList<Integer> itemWhenBroken = ObjectPropertiesManager.getObject(objId).getItemWhenBroken();
 	    
-	    if (Main.tilesManager.getObjects(i, j).getName().equals("Rock") || Main.tilesManager.getObjects(i, j).getName().equals("Rock Max")) {
+	    if (ObjectPropertiesManager.getObject(objId).getName().equals("Rock") || ObjectPropertiesManager.getObject(objId).getName().equals("Rock Max")) {
 	        boolean canBreak = (handItemId == 10 && timeDelta >= PlayerInteraction.BreakTime / 2)
 	                         || timeDelta >= PlayerInteraction.rockBreakTime;
 	        if (canBreak) {
@@ -28,7 +29,7 @@ public class PlayerBreakBlock {
 	            }
 	            resetInteraction();
 	        }
-	    }else if (Main.tilesManager.getObjects(i, j).getName().equals("Tree") && Main.tilesManager.getObjects(i, j).isBreakable()) {
+	    }else if (ObjectPropertiesManager.getObject(objId).getName().equals("Tree") && ObjectPropertiesManager.getObject(objId).isBreakable()) {
 	        boolean canBreak = (handItemId == 2 && timeDelta >= PlayerInteraction.BreakTime / 2)
 	        		|| timeDelta >= PlayerInteraction.BreakTime;
             if (canBreak) {
@@ -39,7 +40,7 @@ public class PlayerBreakBlock {
             	resetInteraction();
             	}
 	    	
-	    }else if(Main.tilesManager.getObjects(i, j).getName().equals("Tree sapling")&& Main.tilesManager.getObjects(i, j).isBreakable()) {
+	    }else if(ObjectPropertiesManager.getObject(objId).getName().equals("Tree sapling")&& ObjectPropertiesManager.getObject(objId).isBreakable()) {
 	        boolean canBreak = (handItemId == 2 && timeDelta >= PlayerInteraction.BreakTime / 2)
 	        		|| timeDelta >= PlayerInteraction.BreakTime;
             if (canBreak) {
@@ -51,7 +52,7 @@ public class PlayerBreakBlock {
             	resetInteraction();
             }
             
-	    }else if (Main.tilesManager.getObjects(i, j).isBreakable()) {
+	    }else if (ObjectPropertiesManager.getObject(objId).isBreakable()) {
 	        boolean canBreak = (handItemId == 2 && timeDelta >= PlayerInteraction.BreakTime / 2)
 	                         || timeDelta >= PlayerInteraction.BreakTime;
 	        if (canBreak) {
@@ -70,7 +71,7 @@ public class PlayerBreakBlock {
     	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ, 0);
 		
 		//left tree 
-		if(Main.tilesManager.getObjects(rootMapI, rootMapJ-2).getName().equals("Tree")) {
+		if(ObjectPropertiesManager.getObject(Main.tilesManager.getObjects(rootMapI, rootMapJ-2).getId()).getName().equals("Tree")) {
         	Main.tilesManager.updateBlock(rootMapI, rootMapJ-1, 15);
         	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ-1, 3);
 
@@ -80,7 +81,7 @@ public class PlayerBreakBlock {
 		}
 		
 		//right tree
-		if(Main.tilesManager.getObjects(rootMapI, rootMapJ+2).getName().equals("Tree")) {
+		if(ObjectPropertiesManager.getObject(Main.tilesManager.getObjects(rootMapI, rootMapJ+2).getId()).getName().equals("Tree")) {
         	Main.tilesManager.updateBlock(rootMapI, rootMapJ+1, 13);
         	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ+1, 1);
 		}else {
