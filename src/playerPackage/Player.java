@@ -122,7 +122,7 @@ public class Player extends Entity implements KeyListener {
 			rod.render(g2d);
 		}
 		
-		for(int i = 0;i<= health;i++) {
+		for(int i = 0;i < health;i++) {
 			g2d.drawImage(heartImage.getImage(), 30 + 40*i , 30, heartImage.getIconWidth()*2, heartImage.getIconHeight()*2, null);
 		}
 	}
@@ -162,45 +162,68 @@ public class Player extends Entity implements KeyListener {
 		ServerClientHandler.sendDataToServer(toString());
 	}
 	
+	private boolean checkTileCollision(int tileI, int tileJ, int xInTile, int yInTile, int w, int h) {
+		Tile tile = Main.tilesManager.getTiles()[tileI][tileJ];
+		if(tile.isSolid(xInTile, yInTile, w, h)) {
+			tile.triggerGate();
+			return true;
+		}
+		return false;
+	}
+
 	private void collision(){
 		int playerXInTile = (x + playerCollisionBoxX + speedX) % tilesize;
 		int playerYInTile = (y + playerCollisionBoxY + speedY) % tilesize;
 		int playerXInTileAndWidth = (x + playerCollisionBoxX + playerCollisionBoxWidth + speedX) % tilesize;
 		int playerYInTileAndHeight = (y + playerCollisionBoxY + playerCollisionBoxHeight + speedY) % tilesize;
-		
+
 		if(speedX > 0){
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + speedY )/tilesize)]
-					[(int)((x + playerCollisionBoxX + playerCollisionBoxWidth + speedX)/tilesize)].isSolid(playerXInTileAndWidth,playerYInTile,1,playerCollisionBoxHeight)) speedX = 0;			
-			
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + playerCollisionBoxHeight + speedY )/tilesize)]
-					[(int)((x + playerCollisionBoxX + playerCollisionBoxWidth + speedX)/tilesize)].isSolid(playerXInTileAndWidth,playerYInTileAndHeight-playerCollisionBoxHeight,1,playerCollisionBoxHeight)) speedX = 0;
+			if(checkTileCollision(
+					(int)((y + playerCollisionBoxY + speedY)/tilesize),
+					(int)((x + playerCollisionBoxX + playerCollisionBoxWidth + speedX)/tilesize),
+					playerXInTileAndWidth, playerYInTile, 1, playerCollisionBoxHeight)) speedX = 0;
+
+			if(checkTileCollision(
+					(int)((y + playerCollisionBoxY + playerCollisionBoxHeight + speedY)/tilesize),
+					(int)((x + playerCollisionBoxX + playerCollisionBoxWidth + speedX)/tilesize),
+					playerXInTileAndWidth, playerYInTileAndHeight - playerCollisionBoxHeight, 1, playerCollisionBoxHeight)) speedX = 0;
 		}
-		
+
 		if(speedX < 0){
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + speedY )/tilesize)]
-					[(int)((x + playerCollisionBoxX + speedX)/tilesize)].isSolid(playerXInTile,playerYInTile,1,playerCollisionBoxHeight)) speedX = 0;
-			
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + playerCollisionBoxHeight + speedY )/tilesize)]
-					[(int)((x + playerCollisionBoxX + speedX)/tilesize)].isSolid(playerXInTile,playerYInTileAndHeight-playerCollisionBoxHeight,1,playerCollisionBoxHeight)) speedX = 0;
+			if(checkTileCollision(
+					(int)((y + playerCollisionBoxY + speedY)/tilesize),
+					(int)((x + playerCollisionBoxX + speedX)/tilesize),
+					playerXInTile, playerYInTile, 1, playerCollisionBoxHeight)) speedX = 0;
+
+			if(checkTileCollision(
+					(int)((y + playerCollisionBoxY + playerCollisionBoxHeight + speedY)/tilesize),
+					(int)((x + playerCollisionBoxX + speedX)/tilesize),
+					playerXInTile, playerYInTileAndHeight - playerCollisionBoxHeight, 1, playerCollisionBoxHeight)) speedX = 0;
 		}
-		
+
 		if(speedY > 0){
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + playerCollisionBoxHeight + speedY)/tilesize)]
-					[(int)((x + playerCollisionBoxX + speedX)/tilesize)].isSolid(playerXInTile,playerYInTileAndHeight,playerCollisionBoxWidth,1)) speedY = 0;
-			
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + playerCollisionBoxHeight + speedY)/tilesize)]
-					[(int)((x + playerCollisionBoxX + playerCollisionBoxWidth + speedX)/tilesize)].isSolid(playerXInTileAndWidth-playerCollisionBoxWidth,playerYInTileAndHeight,playerCollisionBoxWidth,1)) speedY = 0;
+			if(checkTileCollision(
+					(int)((y + playerCollisionBoxY + playerCollisionBoxHeight + speedY)/tilesize),
+					(int)((x + playerCollisionBoxX + speedX)/tilesize),
+					playerXInTile, playerYInTileAndHeight, playerCollisionBoxWidth, 1)) speedY = 0;
+
+			if(checkTileCollision(
+					(int)((y + playerCollisionBoxY + playerCollisionBoxHeight + speedY)/tilesize),
+					(int)((x + playerCollisionBoxX + playerCollisionBoxWidth + speedX)/tilesize),
+					playerXInTileAndWidth - playerCollisionBoxWidth, playerYInTileAndHeight, playerCollisionBoxWidth, 1)) speedY = 0;
 		}
-		
+
 		if(speedY < 0){
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + speedY)/tilesize)]
-					[(int)((x + playerCollisionBoxX + speedX )/tilesize)].isSolid(playerXInTile,playerYInTile,playerCollisionBoxWidth,1)) speedY = 0;
-			
-			if(Main.tilesManager.getTiles()[(int)((y + playerCollisionBoxY + speedY)/tilesize)]
-					[(int)((x + playerCollisionBoxX + playerCollisionBoxWidth + speedX )/tilesize)].isSolid(playerXInTileAndWidth-playerCollisionBoxWidth,playerYInTile,playerCollisionBoxWidth,1)) speedY = 0;
-		
+			if(checkTileCollision(
+					(int)((y + playerCollisionBoxY + speedY)/tilesize),
+					(int)((x + playerCollisionBoxX + speedX)/tilesize),
+					playerXInTile, playerYInTile, playerCollisionBoxWidth, 1)) speedY = 0;
+
+			if(checkTileCollision(
+					(int)((y + playerCollisionBoxY + speedY)/tilesize),
+					(int)((x + playerCollisionBoxX + playerCollisionBoxWidth + speedX)/tilesize),
+					playerXInTileAndWidth - playerCollisionBoxWidth, playerYInTile, playerCollisionBoxWidth, 1)) speedY = 0;
 		}
-		
 	}
 	
 	
@@ -209,7 +232,6 @@ public class Player extends Entity implements KeyListener {
 		
 		GameObject obj = Main.tilesManager.getObjects(pressBlockI,pressBlockJ);
 		Tile tile = Main.tilesManager.getTiles(pressBlockI,pressBlockJ);		
-		
 		//sapling case (grow Tree)
 		if(itemToPlace.getId() == 7 && Main.tilesManager.canPlaceTree(pressBlockI, pressBlockJ)) {
 			Main.player.imagePosture = 2;
@@ -273,18 +295,18 @@ public class Player extends Entity implements KeyListener {
 		int key = e.getKeyCode();
 
 		if(key == KeyEvent.VK_ESCAPE) {
-			if(Main.gameState == 2) {
+			if(Main.gameState == Main.GameState.GAME) {
 				if(Main.inventory.IsOpen()) {
 					Main.inventory.SetOpen(false);
 					return;
 				}
-				Main.gameState = 3;
-			}else if(Main.gameState == 3) {
-				Main.gameState = 2;
-			}	
+				Main.gameState = Main.GameState.PAUSE;
+			}else if(Main.gameState == Main.GameState.PAUSE) {
+				Main.gameState = Main.GameState.GAME;
+			}
 		}
-		
-		if(Main.gameState != 2) return;
+
+		if(Main.gameState != Main.GameState.GAME) return;
 
 		if(key == KeyEvent.VK_A) {
 			speedX = -walkSpeed;
@@ -341,8 +363,8 @@ public class Player extends Entity implements KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {	
-		if(Main.gameState != 2) return;
-		int key = e.getKeyCode();	
+		if(Main.gameState != Main.GameState.GAME) return;
+		int key = e.getKeyCode();
 		if(key == KeyEvent.VK_W) { 
 			speedY = 0;
 			if(speedX == 0) {

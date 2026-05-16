@@ -1,7 +1,26 @@
+# Compiled output
 /bin/
-.DS_Store
+*.class
 
-.settings/
+# Eclipse IDE
 .classpath
 .project
-bin/
+.settings/
+
+# IntelliJ IDEA
+**/.idea/
+.idea/
+**/*.iml
+**/out/
+
+# Project planning
+plan.md
+
+# macOS
+.DS_Store
+
+# Game saves (runtime user data)
+saves/
+
+# Claude Code project instructions
+CLAUDE.md

@@ -23,6 +23,8 @@ import playerPackage.Player;
 
 public class Main extends Canvas implements Runnable{
 
+	public enum GameState { START, GAME, PAUSE }
+
 	private static final long serialVersionUID = 1L;
 	long lastSave = System.currentTimeMillis();
 	public static final int width = 1200 ,height = width /16 * 10; 
@@ -45,11 +47,7 @@ public class Main extends Canvas implements Runnable{
 	Graphics2D g2;
 	
 	Text text;
-	
-	public static int gameState = 1;
-	//1 - Start screen
-	//2 - Game
-	//3 - Pause
+	public static GameState gameState = GameState.START;
 	
 	public Main() {
 		
@@ -112,10 +110,10 @@ public class Main extends Canvas implements Runnable{
 	
 	public void tick() {
 		switch (gameState) {
-		case 1: 
+		case START:
 			startscreen.tick();
 			break;
-		case 2: 
+		case GAME:
 			if(tilesManager.isMapIsReady()) {
 
 				player.tick();
@@ -123,12 +121,14 @@ public class Main extends Canvas implements Runnable{
 				tilesManager.tick();
 				CreatureManager.tick();
 			}
-			
+
 			if(host && System.currentTimeMillis() >lastSave+10000) {
 				tilesManager.saveMap();
 				inventory.saveInventory();
 				lastSave = System.currentTimeMillis();
 			}
+			break;
+		case PAUSE:
 			break;
 		}
 		
@@ -152,11 +152,10 @@ public class Main extends Canvas implements Runnable{
 		}
 		
 		switch (gameState) {
-		case 1: 
+		case START:
 			startscreen.render(g2);
 			break;
-		case 2: 
-			//draw the game
+		case GAME:
 			if(tilesManager.isMapIsReady()) {
 				tilesManager.renderTile(g2);
 				tilesManager.renderObjects(g2);
@@ -166,7 +165,7 @@ public class Main extends Canvas implements Runnable{
 				StartScreen.renderBackScreen(g2);
 			}
 			break;
-		case 3:
+		case PAUSE:
 			tilesManager.renderTile(g2);
 			tilesManager.renderObjects(g2);
 			pausescreen.render(g2);

@@ -64,7 +64,7 @@ public class ServerClientHandler {
 		case "add_drop":
 			Item temp = new Item(Integer.parseInt(responseArr[1]));
 			temp.setQuantity(Integer.parseInt(responseArr[2]));
-			Main.tilesManager.addItemDrop(new Item(Integer.parseInt(responseArr[1])),Integer.parseInt(responseArr[3]) , Integer.parseInt(responseArr[4]));
+			Main.tilesManager.addItemDrop(temp, Integer.parseInt(responseArr[3]), Integer.parseInt(responseArr[4]));
 			break;
 		}
 		

@@ -7,7 +7,9 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Formatter;
+import java.util.List;
 import java.util.Scanner;
 
 import Regeneration.RegenerationManager;
@@ -18,6 +20,7 @@ import entity.GameTextures;
 import entity.ItemOnFloor;
 import entity.Tile;
 import mapRender.MapEntity;
+import mapRender.ObjectIds;
 import mapRender.ObjectPropertiesManager;
 import mapRender.TilePropertiesManager;
 import multiplayer.ServerClientHandler;
@@ -34,7 +37,7 @@ public class TilesManager {
 	GameObject[][] objects;
 	private Scanner s;
 	private Formatter x;
-	ArrayList<ItemOnFloor> drops;
+	List<ItemOnFloor> drops;
 	private ArrayList<entity.Entity> renderList = new ArrayList<>();
 	boolean mapIsReady = false;
 	
@@ -46,7 +49,7 @@ public class TilesManager {
 		TilePropertiesManager.loadTiles();
 		tiles = new Tile[maxScreenCol][maxScreenRow];
 		objects = new GameObject[maxScreenCol][maxScreenRow];
-		drops = new ArrayList<ItemOnFloor>();
+		drops = Collections.synchronizedList(new ArrayList<>());
 		
 	}
 	
@@ -128,7 +131,7 @@ public class TilesManager {
 		}
 			
 		// Draw mouse cursor selection box
-		if(!Main.inventory.IsOpen() && Main.gameState == 2) {
+		if(!Main.inventory.IsOpen() && Main.gameState == Main.GameState.GAME) {
 			g2d.setColor(Color.black);
 			g2d.setStroke(new BasicStroke(2));
 			g2d.drawRect(((cameraX + Main.mouseManeger.getMouseX())/tileSize)*tileSize - cameraX, 
@@ -174,7 +177,7 @@ public class TilesManager {
 	}
 	
 	public int isPlayersClose() {
-		if(Main.player2 == null || ( Main.player2 != null && Main.player2.playerI != Main.player.playerI)) {
+		if(Main.player2 == null || Main.player2.playerI != Main.player.playerI) {
 			return 2;
 		}
 		return(Math.abs( Main.player2.playerJ - Main.player.playerJ));
@@ -206,55 +209,41 @@ public class TilesManager {
 			cameraY =494;
 		}
 		
-		while(true){
-			try {	
-			s = new Scanner(new File("saves/"+map+".txt"));
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("file do not find");
-			}	
-			try {
-			//adding tiles to the screen from map
-			for(int i=0;i<maxScreenCol;i++) {
-				for(int j=0;j<maxScreenRow;j++) {
-					tiles[i][j] = new Tile(s.nextInt(), j*tileSize, i*tileSize, tileSize);
+		try {
+			s = new Scanner(new File("saves/" + map + ".txt"));
+			for(int i = 0; i < maxScreenCol; i++) {
+				for(int j = 0; j < maxScreenRow; j++) {
+					tiles[i][j] = new Tile(s.nextInt(), j * tileSize, i * tileSize, tileSize);
 				}
 			}
 			s.close();
-
-			break;
-			}catch (Exception e) {
-			      e.printStackTrace();
-			}
+		} catch(FileNotFoundException e) {
+			System.err.println("Map file not found: saves/" + map + ".txt");
+			initDefaultTiles();
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
-		while(true){
-			try {	
-			s = new Scanner(new File("saves/"+map+"_items.txt"));
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("file do not find");
-			}	
-			try {
-			//adding items to the screen from map
-			for(int i=0;i<maxScreenCol;i++) {
-				for(int j=0;j<maxScreenRow;j++) {
-					objects[i][j] = new GameObject(s.nextInt() ,j*tileSize, i*tileSize, tileSize);
-					if(ObjectPropertiesManager.getObject(objects[i][j].getId()).getName().equals("Tree sapling") ||
-							ObjectPropertiesManager.getObject(objects[i][j].getId()).getName().equals("Rock")) {
-						RegenerationManager.insertToGrowthList(objects[i][j],j*tileSize,i*tileSize);
+
+		try {
+			s = new Scanner(new File("saves/" + map + "_items.txt"));
+			for(int i = 0; i < maxScreenCol; i++) {
+				for(int j = 0; j < maxScreenRow; j++) {
+					objects[i][j] = new GameObject(s.nextInt(), j * tileSize, i * tileSize, tileSize);
+					int objId = objects[i][j].getId();
+					if(objId == ObjectIds.TREE_SAPLING || objId == ObjectIds.ROCK) {
+						RegenerationManager.insertToGrowthList(objects[i][j], j * tileSize, i * tileSize);
 					}
 				}
 			}
 			s.close();
-
-			break;
-			}catch (Exception e) {
-			      e.printStackTrace();
-			}
+		} catch(FileNotFoundException e) {
+			System.err.println("Objects file not found: saves/" + map + "_items.txt");
+			initDefaultObjects();
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
+
 		mapIsReady = true;
-		
-		CreatureManager.CreateCreature(1350, 1350, "cow");
 	}
 	
 	
@@ -311,6 +300,7 @@ public class TilesManager {
 	}
 	
 	public void setDropsFromMultiplayer(String[] map) {
+		drops.clear();
 		int n = map.length;
 		for(int i = 1;i<n;i+=4) {
 			if(map[i] == null)return;
@@ -327,12 +317,12 @@ public class TilesManager {
 	
 	//check if the player can place a tree in the location
 	public boolean canPlaceTree(int objectI,int objectJ) {
-		boolean canPlace = objects[objectI][objectJ].getId() == 0 && objects[objectI-1][objectJ].getId() == 0 && //middle
+		boolean cantPlace = objects[objectI][objectJ].getId() == 0 && objects[objectI-1][objectJ].getId() == 0 && //middle
 				(objects[objectI][objectJ+1].getId() == 0 || objects[objectI][objectJ+1].getId() == 17) && // right
 				(objects[objectI-1][objectJ+1].getId() == 0 || objects[objectI-1][objectJ+1].getId() == 5) && // right
 				(objects[objectI][objectJ-1].getId() == 0 || objects[objectI][objectJ-1].getId() == 17) && // left
 				(objects[objectI-1][objectJ-1].getId() == 0 || objects[objectI-1][objectJ-1].getId() == 5); // left
-		return !canPlace;
+		return !cantPlace;
 	}
 	
 	public int getTileSize() {
@@ -380,8 +370,24 @@ public class TilesManager {
 	public void addItemDrop(Item item,int x,int y) {
 		drops.add(new ItemOnFloor(item, x/tileSize, y/tileSize));
 	}
-	public ArrayList<ItemOnFloor> getItemOnFloorList() {
+	public List<ItemOnFloor> getItemOnFloorList() {
 		return drops;
+	}
+
+	private void initDefaultTiles() {
+		for(int i = 0; i < maxScreenCol; i++) {
+			for(int j = 0; j < maxScreenRow; j++) {
+				tiles[i][j] = new Tile(1, j * tileSize, i * tileSize, tileSize);
+			}
+		}
+	}
+
+	private void initDefaultObjects() {
+		for(int i = 0; i < maxScreenCol; i++) {
+			for(int j = 0; j < maxScreenRow; j++) {
+				objects[i][j] = new GameObject(0, j * tileSize, i * tileSize, tileSize);
+			}
+		}
 	}
 	public int getBorderX() {
 		return borderX;
@@ -404,39 +410,41 @@ public class TilesManager {
 	
 	public void addDrop(int mapI, int mapJ, int itemId) {
 	    Main.tilesManager.addItemDrop(new Item(itemId), mapJ * tileSize, mapI * tileSize);
-	    ServerClientHandler.sendDataToServer("add_drop " + mapI + " " + mapI + " " + itemId + " " + 1);
+	    ServerClientHandler.sendDataToServer("add_drop " + mapI + " " + mapJ + " " + itemId + " " + 1);
 	}
 
 	
 	@Override
-		public String toString() {
-		String map = "";
-		for(int i=0;i<maxScreenCol;i++) {
-			for(int j=0;j<maxScreenRow;j++) {
-				map += tiles[i][j].getId() + " ";
+	public String toString() {
+		StringBuilder sb = new StringBuilder("map: ");
+		for(int i = 0; i < maxScreenCol; i++) {
+			for(int j = 0; j < maxScreenRow; j++) {
+				sb.append(tiles[i][j].getId()).append(' ');
 			}
 		}
-			return "map: " + map;
+		return sb.toString();
 	}
-	
+
 	public String DropsToString() {
-		String map = "drops: ";
-		for(ItemOnFloor i:drops) {
-			map = map + i.getItem().getId()+ " "+ i.getItem().getQuantity()+ " " +i.getTileX()+ " "+i.getTileY() + " ";
+		StringBuilder sb = new StringBuilder("drops: ");
+		for(ItemOnFloor i : drops) {
+			sb.append(i.getItem().getId()).append(' ')
+			  .append(i.getItem().getQuantity()).append(' ')
+			  .append(i.getTileX()).append(' ')
+			  .append(i.getTileY()).append(' ');
 		}
-		
-		return map;
+		return sb.toString();
 	}
-	
+
 	public String ObjectsToString() {
-		String map = "";
-		for(int i=0;i<maxScreenCol;i++) {
-			for(int j=0;j<maxScreenRow;j++) {
-				map += ((Tile) objects[i][j]).getId() + " ";
+		StringBuilder sb = new StringBuilder("items: ");
+		for(int i = 0; i < maxScreenCol; i++) {
+			for(int j = 0; j < maxScreenRow; j++) {
+				sb.append(objects[i][j].getId()).append(' ');
 			}
 		}
-			return "items: " + map;
-		}
+		return sb.toString();
+	}
 	
 	public void removeDrop(int id,int quantity) {
 		for(ItemOnFloor i:drops) {

@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 
+import creature.CreatureManager;
 import entity.FontLoader;
 import multiplayer.Client;
 import multiplayer.ServerSelectScreen;
@@ -78,15 +79,15 @@ public class StartScreen{
 		if(mouseX > startButtonX && mouseX < (startButtonX + buttonSizeX) && mouseY > startButtonY && mouseY < startButtonY + buttonSizeY) {
 			startButton = false;
 			Main.tilesManager.readFile();
-			
+			CreatureManager.CreateCreature(1350, 1350, "cow");
+
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-				
-			Main.gameState = 2;
+
+			Main.gameState = Main.GameState.GAME;
 			Main.host = true;
 				
 		//multi-player button

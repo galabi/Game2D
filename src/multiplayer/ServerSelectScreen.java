@@ -87,7 +87,7 @@ public class ServerSelectScreen{
 					}
 				}
 				
-				Main.gameState = 2;
+				Main.gameState = Main.GameState.GAME;
 				Main.host = false;
 				
 				press = true;

@@ -188,44 +188,41 @@ public class Inventory implements MouseWheelListener{
 	}
 	
 	public void loadInventory() {
-		int itemId,quantity;
+		int itemId, quantity;
 		items = new Item[toolbarLength][toolbarLength];
-		while(true){
-			try {
+		try {
 			s = new Scanner(new File("saves/inventory.txt"));
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("file do not find");
-			}	
-			try {
-				for(int i = 0;i<toolbarLength;i++) {
-					for(int j = 0;j<toolbarLength;j++) {
-						itemId = s.nextInt();
-						quantity = s.nextInt();
-						if(itemId == 0) {
-							items[i][j] = new Item();
-						}else{
-							items[i][j] = new Item(itemId);
-							items[i][j].quantity = quantity;
-						}
+			for(int i = 0; i < toolbarLength; i++) {
+				for(int j = 0; j < toolbarLength; j++) {
+					itemId = s.nextInt();
+					quantity = s.nextInt();
+					if(itemId == 0) {
+						items[i][j] = new Item();
+					} else {
+						items[i][j] = new Item(itemId);
+						items[i][j].quantity = quantity;
 					}
 				}
+			}
 			s.close();
+		} catch(FileNotFoundException e) {
+			System.err.println("Inventory file not found.");
+			initBlankInventory();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-			break;
-			}catch (Exception e) {
-			      e.printStackTrace();
+	private void initBlankInventory() {
+		for(int i = 0; i < toolbarLength; i++) {
+			for(int j = 0; j < toolbarLength; j++) {
+				items[i][j] = new Item();
 			}
 		}
-		
-
 	}
 	
 	
 	public void saveInventory() {
-		if(hoverItem != null) {
-			
-		}
 		try {
 			x = new Formatter("saves/inventory.txt");
 			
@@ -408,6 +405,9 @@ public class Inventory implements MouseWheelListener{
 	public void addToItemStack(Item item) {
 		AddItemList.add(item);
 	}
+
+	public int getMouseX() { return mouseX; }
+	public int getMouseY() { return mouseY; }
 	
 	
 	public boolean IsOpen() {
@@ -434,7 +434,7 @@ public class Inventory implements MouseWheelListener{
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		if(Main.gameState != 2) return;
+		if(Main.gameState != Main.GameState.GAME) return;
 		selectedSlot = (selectedSlot+e.getWheelRotation())%toolbarLength;
 		if(selectedSlot < 0) selectedSlot += toolbarLength;
 		
