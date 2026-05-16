@@ -32,6 +32,10 @@ public class MapObject extends MapEntity{
 	public String getName() {
 		return objectName;
 	}
+
+	public boolean isTree() {
+		return "Tree".equals(objectName);
+	}
 	
 	public float getObjectRenderOffSet() {
 		return renderOffSet;

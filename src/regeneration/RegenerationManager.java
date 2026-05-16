@@ -54,7 +54,7 @@ public class RegenerationManager {
     	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ, 2);
 		
 		//left tree 
-		if(ObjectPropertiesManager.getObject(objectsMap[rootMapI][rootMapJ-1].getId()).getName().equals("Tree")) {
+		if(ObjectPropertiesManager.getObject(objectsMap[rootMapI][rootMapJ-1].getId()).isTree()) {
         	Main.tilesManager.updateBlock(rootMapI, rootMapJ-1, 17);
         	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ-1, 5);
 
@@ -62,9 +62,9 @@ public class RegenerationManager {
         	Main.tilesManager.updateBlock(rootMapI, rootMapJ-1, 13);
         	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ-1, 1);
 		}
-		
+
 		//right tree
-		if(ObjectPropertiesManager.getObject(objectsMap[rootMapI][rootMapJ+1].getId()).getName().equals("Tree")) {
+		if(ObjectPropertiesManager.getObject(objectsMap[rootMapI][rootMapJ+1].getId()).isTree()) {
         	Main.tilesManager.updateBlock(rootMapI, rootMapJ+1, 17);
         	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ+1, 5);
 		}else {

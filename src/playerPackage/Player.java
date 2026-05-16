@@ -18,6 +18,7 @@ import entity.GameColors;
 import entity.GameObject;
 import entity.Tile;
 import mapRender.TilePropertiesManager;
+import storage.ItemIds;
 import multiplayer.ServerClientHandler;
 
 public class Player extends Entity implements KeyListener {
@@ -257,7 +258,7 @@ public class Player extends Entity implements KeyListener {
 	
 	//player interaction with camp Fire
 	public void cookFish(int pressBlockI,int pressBlockJ,Item itemInhand) {
-		if(itemInhand.getName().equals("Fish")) {
+		if(itemInhand.getId() == ItemIds.FISH) {
 			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,19);
 			Main.inventory.addToItemStack(new Item(5));
 		}else {

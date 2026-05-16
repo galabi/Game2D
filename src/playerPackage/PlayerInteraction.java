@@ -3,6 +3,8 @@ package playerPackage;
 import MainPackage.Main;
 import MainPackage.TilesManager;
 import storage.Item;
+import storage.ItemIds;
+import mapRender.ObjectIds;
 import mapRender.ObjectPropertiesManager;
 import mapRender.TilePropertiesManager;
 
@@ -68,8 +70,8 @@ public class PlayerInteraction {
 		int objId = Main.tilesManager.getObjects()[pressBlockI][pressBlockJ].getId();
 		int tileId = Main.tilesManager.getTiles()[pressBlockI][pressBlockJ].getId();
 		
-		boolean isCookFish = (ObjectPropertiesManager.getObject(objId).getName().equals("Campfire on") && itemInHand.getName().equals("Fish")) ||
-				(ObjectPropertiesManager.getObject(objId).getName().equals("Campfire") && itemInHand.getName().equals("Wood"));
+		boolean isCookFish = (objId == ObjectIds.CAMPFIRE_ON && itemInHand.getId() == ItemIds.FISH) ||
+				(objId == ObjectIds.CAMPFIRE && itemInHand.getId() == ItemIds.WOOD);
 		
 		//place block
 		if(itemInHand.isPlaceable()) {

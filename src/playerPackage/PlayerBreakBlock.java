@@ -72,7 +72,7 @@ public class PlayerBreakBlock {
     	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ, 0);
 		
 		//left tree 
-		if(ObjectPropertiesManager.getObject(Main.tilesManager.getObjects(rootMapI, rootMapJ-2).getId()).getName().equals("Tree")) {
+		if(ObjectPropertiesManager.getObject(Main.tilesManager.getObjects(rootMapI, rootMapJ-2).getId()).isTree()) {
         	Main.tilesManager.updateBlock(rootMapI, rootMapJ-1, 15);
         	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ-1, 3);
 
@@ -80,9 +80,9 @@ public class PlayerBreakBlock {
         	Main.tilesManager.updateBlock(rootMapI, rootMapJ-1, 0);
         	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ-1, 0);
 		}
-		
+
 		//right tree
-		if(ObjectPropertiesManager.getObject(Main.tilesManager.getObjects(rootMapI, rootMapJ+2).getId()).getName().equals("Tree")) {
+		if(ObjectPropertiesManager.getObject(Main.tilesManager.getObjects(rootMapI, rootMapJ+2).getId()).isTree()) {
         	Main.tilesManager.updateBlock(rootMapI, rootMapJ+1, 13);
         	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ+1, 1);
 		}else {
