@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import Storage.Inventory;
+import storage.Inventory;
 import creature.CreatureManager;
 import entity.GameTextures;
 import entity.Text;
@@ -39,7 +39,7 @@ public class Main extends Canvas implements Runnable{
 	public static Player player ,player2;
 	public static Inventory inventory;
 	public static TilesManager tilesManager;
-	public static MouseManager mouseManeger; 
+	public static MouseManager mouseManager; 
 	public static BufferedImage tempScreen;
 	
 	public static StartScreen startscreen;
@@ -212,7 +212,7 @@ public void window(int width,int height,String title,Main main){
 	pausescreen = new PauseScreen();
 	
 	tilesManager = new TilesManager();
-	mouseManeger = new MouseManager();
+	mouseManager = new MouseManager();
 	player = new Player(1470, 1330,64);
 	inventory = new Inventory(450, 630, 64);
 	tempScreen = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB_PRE);
@@ -245,8 +245,8 @@ public void window(int width,int height,String title,Main main){
 	
 	main.addKeyListener(player);
 	main.addMouseWheelListener(inventory);
-	main.addMouseMotionListener(mouseManeger);
-	main.addMouseListener(mouseManeger);
+	main.addMouseMotionListener(mouseManager);
+	main.addMouseListener(mouseManager);
 
 	}
 

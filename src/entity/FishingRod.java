@@ -189,8 +189,8 @@ public class FishingRod{
     }
 	
 	private void setBiteLocation() {
-		baitX = Main.mouseManeger.getMouseX();
-		baitY = Main.mouseManeger.getMouseY();
+		baitX = Main.mouseManager.getMouseX();
+		baitY = Main.mouseManager.getMouseY();
 	}
 	
 	public void setRopOffSet(int Xoffset,int Yoffset) {

@@ -39,7 +39,7 @@ public class Tile extends Entity{
 		MapObject topObj = ObjectPropertiesManager.getObject(Main.tilesManager.getObjects(y/sizeY,x/sizeX).id);
 		ArrayList<Rectangle> solidInTile = TilePropertiesManager.getTile(id).getSolidInTile();
 
-		if(!topObj.IsSolid()) {
+		if(!topObj.isSolid()) {
 			for(Rectangle i: solidInTile) {
 				if(i.intersects(r))return true;
 			}

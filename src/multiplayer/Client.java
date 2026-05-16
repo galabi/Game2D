@@ -42,7 +42,7 @@ public class Client implements Runnable{
         	do{                
         		response = in.readLine();
             	if(response != null) {
-            		ServerClientHandler.responseHandeler(response);
+            		ServerClientHandler.responseHandler(response);
             	}else {
             		response = "ok";
             	}

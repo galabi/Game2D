@@ -1,4 +1,4 @@
-package Regeneration;
+package regeneration;
 
 import java.util.PriorityQueue;
 import java.util.Random;
@@ -39,7 +39,7 @@ public class RegenerationManager {
 		regenerationList.add(new RegenerationBlock(nextObject, x, y, targetGrow));
 	}
 	
-	public static long getNextGowthTime() {
+	public static long getNextGrowthTime() {
 		return System.currentTimeMillis() + new Random().nextInt(30000,50000);
 	}
 	

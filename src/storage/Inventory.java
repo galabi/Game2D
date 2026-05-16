@@ -1,4 +1,4 @@
-package Storage;
+package storage;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -32,7 +32,7 @@ public class Inventory implements MouseWheelListener{
 	Stack<Item> AddItemList;
 	Item[][] items;
 	Crafting crafting;
-	HoverItemInInventoey hoverItem;
+	HoverItemInInventory hoverItem;
 	
 	final int toolbarLength = 5;
 	final int HotBarX;
@@ -119,9 +119,9 @@ public class Inventory implements MouseWheelListener{
 				}
 			}
 			
-			crafting.rander(g2d);
+			crafting.render(g2d);
 			if(hoverItem != null) {
-				hoverItem.rander(g2d);
+				hoverItem.render(g2d);
 			}
 			
 		}
@@ -266,18 +266,18 @@ public class Inventory implements MouseWheelListener{
 		mouseY = e.getY()*Main.height/Main.screenHeight;
 		//hot-bar press
 		if(mouseX > HotBarX && mouseX < (HotBarX + toolbarLength*slotSize) && mouseY > HotBarY && mouseY < (HotBarY + slotSize)) {
-			DragAndDrop(items[0][(mouseX-HotBarX)/slotSize], HotBarX+((mouseX-HotBarX)/slotSize)*slotSize, HotBarY,e.getButton());
+			dragAndDrop(items[0][(mouseX-HotBarX)/slotSize], HotBarX+((mouseX-HotBarX)/slotSize)*slotSize, HotBarY,e.getButton());
 		//inventory press
 		}else if(mouseX > inventoryX && mouseX < inventoryX+slotSize*toolbarLength && mouseY > inventoryY && mouseY < inventoryY+slotSize*(toolbarLength-1)){
-				DragAndDrop(items[1+(mouseY-inventoryY)/slotSize][(mouseX-inventoryX)/slotSize], inventoryX+((mouseX-inventoryX)/slotSize)*slotSize, inventoryY + ((mouseY-inventoryY)/slotSize)*slotSize,e.getButton());
+				dragAndDrop(items[1+(mouseY-inventoryY)/slotSize][(mouseX-inventoryX)/slotSize], inventoryX+((mouseX-inventoryX)/slotSize)*slotSize, inventoryY + ((mouseY-inventoryY)/slotSize)*slotSize,e.getButton());
 		//crafting press
 		}else if(mouseX > craftingX && mouseX < craftingX+slotSize*crafting.getCraftingSlots() && mouseY > craftingY && mouseY < craftingY+slotSize*crafting.getCraftingSlots()) {
-			DragAndDrop(crafting.craftingItems[(mouseY-craftingY)/slotSize][(mouseX-craftingX)/slotSize], craftingX+((mouseX-craftingX)/slotSize)*slotSize, craftingY + ((mouseY-craftingY)/slotSize)*slotSize,e.getButton());
+			dragAndDrop(crafting.craftingItems[(mouseY-craftingY)/slotSize][(mouseX-craftingX)/slotSize], craftingX+((mouseX-craftingX)/slotSize)*slotSize, craftingY + ((mouseY-craftingY)/slotSize)*slotSize,e.getButton());
 			crafting.checkCrafting();
 		//drop outside the inventory
 		}else if(mouseX > craftingX+slotSize/crafting.getCraftingSlots() && mouseX < craftingX+slotSize/crafting.getCraftingSlots()+slotSize && mouseY > craftingY + slotSize*(crafting.getCraftingSlots()+1) && mouseY < craftingY + slotSize*(crafting.getCraftingSlots()+1)+slotSize){
 			if(crafting.outPut.id != 0 && hoverItem == null) {
-				DragAndDrop(crafting.craftItem(),(craftingX+slotSize/crafting.getCraftingSlots())+((mouseX-(craftingX+slotSize/crafting.getCraftingSlots()))/slotSize)*slotSize, (craftingY + slotSize*(crafting.getCraftingSlots()+1)) + ((mouseY-(craftingY + slotSize*(crafting.getCraftingSlots()+1)))/slotSize)*slotSize,e.getButton());
+				dragAndDrop(crafting.craftItem(),(craftingX+slotSize/crafting.getCraftingSlots())+((mouseX-(craftingX+slotSize/crafting.getCraftingSlots()))/slotSize)*slotSize, (craftingY + slotSize*(crafting.getCraftingSlots()+1)) + ((mouseY-(craftingY + slotSize*(crafting.getCraftingSlots()+1)))/slotSize)*slotSize,e.getButton());
 			}else if(hoverItem != null && crafting.outPut.getId() == hoverItem.getId()) {
 				crafting.craftItem();
 				hoverItem.item.quantity++;
@@ -294,7 +294,7 @@ public class Inventory implements MouseWheelListener{
 	}
 	
 	//the drag and drop settings
-	public void DragAndDrop(Item item, int itemX, int itemY,int mouseButton){
+	public void dragAndDrop(Item item, int itemX, int itemY,int mouseButton){
 		
 		//item on mouse
 		if(hoverItem != null) {
@@ -341,12 +341,12 @@ public class Inventory implements MouseWheelListener{
 		}else {
 			//left press
 			if(mouseButton == 1) {
-				hoverItem = new HoverItemInInventoey(mouseX -itemX, mouseY - itemY, item.Clone());
+				hoverItem = new HoverItemInInventory(mouseX -itemX, mouseY - itemY, item.Clone());
 				item.setBlank();
 	
 			//Right press
 			}else if(mouseButton == 3) {
-				hoverItem = new HoverItemInInventoey(mouseX -itemX, mouseY - itemY, item.Clone());
+				hoverItem = new HoverItemInInventory(mouseX -itemX, mouseY - itemY, item.Clone());
 				hoverItem.item.quantity = (hoverItem.item.quantity+1)/2;
 				item.quantity /= 2;
 				
@@ -410,11 +410,11 @@ public class Inventory implements MouseWheelListener{
 	public int getMouseY() { return mouseY; }
 	
 	
-	public boolean IsOpen() {
+	public boolean isOpen() {
 		return open;
 	}
 	
-	public void SetOpen(boolean open) {
+	public void setOpen(boolean open) {
 		this.open = open;
 		if(!open) {
 			crafting.exitInventory();

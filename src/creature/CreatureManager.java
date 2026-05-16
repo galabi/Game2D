@@ -13,7 +13,7 @@ public class CreatureManager {
 	
 	static ArrayList<Creature> creatureList = new ArrayList<Creature>();
 	
-	public static void CreateCreature(int x,int y, String type) {
+	public static void createCreature(int x,int y, String type) {
 		switch (type) {
 		case "slime": 
 			creatureList.add(new Slime(x, y, CreatureSize, CreatureSize));

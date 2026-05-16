@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-public class CreactureImage {
+public class CreatureImage {
 	
 	final static ImageIcon[] slimeImage = new ImageIcon[4];
 	final static ImageIcon[] cowImage = new ImageIcon[4];
@@ -30,7 +30,7 @@ public class CreactureImage {
 			 * 2 = right
 			 * 3 = up
 				*/
-			temp = ImageIO.read(CreactureImage.class.getResourceAsStream(fileLoaction));
+			temp = ImageIO.read(CreatureImage.class.getResourceAsStream(fileLoaction));
 			for(int i = 0;i<4;i++) {
 				Creacture[i] = new ImageIcon(temp.getSubimage(i*imageSize, 0, imageSize, imageSize));
 			}

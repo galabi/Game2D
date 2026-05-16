@@ -1,4 +1,4 @@
-package Storage;
+package storage;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -39,7 +39,7 @@ public class Crafting {
 		outPut = RecipeBook.checkRecipe(itemsInCrafing);
 	}
 	
-	public void rander(Graphics2D g2d) {
+	public void render(Graphics2D g2d) {
 		int mouseX = Main.inventory.getMouseX(), mouseY = Main.inventory.getMouseY();
 		g2d.setStroke(new BasicStroke(3));
 		g2d.setFont(font);

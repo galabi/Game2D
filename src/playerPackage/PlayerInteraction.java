@@ -2,7 +2,7 @@ package playerPackage;
 
 import MainPackage.Main;
 import MainPackage.TilesManager;
-import Storage.Item;
+import storage.Item;
 import mapRender.ObjectPropertiesManager;
 import mapRender.TilePropertiesManager;
 
@@ -72,7 +72,7 @@ public class PlayerInteraction {
 				(ObjectPropertiesManager.getObject(objId).getName().equals("Campfire") && itemInHand.getName().equals("Wood"));
 		
 		//place block
-		if(itemInHand.IsPlaceable()) {
+		if(itemInHand.isPlaceable()) {
 			Main.player.placeBlock(pressBlockI, pressBlockJ,itemInHand);
 			
 		//cook a fish
@@ -80,7 +80,7 @@ public class PlayerInteraction {
 			Main.player.cookFish(pressBlockI, pressBlockJ, itemInHand);
 			
 		//fishing
-		}else if(itemInHand.getId() == 3 && TilePropertiesManager.getTile(tileId).isWater(Main.mouseManeger.getMouseX(),Main.mouseManeger.getMouseY())) {
+		}else if(itemInHand.getId() == 3 && TilePropertiesManager.getTile(tileId).isWater(Main.mouseManager.getMouseX(),Main.mouseManager.getMouseY())) {
 			Main.player.startFishing(pressBlockI,pressBlockJ);
 
 		}

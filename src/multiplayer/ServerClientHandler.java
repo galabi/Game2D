@@ -1,7 +1,7 @@
 package multiplayer;
 
 import MainPackage.Main;
-import Storage.Item;
+import storage.Item;
 import entity.GameObject;
 import playerPackage.Player;
 
@@ -30,7 +30,7 @@ public class ServerClientHandler {
 		}
 	}
 	
-	public static void responseHandeler(String response) {
+	public static void responseHandler(String response) {
 		String[] responseArr = response.split(" ");
 		switch (responseArr[0]) {
 		case "player:":

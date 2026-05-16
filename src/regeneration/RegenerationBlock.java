@@ -1,4 +1,4 @@
-package Regeneration;
+package regeneration;
 
 import MainPackage.TilesManager;
 import entity.GameObject;
@@ -16,7 +16,7 @@ public class RegenerationBlock implements Comparable<RegenerationBlock> {
 		this.y = y;
 		this.mapI = y/TilesManager.tileSize;
 		this.mapJ = x/TilesManager.tileSize;
-		setNextGowthTime();
+		setNextGrowthTime();
 	}
 	
 	public int getX() {
@@ -43,8 +43,8 @@ public class RegenerationBlock implements Comparable<RegenerationBlock> {
 	public void setTargetGrow(String targetGrow) {
 		this.targetGrow = targetGrow;
 	}
-	public void setNextGowthTime() {
-		GrowthTime = RegenerationManager.getNextGowthTime() ;
+	public void setNextGrowthTime() {
+		GrowthTime = RegenerationManager.getNextGrowthTime() ;
 	}
 	
 	public boolean isReadyToGrow() {

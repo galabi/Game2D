@@ -26,7 +26,7 @@ public class MouseManager implements MouseListener,MouseMotionListener, MouseWhe
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if(Main.gameState == Main.GameState.GAME && Main.inventory.IsOpen()) {
+		if(Main.gameState == Main.GameState.GAME && Main.inventory.isOpen()) {
 			Main.inventory.mouseDragged(e);
 			
 		}
@@ -35,7 +35,7 @@ public class MouseManager implements MouseListener,MouseMotionListener, MouseWhe
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		setMouselocation(e);
-		if(Main.inventory.IsOpen()) {
+		if(Main.inventory.isOpen()) {
 			Main.inventory.mouseMoved(e);
 		}
 	}
@@ -55,7 +55,7 @@ public class MouseManager implements MouseListener,MouseMotionListener, MouseWhe
 			Main.startscreen.mousePressed(e);
 			break;
 		case GAME:
-			if(!Main.inventory.IsOpen()) {
+			if(!Main.inventory.isOpen()) {
 				PlayerInteraction.mousePress(mouseX, mouseY,e.getButton());
 			}else {
 				Main.inventory.mousePressed(e);
@@ -77,7 +77,7 @@ public class MouseManager implements MouseListener,MouseMotionListener, MouseWhe
 			Main.startscreen.mouseReleased(e);
 			break;
 		case GAME:
-			if(!Main.inventory.IsOpen()) {
+			if(!Main.inventory.isOpen()) {
 				PlayerInteraction.mouseReleased(mouseX, mouseY,e.getButton());
 			}
 			break;

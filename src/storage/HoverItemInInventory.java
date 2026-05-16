@@ -1,4 +1,4 @@
-package Storage;
+package storage;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -6,19 +6,19 @@ import java.awt.Graphics2D;
 
 import entity.FontLoader;
 
-public class HoverItemInInventoey {
+public class HoverItemInInventory {
 	
 	int offSetX,offSetY,mouseX,mouseY,size = 64;
 	Item item;
 	Font font = FontLoader.getPixelFont(13);
 	
-	public HoverItemInInventoey(int offSetX,int offSetY,Item item) {
+	public HoverItemInInventory(int offSetX,int offSetY,Item item) {
 		this.item = item;
 		this.offSetX = offSetX;
 		this.offSetY = offSetY;
 	}
 	
-	public void rander(Graphics2D g2d) {
+	public void render(Graphics2D g2d) {
 		g2d.drawImage(item.getImage(), mouseX-offSetX, mouseY-offSetY, size, size, null);
 		
 		if(item.quantity <= 1)return;

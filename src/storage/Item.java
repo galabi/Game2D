@@ -1,4 +1,4 @@
-package Storage;
+package storage;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
@@ -135,10 +135,10 @@ public class Item {
 	public void setBlank() {
 		setItem(0);
 	}
-	public boolean IsSolid(){
+	public boolean isSolid(){
 		return solid;
 	}
-	public boolean IsPlaceable(){
+	public boolean isPlaceable(){
 		return placeable;
 	}
 	public int getId() {

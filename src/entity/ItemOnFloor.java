@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 
 import MainPackage.Main;
 import MainPackage.TilesManager;
-import Storage.Item;
+import storage.Item;
 
 public class ItemOnFloor {
 	static int tileSize = TilesManager.tileSize;

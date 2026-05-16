@@ -12,8 +12,8 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Scanner;
 
-import Regeneration.RegenerationManager;
-import Storage.Item;
+import regeneration.RegenerationManager;
+import storage.Item;
 import creature.CreatureManager;
 import entity.GameObject;
 import entity.GameTextures;
@@ -131,11 +131,11 @@ public class TilesManager {
 		}
 			
 		// Draw mouse cursor selection box
-		if(!Main.inventory.IsOpen() && Main.gameState == Main.GameState.GAME) {
+		if(!Main.inventory.isOpen() && Main.gameState == Main.GameState.GAME) {
 			g2d.setColor(Color.black);
 			g2d.setStroke(new BasicStroke(2));
-			g2d.drawRect(((cameraX + Main.mouseManeger.getMouseX())/tileSize)*tileSize - cameraX, 
-					((cameraY + Main.mouseManeger.getMouseY())/tileSize)*tileSize - cameraY,
+			g2d.drawRect(((cameraX + Main.mouseManager.getMouseX())/tileSize)*tileSize - cameraX, 
+					((cameraY + Main.mouseManager.getMouseY())/tileSize)*tileSize - cameraY,
 					tileSize, tileSize);
 		}
 	}

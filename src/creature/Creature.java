@@ -25,7 +25,7 @@ public class Creature extends Entity{
 	int CollisionBoxWidth;
 	int CollisionBoxHeight;
 	
-	final static Color SadowColor = GameColors.playerShadowColor;
+	final static Color shadowColor = GameColors.playerShadowColor;
 	private static final Random RANDOM = new Random();
 	
 	public Creature(int x, int y ,int sizeX ,int sizeY) {
@@ -35,12 +35,12 @@ public class Creature extends Entity{
 	}
 	
 	public void render(Graphics2D g2d) {
-		g2d.setColor(SadowColor);
+		g2d.setColor(shadowColor);
 		g2d.fillOval(x - Main.tilesManager.getCameraX(false) + (sizeX - 44) / 2, y - Main.tilesManager.getCameraY(false) + sizeY - 10, 44, 20);
 		g2d.drawImage(image[creatureDirection].getImage(), x - Main.tilesManager.getCameraX(false) ,
 				y - Main.tilesManager.getCameraY(false), sizeX, sizeY,null);
 		
-		//debag
+		//debug
 		if(Main.devmode) {
 			g2d.setColor(Color.white);
 			g2d.drawRect(x+CollisionBoxX-Main.tilesManager.getCameraX(false), y+CollisionBoxY-Main.tilesManager.getCameraY(false), CollisionBoxWidth, CollisionBoxHeight);
@@ -161,7 +161,7 @@ public class Creature extends Entity{
 		
 	}
 	
-	public boolean IsInTarget() {
+	public boolean isInTarget() {
 		return (x == targetX && y == targetY);
 	}
 }

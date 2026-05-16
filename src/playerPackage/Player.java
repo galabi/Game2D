@@ -10,8 +10,8 @@ import javax.swing.ImageIcon;
 
 import MainPackage.Main;
 import MainPackage.TilesManager;
-import Regeneration.RegenerationManager;
-import Storage.Item;
+import regeneration.RegenerationManager;
+import storage.Item;
 import entity.Entity;
 import entity.FishingRod;
 import entity.GameColors;
@@ -109,10 +109,10 @@ public class Player extends Entity implements KeyListener {
 					y - Main.tilesManager.getCameraY(false), sizeX, sizeY,null);
 			}
 		} catch (Exception e) {
-			System.out.println("problrm in player animation:" + imageDirection + " " + imagePosture);
+			System.out.println("problem in player animation:" + imageDirection + " " + imagePosture);
 		}
 
-		//debag
+		//debug
 		if(Main.devmode) {
 			g2d.setColor(Color.white);
 			g2d.drawRect(x+playerCollisionBoxX-Main.tilesManager.getCameraX(false), y+playerCollisionBoxY-Main.tilesManager.getCameraY(false), playerCollisionBoxWidth, playerCollisionBoxHeight);
@@ -243,7 +243,7 @@ public class Player extends Entity implements KeyListener {
 
 			
 		//general case
-		}else if(obj.getId() == 0 && ! TilePropertiesManager.getTile(tile.getId()).IsSolid()) {
+		}else if(obj.getId() == 0 && ! TilePropertiesManager.getTile(tile.getId()).isSolid()) {
 			Main.player.imagePosture = 2;
 			Main.player.animationTimer = System.currentTimeMillis();
 			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,itemToPlace.getIdToPlace());
@@ -296,8 +296,8 @@ public class Player extends Entity implements KeyListener {
 
 		if(key == KeyEvent.VK_ESCAPE) {
 			if(Main.gameState == Main.GameState.GAME) {
-				if(Main.inventory.IsOpen()) {
-					Main.inventory.SetOpen(false);
+				if(Main.inventory.isOpen()) {
+					Main.inventory.setOpen(false);
 					return;
 				}
 				Main.gameState = Main.GameState.PAUSE;
@@ -356,7 +356,7 @@ public class Player extends Entity implements KeyListener {
 		
 		//E - open/close inventory
 		if(key == KeyEvent.VK_E) {
-			Main.inventory.SetOpen(!Main.inventory.IsOpen());
+			Main.inventory.setOpen(!Main.inventory.isOpen());
 		}
 	}
 	

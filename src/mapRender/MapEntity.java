@@ -29,7 +29,7 @@ public class MapEntity {
 		this.id = id;
 	}
 	
-	public boolean IsSolid() {
+	public boolean isSolid() {
 		return solid;
 	}
 	

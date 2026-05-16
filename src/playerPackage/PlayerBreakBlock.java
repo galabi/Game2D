@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import MainPackage.Main;
 import MainPackage.TilesManager;
-import Regeneration.RegenerationManager;
+import regeneration.RegenerationManager;
 import mapRender.ObjectIds;
 import mapRender.ObjectPropertiesManager;
 

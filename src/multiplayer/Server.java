@@ -56,7 +56,7 @@ public class Server implements Runnable{
 
 	                do {
 	                    if (response != null) {
-	                		ServerClientHandler.responseHandeler(response);
+	                		ServerClientHandler.responseHandler(response);
 	                		
 	                    	if ("stop".equals(response)) {
 	                            break;
