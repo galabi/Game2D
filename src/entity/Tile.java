@@ -46,14 +46,17 @@ public class Tile extends Entity{
 		}
 		for(Rectangle i : topObj.getSolidInTile()) {
 			if(i.intersects(r)) {
-				if(topObj.isGate()) {
-					Main.tilesManager.readFile();
-				}
-				
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public void triggerGate() {
+		MapObject topObj = ObjectPropertiesManager.getObject(Main.tilesManager.getObjects(y/sizeY, x/sizeX).id);
+		if(topObj.isGate()) {
+			Main.tilesManager.readFile();
+		}
 	}
 	
 	public int getId(){

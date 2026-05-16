@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import MainPackage.Main;
 import MainPackage.TilesManager;
 import Regeneration.RegenerationManager;
+import mapRender.ObjectIds;
 import mapRender.ObjectPropertiesManager;
 
 public class PlayerBreakBlock {
@@ -17,7 +18,7 @@ public class PlayerBreakBlock {
 	    int handItemId = Main.inventory.getItemInHand().getId();
 	    ArrayList<Integer> itemWhenBroken = ObjectPropertiesManager.getObject(objId).getItemWhenBroken();
 	    
-	    if (ObjectPropertiesManager.getObject(objId).getName().equals("Rock") || ObjectPropertiesManager.getObject(objId).getName().equals("Rock Max")) {
+	    if (objId == ObjectIds.ROCK || objId == ObjectIds.ROCK_MAX) {
 	        boolean canBreak = (handItemId == 10 && timeDelta >= PlayerInteraction.BreakTime / 2)
 	                         || timeDelta >= PlayerInteraction.rockBreakTime;
 	        if (canBreak) {
@@ -29,7 +30,7 @@ public class PlayerBreakBlock {
 	            }
 	            resetInteraction();
 	        }
-	    }else if (ObjectPropertiesManager.getObject(objId).getName().equals("Tree") && ObjectPropertiesManager.getObject(objId).isBreakable()) {
+	    } else if (objId == ObjectIds.TREE_TRUNK) {
 	        boolean canBreak = (handItemId == 2 && timeDelta >= PlayerInteraction.BreakTime / 2)
 	        		|| timeDelta >= PlayerInteraction.BreakTime;
             if (canBreak) {
@@ -40,7 +41,7 @@ public class PlayerBreakBlock {
             	resetInteraction();
             	}
 	    	
-	    }else if(ObjectPropertiesManager.getObject(objId).getName().equals("Tree sapling")&& ObjectPropertiesManager.getObject(objId).isBreakable()) {
+	    } else if (objId == ObjectIds.TREE_SAPLING) {
 	        boolean canBreak = (handItemId == 2 && timeDelta >= PlayerInteraction.BreakTime / 2)
 	        		|| timeDelta >= PlayerInteraction.BreakTime;
             if (canBreak) {

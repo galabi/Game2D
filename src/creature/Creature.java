@@ -3,7 +3,6 @@ package creature;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Random;
-
 import javax.swing.ImageIcon;
 
 import MainPackage.Main;
@@ -27,6 +26,7 @@ public class Creature extends Entity{
 	int CollisionBoxHeight;
 	
 	final static Color SadowColor = GameColors.playerShadowColor;
+	private static final Random RANDOM = new Random();
 	
 	public Creature(int x, int y ,int sizeX ,int sizeY) {
 		super(x, y, sizeX, sizeY);
@@ -74,14 +74,12 @@ public class Creature extends Entity{
 	
 	
 	public void setNextLocation() {
-		Random r = new Random();
 		int Direction;
 		int target;
 		speed = Math.abs(speed);
 
-		
-		Direction = r.nextInt(4);
-		target = r.nextInt(0,64);
+		Direction = RANDOM.nextInt(4);
+		target = RANDOM.nextInt(0, 64);
 		
 		/**
 		 * 0 = down

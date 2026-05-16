@@ -6,8 +6,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import MainPackage.Main;
 
@@ -18,7 +18,7 @@ public class Server implements Runnable{
 	String response = "start";
 	boolean serverUP = false;
 	int port = 1000;
-	Queue<String> queue = new LinkedList<>();
+	Queue<String> queue = new ConcurrentLinkedQueue<>();
 
 	@Override
 	public void run() {
