@@ -7,11 +7,11 @@ public class RegenerationBlock implements Comparable<RegenerationBlock> {
 	private int x,y,mapI,mapJ;
 	private GameObject objectToGrow;
 	private long GrowthTime;
-	private String targetGrow;
-	
-	public RegenerationBlock(GameObject objectToGrow,int x,int y,String targetGrow) {
+	private GrowthType growthType;
+
+	public RegenerationBlock(GameObject objectToGrow,int x,int y,GrowthType growthType) {
 		this.objectToGrow = objectToGrow;
-		this.targetGrow = targetGrow;
+		this.growthType = growthType;
 		this.x = x;
 		this.y = y;
 		this.mapI = y/TilesManager.tileSize;
@@ -37,11 +37,11 @@ public class RegenerationBlock implements Comparable<RegenerationBlock> {
 	public long getGrowthTime() {
 		return GrowthTime;
 	}
-	public String getTargetGrow() {
-		return targetGrow;
+	public GrowthType getGrowthType() {
+		return growthType;
 	}
-	public void setTargetGrow(String targetGrow) {
-		this.targetGrow = targetGrow;
+	public void setGrowthType(GrowthType growthType) {
+		this.growthType = growthType;
 	}
 	public void setNextGrowthTime() {
 		GrowthTime = RegenerationManager.getNextGrowthTime() ;

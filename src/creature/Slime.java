@@ -8,6 +8,10 @@ public class Slime extends Creature{
 		image = CreatureImage.getSlimeImage();
 		damage = 1;
 		health = 5;
+		CollisionBoxX = 12;
+		CollisionBoxY = 32;
+		CollisionBoxWidth = 40;
+		CollisionBoxHeight = 32;
 	}
 
 }

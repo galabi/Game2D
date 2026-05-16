@@ -2,6 +2,7 @@ package creature;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.util.Random;
 import javax.swing.ImageIcon;
 
@@ -70,6 +71,18 @@ public class Creature extends Entity{
 	//use this to lower the creature health points
 	public void hitCreature(int damage) {
 		health -= damage;
+	}
+
+	public Rectangle getCollisionRect() {
+		return new Rectangle(x + CollisionBoxX, y + CollisionBoxY, CollisionBoxWidth, CollisionBoxHeight);
+	}
+
+	public int getDamage() {
+		return damage;
+	}
+
+	public int getHealth() {
+		return health;
 	}
 	
 	

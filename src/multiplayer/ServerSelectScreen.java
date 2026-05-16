@@ -41,9 +41,9 @@ public class ServerSelectScreen{
 	public void checkpress(int mouseX,int mouseY) {
 		//check if the player press any of the available servers
 		for(serverToJoin availableServers: buttons) {
-			try {
+			if(availableServers != null) {
 				availableServers.ispressd(mouseX, mouseY);
-			} catch (Exception e) {}
+			}
 		}
 	}
 	

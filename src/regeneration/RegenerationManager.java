@@ -18,9 +18,9 @@ public class RegenerationManager {
 				
 			RegenerationBlock temp = regenerationList.poll();
 			
-			if(temp.getTargetGrow().equals("Tree")){
+			if(temp.getGrowthType() == GrowthType.TREE){
 				GrowTree(temp.getMapI(), temp.getMapJ(), Main.tilesManager.getObjects());
-			}else if(temp.getTargetGrow().equals("Rock Max")) {
+			}else if(temp.getGrowthType() == GrowthType.ROCK) {
 				GrowRock(temp.getMapI(), temp.getMapJ(), Main.tilesManager.getObjects());
 			}
 		}
@@ -28,15 +28,15 @@ public class RegenerationManager {
 	
 	//add the object to the growth list;
 	public static void insertToGrowthList(GameObject nextObject, int x, int y) {
-		String targetGrow = "";
 		int id = nextObject.getId();
 
+		GrowthType growthType = null;
 		if (id == ObjectIds.TREE_SAPLING) {
-			targetGrow = "Tree";
+			growthType = GrowthType.TREE;
 		} else if (id == ObjectIds.ROCK) {
-			targetGrow = "Rock Max";
+			growthType = GrowthType.ROCK;
 		}
-		regenerationList.add(new RegenerationBlock(nextObject, x, y, targetGrow));
+		regenerationList.add(new RegenerationBlock(nextObject, x, y, growthType));
 	}
 	
 	public static long getNextGrowthTime() {

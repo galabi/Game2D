@@ -2,6 +2,7 @@ package playerPackage;
 
 import MainPackage.Main;
 import MainPackage.TilesManager;
+import creature.CreatureManager;
 import storage.Item;
 import storage.ItemIds;
 import mapRender.ObjectIds;
@@ -55,6 +56,7 @@ public class PlayerInteraction {
 	
 	private static void leftMousePress(int pressBlockI,int pressBlockJ) {
 		Main.player.fishing = false;
+		if (CreatureManager.attackCreatureInRange()) return;
 		if(objectToBreakId != Main.tilesManager.getObjects(pressBlockI,pressBlockJ).getId() && Main.tilesManager.getObjects(pressBlockI,pressBlockJ).getId() != 0) {
 			objectI = pressBlockI;
 			objectJ = pressBlockJ;

@@ -79,7 +79,7 @@ public class StartScreen{
 		if(mouseX > startButtonX && mouseX < (startButtonX + buttonSizeX) && mouseY > startButtonY && mouseY < startButtonY + buttonSizeY) {
 			startButton = false;
 			Main.tilesManager.readFile();
-			CreatureManager.createCreature(1350, 1350, "cow");
+			CreatureManager.createCreature(1350, 1350, "slime");
 
 			try {
 				Thread.sleep(100);

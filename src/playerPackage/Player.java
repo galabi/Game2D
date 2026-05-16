@@ -41,6 +41,10 @@ public class Player extends Entity implements KeyListener {
 	int imagePosture = 0;
 	
 	long animationTimer = System.currentTimeMillis();
+	private long lastHitTime = 0;
+	private static final long HIT_COOLDOWN_MS = 1000;
+	private long lastRegenTime = System.currentTimeMillis();
+	private static final long REGEN_INTERVAL_MS = 8000;
 	 
 	
 	boolean fishing = false;
@@ -66,6 +70,11 @@ public class Player extends Entity implements KeyListener {
 	}
 	
 	public void tick() {
+		long now = System.currentTimeMillis();
+		if (health > 0 && health < maxHealth && now - lastRegenTime >= REGEN_INTERVAL_MS) {
+			health++;
+			lastRegenTime = now;
+		}
 		//check if the player need to move
 		if(speedX != 0 || speedY != 0) {
 			fishing = false;
@@ -256,6 +265,14 @@ public class Player extends Entity implements KeyListener {
 
 	}
 	
+	public void takeDamage(int amount) {
+		long now = System.currentTimeMillis();
+		if (now - lastHitTime >= HIT_COOLDOWN_MS) {
+			health = Math.max(0, health - amount);
+			lastHitTime = now;
+		}
+	}
+
 	//player interaction with camp Fire
 	public void cookFish(int pressBlockI,int pressBlockJ,Item itemInhand) {
 		if(itemInhand.getId() == ItemIds.FISH) {

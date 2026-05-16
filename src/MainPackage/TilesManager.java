@@ -164,7 +164,7 @@ public class TilesManager {
 		try {
 			g2d.drawImage(GameTextures.getMapRenderImage(e).getImage(), x-cameraX,y-cameraY, tileSize,tileSize,null);
 		} catch (Exception ex) {
-			System.out.println(x/tileSize +" "+y/tileSize);
+			ex.printStackTrace();
 		}
 		if(Main.devmode) {
 			g2d.setColor(Color.white);
