@@ -45,6 +45,7 @@ public class Main extends Canvas implements Runnable{
 	public static StartScreen startscreen;
 	public static PauseScreen pausescreen;
 	public static GameOverScreen gameOverScreen;
+	public static MinimapRenderer minimap;
 	Graphics2D g2;
 	
 	Text text;
@@ -164,6 +165,7 @@ public class Main extends Canvas implements Runnable{
 				tilesManager.renderObjects(g2);
 				tilesManager.renderDrops(g2);
 				inventory.render(g2);
+				minimap.render(g2);
 			}else {
 				StartScreen.renderBackScreen(g2);
 			}
@@ -217,6 +219,7 @@ public void window(int width,int height,String title,Main main){
 	startscreen = new StartScreen();
 	pausescreen = new PauseScreen();
 	gameOverScreen = new GameOverScreen();
+	minimap = new MinimapRenderer();
 	
 	tilesManager = new TilesManager();
 	mouseManager = new MouseManager();

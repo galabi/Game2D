@@ -244,9 +244,10 @@ public class TilesManager {
 		}
 
 		mapIsReady = true;
+		if (Main.minimap != null) Main.minimap.markDirty();
 	}
-	
-	
+
+
 	public void saveMap() {
 		try {
 			x = new Formatter("saves/"+map+".txt");
@@ -406,6 +407,7 @@ public class TilesManager {
 	public void updateBlock(int mapI,int mapJ, int newId) {
 	    objects[mapI][mapJ].setId(newId);
 	    ServerClientHandler.sendDataToServer("update_block " + mapI + " " + mapJ + " " + newId);
+	    if (Main.minimap != null) Main.minimap.markDirty();
 	    }
 	
 	public void addDrop(int mapI, int mapJ, int itemId) {
