@@ -31,6 +31,7 @@ public class Slime extends Creature{
 
 		if (dist > TilesManager.tileSize * 5) { super.setNextLocation(); return; }
 
+		nextMoveTime = 0;
 		if (Math.abs(playerCX - myCX) >= Math.abs(playerCY - myCY)) {
 			targetX = Main.player.getX();
 			targetY = y;

@@ -30,6 +30,7 @@ public class Creature extends Entity{
 	int CollisionBoxHeight;
 
 	protected ArrayList<Integer> lootIds = new ArrayList<>();
+	protected long nextMoveTime = 0;
 	private long hitFlashTime = 0;
 	private static final long HIT_FLASH_DURATION_MS = 200;
 
@@ -80,7 +81,11 @@ public class Creature extends Entity{
 			}
 			y += speed;
 		}else {
-			setNextLocation();
+			long now = System.currentTimeMillis();
+			if (now >= nextMoveTime) {
+				setNextLocation();
+				nextMoveTime = now + 2000 + RANDOM.nextInt(3000);
+			}
 		}
 	}
 	
@@ -117,7 +122,7 @@ public class Creature extends Entity{
 		speed = Math.abs(speed);
 
 		Direction = RANDOM.nextInt(4);
-		target = RANDOM.nextInt(0, 64);
+		target = (1 + RANDOM.nextInt(3)) * TilesManager.tileSize;
 		
 		/**
 		 * 0 = down
@@ -155,48 +160,58 @@ public class Creature extends Entity{
 		
 	}
 	
-	private void collision(int Direction){
-		int XInTile = (x + CollisionBoxX + speed) % TilesManager.tileSize;;
-		int XInTileAndWidth = (x + CollisionBoxX + CollisionBoxWidth + speed) % TilesManager.tileSize;;
-		int YInTile = (y + CollisionBoxY + speed) % TilesManager.tileSize;
-		int YInTileAndHeight = (y + CollisionBoxY + CollisionBoxHeight + speed) % TilesManager.tileSize;;
-		
-		switch(Direction){
-		case 0:
-			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + speed)/TilesManager.tileSize)]
-					[(int)((x + CollisionBoxX + speed )/TilesManager.tileSize)].isSolid(XInTile,YInTile,CollisionBoxWidth,1)) targetY = y;
-			
-			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + speed)/TilesManager.tileSize)]
-					[(int)((x + CollisionBoxX + CollisionBoxWidth + speed )/TilesManager.tileSize)].isSolid(XInTileAndWidth-CollisionBoxWidth,YInTile,CollisionBoxWidth,1))targetY = y;
-			break;
-			
-		case 1:
-			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + speed )/TilesManager.tileSize)]
-					[(int)((x + CollisionBoxX + speed)/TilesManager.tileSize)].isSolid(XInTile,YInTile,1,CollisionBoxHeight)) targetX = x;
-			
-			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + CollisionBoxHeight + speed )/TilesManager.tileSize)]
-					[(int)((x + CollisionBoxX + speed)/TilesManager.tileSize)].isSolid(XInTile,YInTileAndHeight-CollisionBoxHeight,1,CollisionBoxHeight)) targetX = x;
-			break;
-			
-		case 2:
-			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + speed)/TilesManager.tileSize)]
-					[(int)((x + CollisionBoxX + CollisionBoxWidth + speed)/TilesManager.tileSize)].isSolid(XInTileAndWidth,YInTile,1,CollisionBoxHeight)) targetX = x;			
-			
-			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + CollisionBoxHeight + speed )/TilesManager.tileSize)]
-					[(int)((x + CollisionBoxX + CollisionBoxWidth + speed)/TilesManager.tileSize)].isSolid(XInTileAndWidth,YInTileAndHeight-CollisionBoxHeight,1,CollisionBoxHeight)) targetX = x;
-			break;
-		
-		case 3:
-			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + CollisionBoxHeight + speed)/TilesManager.tileSize)]
-					[(int)((x + CollisionBoxX + speed)/TilesManager.tileSize)].isSolid(XInTile,YInTileAndHeight,CollisionBoxWidth,1)) targetY = y;
-			
-			if(Main.tilesManager.getTiles()[(int)((y + CollisionBoxY + CollisionBoxHeight + speed)/TilesManager.tileSize)]
-					[(int)((x + CollisionBoxX + CollisionBoxWidth + speed)/TilesManager.tileSize)].isSolid(XInTileAndWidth-CollisionBoxWidth,YInTileAndHeight,CollisionBoxWidth,1)) targetY = y;
-		break;
-		
+	private void collision(int direction) {
+		int ts = TilesManager.tileSize;
+		// X positions within tile — no speed offset for vertical moves
+		int xLeft       = (x + CollisionBoxX) % ts;
+		int xRight      = (x + CollisionBoxX + CollisionBoxWidth) % ts;
+		// X positions with speed — for horizontal moves
+		int xLeftSpeed  = (x + CollisionBoxX + speed) % ts;
+		int xRightSpeed = (x + CollisionBoxX + CollisionBoxWidth + speed) % ts;
+		// Y positions within tile — no speed offset for horizontal moves
+		int yTop        = (y + CollisionBoxY) % ts;
+		int yBottom     = (y + CollisionBoxY + CollisionBoxHeight) % ts;
+		// Y positions with speed — for vertical moves
+		int yTopSpeed    = (y + CollisionBoxY + speed) % ts;
+		int yBottomSpeed = (y + CollisionBoxY + CollisionBoxHeight + speed) % ts;
 
+		switch (direction) {
+		case 0: // down — check bottom edge
+			if (Main.tilesManager.getTiles()[(y + CollisionBoxY + CollisionBoxHeight + speed) / ts]
+					[(x + CollisionBoxX) / ts]
+					.isSolid(xLeft, yBottomSpeed, CollisionBoxWidth, 1)) targetY = y;
+			if (Main.tilesManager.getTiles()[(y + CollisionBoxY + CollisionBoxHeight + speed) / ts]
+					[(x + CollisionBoxX + CollisionBoxWidth) / ts]
+					.isSolid(xRight - CollisionBoxWidth, yBottomSpeed, CollisionBoxWidth, 1)) targetY = y;
+			break;
+
+		case 1: // left — check left edge
+			if (Main.tilesManager.getTiles()[(y + CollisionBoxY) / ts]
+					[(x + CollisionBoxX + speed) / ts]
+					.isSolid(xLeftSpeed, yTop, 1, CollisionBoxHeight)) targetX = x;
+			if (Main.tilesManager.getTiles()[(y + CollisionBoxY + CollisionBoxHeight) / ts]
+					[(x + CollisionBoxX + speed) / ts]
+					.isSolid(xLeftSpeed, yBottom - CollisionBoxHeight, 1, CollisionBoxHeight)) targetX = x;
+			break;
+
+		case 2: // right — check right edge
+			if (Main.tilesManager.getTiles()[(y + CollisionBoxY) / ts]
+					[(x + CollisionBoxX + CollisionBoxWidth + speed) / ts]
+					.isSolid(xRightSpeed, yTop, 1, CollisionBoxHeight)) targetX = x;
+			if (Main.tilesManager.getTiles()[(y + CollisionBoxY + CollisionBoxHeight) / ts]
+					[(x + CollisionBoxX + CollisionBoxWidth + speed) / ts]
+					.isSolid(xRightSpeed, yBottom - CollisionBoxHeight, 1, CollisionBoxHeight)) targetX = x;
+			break;
+
+		case 3: // up — check top edge
+			if (Main.tilesManager.getTiles()[(y + CollisionBoxY + speed) / ts]
+					[(x + CollisionBoxX) / ts]
+					.isSolid(xLeft, yTopSpeed, CollisionBoxWidth, 1)) targetY = y;
+			if (Main.tilesManager.getTiles()[(y + CollisionBoxY + speed) / ts]
+					[(x + CollisionBoxX + CollisionBoxWidth) / ts]
+					.isSolid(xRight - CollisionBoxWidth, yTopSpeed, CollisionBoxWidth, 1)) targetY = y;
+			break;
 		}
-		
 	}
 	
 	public boolean isInTarget() {
