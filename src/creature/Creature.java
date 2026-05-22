@@ -1,8 +1,6 @@
 package creature;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -13,6 +11,7 @@ import MainPackage.Main;
 import MainPackage.TilesManager;
 import entity.Entity;
 import entity.GameColors;
+import mapRender.TilePropertiesManager;
 
 public class Creature extends Entity{
 	
@@ -29,10 +28,15 @@ public class Creature extends Entity{
 	int CollisionBoxWidth;
 	int CollisionBoxHeight;
 
+	private static int idCounter = 0;
+	int id = idCounter++;
+	int typeCode = 0;
+
 	protected ArrayList<Integer> lootIds = new ArrayList<>();
 	protected long nextMoveTime = 0;
-	private long hitFlashTime = 0;
-	private static final long HIT_FLASH_DURATION_MS = 200;
+	private static final int KNOCKBACK_DISTANCE = 40;
+	private static final int KNOCKBACK_SPEED    = 4;
+	private boolean knockbackActive = false;
 
 	final static Color shadowColor = GameColors.playerShadowColor;
 	private static final Random RANDOM = new Random();
@@ -49,15 +53,6 @@ public class Creature extends Entity{
 		g2d.drawImage(image[creatureDirection].getImage(), x - Main.tilesManager.getCameraX(false) ,
 				y - Main.tilesManager.getCameraY(false), sizeX, sizeY,null);
 
-		if (System.currentTimeMillis() - hitFlashTime < HIT_FLASH_DURATION_MS) {
-			Composite original = g2d.getComposite();
-			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.5f));
-			g2d.setColor(Color.RED);
-			g2d.fillRect(x - Main.tilesManager.getCameraX(false),
-						 y - Main.tilesManager.getCameraY(false), sizeX, sizeY);
-			g2d.setComposite(original);
-		}
-
 		//debug
 		if(Main.devmode) {
 			g2d.setColor(Color.white);
@@ -67,20 +62,22 @@ public class Creature extends Entity{
 	
 	public void move() {
 		collision(creatureDirection);
-		if(x != targetX){
-			if(Math.abs(targetX-x) <= Math.abs(speed)) {
+		if (x != targetX) {
+			if (Math.abs(targetX - x) <= Math.abs(speed)) {
 				x = targetX;
+				if (knockbackActive) endKnockback();
 				return;
 			}
-			
 			x += speed;
-		}else if(y != targetY) {
-			if(Math.abs(targetY-y) <= Math.abs(speed)) {
+		} else if (y != targetY) {
+			if (Math.abs(targetY - y) <= Math.abs(speed)) {
 				y = targetY;
+				if (knockbackActive) endKnockback();
 				return;
 			}
 			y += speed;
-		}else {
+		} else {
+			if (knockbackActive) endKnockback();
 			long now = System.currentTimeMillis();
 			if (now >= nextMoveTime) {
 				setNextLocation();
@@ -88,11 +85,35 @@ public class Creature extends Entity{
 			}
 		}
 	}
+
+	private void endKnockback() {
+		knockbackActive = false;
+		speed = 1;
+		nextMoveTime = 0;
+	}
 	
-	//use this to lower the creature health points
-	public void hitCreature(int damage) {
+	public void hitCreature(int damage, int attackerX, int attackerY) {
 		health -= damage;
-		hitFlashTime = System.currentTimeMillis();
+		applyKnockback(attackerX, attackerY);
+	}
+
+	public void applyKnockback(int attackerX, int attackerY) {
+		int myCX = x + CollisionBoxX + CollisionBoxWidth  / 2;
+		int myCY = y + CollisionBoxY + CollisionBoxHeight / 2;
+		int dx = myCX - attackerX;
+		int dy = myCY - attackerY;
+		if (Math.abs(dx) >= Math.abs(dy)) {
+			targetX = x + (dx >= 0 ? KNOCKBACK_DISTANCE : -KNOCKBACK_DISTANCE);
+			targetY = y;
+			speed = dx >= 0 ? KNOCKBACK_SPEED : -KNOCKBACK_SPEED;
+			creatureDirection = dx >= 0 ? 2 : 1;
+		} else {
+			targetX = x;
+			targetY = y + (dy >= 0 ? KNOCKBACK_DISTANCE : -KNOCKBACK_DISTANCE);
+			speed = dy >= 0 ? KNOCKBACK_SPEED : -KNOCKBACK_SPEED;
+			creatureDirection = dy >= 0 ? 0 : 3;
+		}
+		knockbackActive = true;
 	}
 
 	public void die() {
@@ -114,6 +135,11 @@ public class Creature extends Entity{
 	public int getHealth() {
 		return health;
 	}
+
+	public int getCreatureDirection() {
+		return creatureDirection;
+	}
+
 	
 	
 	public void setNextLocation() {
@@ -183,6 +209,8 @@ public class Creature extends Entity{
 			if (Main.tilesManager.getTiles()[(y + CollisionBoxY + CollisionBoxHeight + speed) / ts]
 					[(x + CollisionBoxX + CollisionBoxWidth) / ts]
 					.isSolid(xRight - CollisionBoxWidth, yBottomSpeed, CollisionBoxWidth, 1)) targetY = y;
+			if (isWaterTile((y + CollisionBoxY + CollisionBoxHeight + speed) / ts, (x + CollisionBoxX) / ts)) targetY = y;
+			if (isWaterTile((y + CollisionBoxY + CollisionBoxHeight + speed) / ts, (x + CollisionBoxX + CollisionBoxWidth) / ts)) targetY = y;
 			break;
 
 		case 1: // left — check left edge
@@ -192,6 +220,8 @@ public class Creature extends Entity{
 			if (Main.tilesManager.getTiles()[(y + CollisionBoxY + CollisionBoxHeight) / ts]
 					[(x + CollisionBoxX + speed) / ts]
 					.isSolid(xLeftSpeed, yBottom - CollisionBoxHeight, 1, CollisionBoxHeight)) targetX = x;
+			if (isWaterTile((y + CollisionBoxY) / ts, (x + CollisionBoxX + speed) / ts)) targetX = x;
+			if (isWaterTile((y + CollisionBoxY + CollisionBoxHeight) / ts, (x + CollisionBoxX + speed) / ts)) targetX = x;
 			break;
 
 		case 2: // right — check right edge
@@ -201,6 +231,8 @@ public class Creature extends Entity{
 			if (Main.tilesManager.getTiles()[(y + CollisionBoxY + CollisionBoxHeight) / ts]
 					[(x + CollisionBoxX + CollisionBoxWidth + speed) / ts]
 					.isSolid(xRightSpeed, yBottom - CollisionBoxHeight, 1, CollisionBoxHeight)) targetX = x;
+			if (isWaterTile((y + CollisionBoxY) / ts, (x + CollisionBoxX + CollisionBoxWidth + speed) / ts)) targetX = x;
+			if (isWaterTile((y + CollisionBoxY + CollisionBoxHeight) / ts, (x + CollisionBoxX + CollisionBoxWidth + speed) / ts)) targetX = x;
 			break;
 
 		case 3: // up — check top edge
@@ -210,8 +242,15 @@ public class Creature extends Entity{
 			if (Main.tilesManager.getTiles()[(y + CollisionBoxY + speed) / ts]
 					[(x + CollisionBoxX + CollisionBoxWidth) / ts]
 					.isSolid(xRight - CollisionBoxWidth, yTopSpeed, CollisionBoxWidth, 1)) targetY = y;
+			if (isWaterTile((y + CollisionBoxY + speed) / ts, (x + CollisionBoxX) / ts)) targetY = y;
+			if (isWaterTile((y + CollisionBoxY + speed) / ts, (x + CollisionBoxX + CollisionBoxWidth) / ts)) targetY = y;
 			break;
 		}
+	}
+
+	private boolean isWaterTile(int i, int j) {
+		if (i < 0 || i >= Main.tilesManager.getmaxScreenCol() || j < 0 || j >= Main.tilesManager.getmaxScreenRow()) return false;
+		return TilePropertiesManager.getTile(Main.tilesManager.getTiles(i, j).getId()).isWater();
 	}
 	
 	public boolean isInTarget() {

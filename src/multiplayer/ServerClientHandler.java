@@ -1,6 +1,7 @@
 package multiplayer;
 
 import MainPackage.Main;
+import creature.CreatureManager;
 import storage.Item;
 import entity.GameObject;
 import playerPackage.Player;
@@ -66,8 +67,19 @@ public class ServerClientHandler {
 			temp.setQuantity(Integer.parseInt(responseArr[2]));
 			Main.tilesManager.addItemDrop(temp, Integer.parseInt(responseArr[3]), Integer.parseInt(responseArr[4]));
 			break;
+		case "creatures:":
+			CreatureManager.syncFromNetwork(responseArr);
+			break;
+		case "attack_creature":
+			if (Main.host && Main.player2 != null) {
+				int strength = Integer.parseInt(responseArr[1]);
+				int p2x = Main.player2.getX() + Player.playerCollisionBoxX;
+				int p2y = Main.player2.getY() + Player.playerCollisionBoxY;
+				CreatureManager.attackCreatureInRange(p2x, p2y, strength);
+			}
+			break;
 		}
-		
+
 	}
 	
 }

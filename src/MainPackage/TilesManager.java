@@ -409,8 +409,10 @@ public class TilesManager {
 	    }
 	
 	public void addDrop(int mapI, int mapJ, int itemId) {
-	    Main.tilesManager.addItemDrop(new Item(itemId), mapJ * tileSize, mapI * tileSize);
-	    ServerClientHandler.sendDataToServer("add_drop " + mapI + " " + mapJ + " " + itemId + " " + 1);
+		int px = mapJ * tileSize;
+		int py = mapI * tileSize;
+		Main.tilesManager.addItemDrop(new Item(itemId), px, py);
+		ServerClientHandler.sendDataToServer("add_drop " + itemId + " 1 " + px + " " + py);
 	}
 
 	

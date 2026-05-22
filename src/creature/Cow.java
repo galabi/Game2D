@@ -14,6 +14,7 @@ public class Cow extends Creature{
 		CollisionBoxY = 32;
 		CollisionBoxWidth = 40;
 		CollisionBoxHeight = 32;
+		typeCode = 1;
 		lootIds.add(ItemIds.FISH);
 	}
 

@@ -10,6 +10,11 @@ public class Sheep extends Creature{
 		image = CreatureImage.getSheepImage();
 		damage = 0;
 		health = 5;
+		typeCode = 2;
+		CollisionBoxX = 12;
+		CollisionBoxY = 32;
+		CollisionBoxWidth = 40;
+		CollisionBoxHeight = 32;
 		lootIds.add(ItemIds.STICK);
 	}
 

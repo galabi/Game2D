@@ -17,6 +17,7 @@ public class Slime extends Creature{
 		CollisionBoxY = 32;
 		CollisionBoxWidth = 40;
 		CollisionBoxHeight = 32;
+		typeCode = 0;
 		lootIds.add(ItemIds.STONE);
 	}
 
