@@ -1,8 +1,11 @@
 package creature;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.ImageIcon;
 
@@ -25,7 +28,11 @@ public class Creature extends Entity{
 	int CollisionBoxY;
 	int CollisionBoxWidth;
 	int CollisionBoxHeight;
-	
+
+	protected ArrayList<Integer> lootIds = new ArrayList<>();
+	private long hitFlashTime = 0;
+	private static final long HIT_FLASH_DURATION_MS = 200;
+
 	final static Color shadowColor = GameColors.playerShadowColor;
 	private static final Random RANDOM = new Random();
 	
@@ -40,7 +47,16 @@ public class Creature extends Entity{
 		g2d.fillOval(x - Main.tilesManager.getCameraX(false) + (sizeX - 44) / 2, y - Main.tilesManager.getCameraY(false) + sizeY - 10, 44, 20);
 		g2d.drawImage(image[creatureDirection].getImage(), x - Main.tilesManager.getCameraX(false) ,
 				y - Main.tilesManager.getCameraY(false), sizeX, sizeY,null);
-		
+
+		if (System.currentTimeMillis() - hitFlashTime < HIT_FLASH_DURATION_MS) {
+			Composite original = g2d.getComposite();
+			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.5f));
+			g2d.setColor(Color.RED);
+			g2d.fillRect(x - Main.tilesManager.getCameraX(false),
+						 y - Main.tilesManager.getCameraY(false), sizeX, sizeY);
+			g2d.setComposite(original);
+		}
+
 		//debug
 		if(Main.devmode) {
 			g2d.setColor(Color.white);
@@ -71,6 +87,15 @@ public class Creature extends Entity{
 	//use this to lower the creature health points
 	public void hitCreature(int damage) {
 		health -= damage;
+		hitFlashTime = System.currentTimeMillis();
+	}
+
+	public void die() {
+		int mapI = (y + CollisionBoxY + CollisionBoxHeight / 2) / TilesManager.tileSize;
+		int mapJ = (x + CollisionBoxX + CollisionBoxWidth / 2) / TilesManager.tileSize;
+		for (int itemId : lootIds) {
+			Main.tilesManager.addDrop(mapI, mapJ, itemId);
+		}
 	}
 
 	public Rectangle getCollisionRect() {

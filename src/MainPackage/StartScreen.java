@@ -78,6 +78,8 @@ public class StartScreen{
 		//start game
 		if(mouseX > startButtonX && mouseX < (startButtonX + buttonSizeX) && mouseY > startButtonY && mouseY < startButtonY + buttonSizeY) {
 			startButton = false;
+			CreatureManager.getCreatures().clear();
+			Main.tilesManager.resetMap();
 			Main.tilesManager.readFile();
 			CreatureManager.createCreature(1350, 1350, "slime");
 

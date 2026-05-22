@@ -23,7 +23,7 @@ import playerPackage.Player;
 
 public class Main extends Canvas implements Runnable{
 
-	public enum GameState { START, GAME, PAUSE }
+	public enum GameState { START, GAME, PAUSE, GAME_OVER }
 
 	private static final long serialVersionUID = 1L;
 	long lastSave = System.currentTimeMillis();
@@ -44,6 +44,7 @@ public class Main extends Canvas implements Runnable{
 	
 	public static StartScreen startscreen;
 	public static PauseScreen pausescreen;
+	public static GameOverScreen gameOverScreen;
 	Graphics2D g2;
 	
 	Text text;
@@ -130,8 +131,10 @@ public class Main extends Canvas implements Runnable{
 			break;
 		case PAUSE:
 			break;
+		case GAME_OVER:
+			break;
 		}
-		
+
 
 	}
 	
@@ -169,6 +172,9 @@ public class Main extends Canvas implements Runnable{
 			tilesManager.renderTile(g2);
 			tilesManager.renderObjects(g2);
 			pausescreen.render(g2);
+			break;
+		case GAME_OVER:
+			gameOverScreen.render(g2);
 			break;
 		}
 
@@ -210,6 +216,7 @@ public void window(int width,int height,String title,Main main){
 
 	startscreen = new StartScreen();
 	pausescreen = new PauseScreen();
+	gameOverScreen = new GameOverScreen();
 	
 	tilesManager = new TilesManager();
 	mouseManager = new MouseManager();

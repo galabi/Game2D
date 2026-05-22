@@ -64,6 +64,9 @@ public class MouseManager implements MouseListener,MouseMotionListener, MouseWhe
 		case PAUSE:
 			Main.pausescreen.mousePressed(e);
 			break;
+		case GAME_OVER:
+			Main.gameOverScreen.mousePressed(e);
+			break;
 		}
 	}
 
@@ -82,6 +85,10 @@ public class MouseManager implements MouseListener,MouseMotionListener, MouseWhe
 			}
 			break;
 		case PAUSE:
+			Main.pausescreen.mouseReleased();
+			break;
+		case GAME_OVER:
+			Main.gameOverScreen.mouseReleased();
 			break;
 		}
 	}

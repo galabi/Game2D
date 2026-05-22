@@ -1,8 +1,10 @@
-	package creature;
+package creature;
+
+import storage.ItemIds;
 
 public class Cow extends Creature{
-	
-	
+
+
 	public Cow(int x, int y, int sizeX, int sizeY) {
 		super(x, y, sizeX, sizeY);
 		image = CreatureImage.getCowImage();
@@ -12,6 +14,7 @@ public class Cow extends Creature{
 		CollisionBoxY = 32;
 		CollisionBoxWidth = 40;
 		CollisionBoxHeight = 32;
+		lootIds.add(ItemIds.FISH);
 	}
 
 }

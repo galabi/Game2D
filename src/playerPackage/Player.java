@@ -270,6 +270,9 @@ public class Player extends Entity implements KeyListener {
 		if (now - lastHitTime >= HIT_COOLDOWN_MS) {
 			health = Math.max(0, health - amount);
 			lastHitTime = now;
+			if (health <= 0) {
+				Main.gameState = Main.GameState.GAME_OVER;
+			}
 		}
 	}
 

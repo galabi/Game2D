@@ -16,7 +16,7 @@ public class CreatureManager {
 	final static int CreatureSize = 64;
 	
 	
-	static ArrayList<Creature> creatureList = new ArrayList<Creature>();
+	private static ArrayList<Creature> creatureList = new ArrayList<Creature>();
 	
 	public static void createCreature(int x,int y, String type) {
 		switch (type) {
@@ -93,6 +93,7 @@ public class CreatureManager {
 		int strength = Main.inventory.getItemInHand().getStrength();
 		target.hitCreature(strength);
 		if (target.getHealth() <= 0) {
+			target.die();
 			creatureList.remove(target);
 		}
 		return true;

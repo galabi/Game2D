@@ -454,5 +454,9 @@ public class TilesManager {
 			}
 		}
 	}
-	
+
+	public void resetMap() {
+		map = "";
+	}
+
 }
