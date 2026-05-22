@@ -14,7 +14,6 @@ import java.util.Scanner;
 
 import regeneration.RegenerationManager;
 import storage.Item;
-import creature.CreatureManager;
 import entity.GameObject;
 import entity.GameTextures;
 import entity.ItemOnFloor;

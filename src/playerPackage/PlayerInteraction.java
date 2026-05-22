@@ -6,7 +6,6 @@ import creature.CreatureManager;
 import storage.Item;
 import storage.ItemIds;
 import mapRender.ObjectIds;
-import mapRender.ObjectPropertiesManager;
 import mapRender.TilePropertiesManager;
 
 public class PlayerInteraction {
@@ -83,6 +82,16 @@ public class PlayerInteraction {
 		}else if(isCookFish) {
 			Main.player.cookFish(pressBlockI, pressBlockJ, itemInHand);
 			
+		//eat fish
+		}else if(itemInHand.getId() == ItemIds.FISH) {
+			Main.player.eatFood(1);
+			Main.inventory.decreaseItemInHand();
+
+		//eat baked fish
+		}else if(itemInHand.getId() == ItemIds.BAKED_FISH) {
+			Main.player.eatFood(6);
+			Main.inventory.decreaseItemInHand();
+
 		//fishing
 		}else if(itemInHand.getId() == 3 && TilePropertiesManager.getTile(tileId).isWater(Main.mouseManager.getMouseX(),Main.mouseManager.getMouseY())) {
 			Main.player.startFishing(pressBlockI,pressBlockJ);

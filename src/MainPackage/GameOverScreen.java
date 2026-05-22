@@ -55,6 +55,7 @@ public class GameOverScreen {
 		CreatureManager.getCreatures().clear();
 		SpawnManager.reset();
 		Main.player.setHealth(Main.player.getMaxHealth());
+		Main.player.setHunger(Main.player.getMaxHunger());
 		Main.tilesManager.resetMap();
 		Main.tilesManager.readFile();
 		Main.gameState = Main.GameState.GAME;

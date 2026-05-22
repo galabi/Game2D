@@ -36,15 +36,20 @@ public class Player extends Entity implements KeyListener {
 	final int walkSpeed = 2,runSpeed = 4;
 	int maxHealth = 10;
 	int health = maxHealth;
-	
+	int maxHunger = 10;
+	int hunger = maxHunger;
+
 	int imageDirection = 0;
 	int imagePosture = 0;
-	
+
 	long animationTimer = System.currentTimeMillis();
 	private long lastHitTime = 0;
 	private static final long HIT_COOLDOWN_MS = 1000;
 	private long lastRegenTime = System.currentTimeMillis();
 	private static final long REGEN_INTERVAL_MS = 8000;
+	private long lastHungerDecayTime = System.currentTimeMillis();
+	private static final long HUNGER_DECAY_INTERVAL_MS = 10000;
+	private long lastStarveTime = System.currentTimeMillis();
 	 
 	
 	boolean fishing = false;
@@ -71,9 +76,24 @@ public class Player extends Entity implements KeyListener {
 	
 	public void tick() {
 		long now = System.currentTimeMillis();
-		if (health > 0 && health < maxHealth && now - lastRegenTime >= REGEN_INTERVAL_MS) {
+
+		// hunger decay
+		if (now - lastHungerDecayTime >= HUNGER_DECAY_INTERVAL_MS) {
+			if (hunger > 0) hunger--;
+			lastHungerDecayTime = now;
+		}
+
+		// health regen only when not starving
+		if (hunger > 0 && health > 0 && health < maxHealth && now - lastRegenTime >= REGEN_INTERVAL_MS) {
 			health++;
 			lastRegenTime = now;
+		}
+
+		// starvation damage
+		if (hunger == 0 && health > 0 && now - lastStarveTime >= REGEN_INTERVAL_MS) {
+			health = Math.max(0, health - 1);
+			lastStarveTime = now;
+			if (health <= 0) Main.gameState = Main.GameState.GAME_OVER;
 		}
 		//check if the player need to move
 		if(speedX != 0 || speedY != 0) {
@@ -134,6 +154,14 @@ public class Player extends Entity implements KeyListener {
 		
 		for(int i = 0;i < health;i++) {
 			g2d.drawImage(heartImage.getImage(), 30 + 40*i , 30, heartImage.getIconWidth()*2, heartImage.getIconHeight()*2, null);
+		}
+
+		// hunger bar
+		int hungerSquare = 20;
+		int hungerSpacing = 6;
+		for (int i = 0; i < maxHunger; i++) {
+			g2d.setColor(i < hunger ? new Color(220, 130, 20) : new Color(70, 70, 70, 180));
+			g2d.fillRoundRect(30 + i * (hungerSquare + hungerSpacing), 80, hungerSquare, hungerSquare, 6, 6);
 		}
 	}
 	
@@ -265,6 +293,13 @@ public class Player extends Entity implements KeyListener {
 
 	}
 	
+	public void eatFood(int hungerRestore) {
+		hunger = Math.min(maxHunger, hunger + hungerRestore);
+	}
+
+	public int getHunger() { return hunger; }
+	public void setHunger(int hunger) { this.hunger = hunger; }
+
 	public void takeDamage(int amount) {
 		long now = System.currentTimeMillis();
 		if (now - lastHitTime >= HIT_COOLDOWN_MS) {
@@ -500,6 +535,10 @@ public class Player extends Entity implements KeyListener {
 
 	public int getMaxHealth() {
 		return maxHealth;
+	}
+	
+	public int getMaxHunger() {
+		return maxHunger;
 	}
 
 	public void setMaxHealth(int maxHealth) {
