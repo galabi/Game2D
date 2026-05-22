@@ -52,6 +52,7 @@ public class CreatureManager {
 			}
 		}
 		checkPlayerHit();
+		SpawnManager.tick();
 	}
 
 	private static void checkPlayerHit() {

@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 
 import creature.CreatureManager;
+import creature.SpawnManager;
 import entity.FontLoader;
 import multiplayer.Client;
 import multiplayer.ServerSelectScreen;
@@ -79,9 +80,9 @@ public class StartScreen{
 		if(mouseX > startButtonX && mouseX < (startButtonX + buttonSizeX) && mouseY > startButtonY && mouseY < startButtonY + buttonSizeY) {
 			startButton = false;
 			CreatureManager.getCreatures().clear();
+			SpawnManager.reset();
 			Main.tilesManager.resetMap();
 			Main.tilesManager.readFile();
-			CreatureManager.createCreature(1350, 1350, "slime");
 
 			try {
 				Thread.sleep(100);

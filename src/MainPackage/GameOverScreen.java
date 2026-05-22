@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 
 import creature.CreatureManager;
+import creature.SpawnManager;
 import entity.FontLoader;
 
 public class GameOverScreen {
@@ -52,10 +53,10 @@ public class GameOverScreen {
 
 	private void restart() {
 		CreatureManager.getCreatures().clear();
+		SpawnManager.reset();
 		Main.player.setHealth(Main.player.getMaxHealth());
 		Main.tilesManager.resetMap();
 		Main.tilesManager.readFile();
-		CreatureManager.createCreature(1350, 1350, "slime");
 		Main.gameState = Main.GameState.GAME;
 		Main.host = true;
 	}
