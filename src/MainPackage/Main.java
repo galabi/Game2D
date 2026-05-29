@@ -170,6 +170,7 @@ public class Main extends Canvas implements Runnable{
 				tilesManager.renderDrops(g2);
 				inventory.render(g2);
 				chestUI.render(g2);
+				if (chestUI.isOpen()) inventory.renderHoverItem(g2);
 				minimap.render(g2);
 			}else {
 				StartScreen.renderBackScreen(g2);
@@ -227,6 +228,7 @@ public void window(int width,int height,String title,Main main){
 	minimap = new MinimapRenderer();
 	
 	tilesManager = new TilesManager();
+	tilesManager.migrateSaves();
 	mouseManager = new MouseManager();
 	player = new Player(1470, 1330,64);
 	inventory = new Inventory(450, 630, 64);

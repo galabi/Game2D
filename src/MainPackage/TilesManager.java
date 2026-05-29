@@ -338,6 +338,76 @@ public class TilesManager {
 	}
 	
 	
+	public void migrateSaves() {
+		String[] mapNames = {"map", "cave"};
+		for (String mapName : mapNames) {
+			File binFile = new File("saves/" + mapName + ".bin");
+			if (binFile.exists()) continue;
+
+			File txtFile   = new File("saves/" + mapName + ".txt");
+			File itemsFile = new File("saves/" + mapName + "_items.txt");
+			if (!txtFile.exists() || !itemsFile.exists()) continue;
+
+			Tile[][]       tempTiles   = new Tile[maxScreenCol][maxScreenRow];
+			GameObject[][] tempObjects = new GameObject[maxScreenCol][maxScreenRow];
+
+			try {
+				Scanner sc = new Scanner(txtFile);
+				for (int i = 0; i < maxScreenCol; i++)
+					for (int j = 0; j < maxScreenRow; j++)
+						tempTiles[i][j] = new Tile(sc.nextInt(), j * tileSize, i * tileSize, tileSize);
+				sc.close();
+			} catch (Exception e) {
+				System.err.println("Migration: failed to read " + mapName + ".txt: " + e.getMessage());
+				continue;
+			}
+
+			try {
+				Scanner sc = new Scanner(itemsFile);
+				for (int i = 0; i < maxScreenCol; i++)
+					for (int j = 0; j < maxScreenRow; j++)
+						tempObjects[i][j] = new GameObject(sc.nextInt(), j * tileSize, i * tileSize, tileSize);
+				sc.close();
+			} catch (Exception e) {
+				System.err.println("Migration: failed to read " + mapName + "_items.txt: " + e.getMessage());
+				continue;
+			}
+
+			try (DataOutputStream dos = new DataOutputStream(
+					new BufferedOutputStream(new FileOutputStream(binFile)))) {
+				dos.writeInt(MAGIC);
+				dos.writeByte(VERSION);
+				for (int i = 0; i < maxScreenCol; i++)
+					for (int j = 0; j < maxScreenRow; j++)
+						dos.writeByte(tempTiles[i][j].getId());
+				for (int i = 0; i < maxScreenCol; i++)
+					for (int j = 0; j < maxScreenRow; j++)
+						dos.writeByte(tempObjects[i][j].getId());
+				dos.writeShort(0); // no chests
+				txtFile.delete();
+				itemsFile.delete();
+				System.out.println("Migration: converted " + mapName + " to binary.");
+			} catch (Exception e) {
+				System.err.println("Migration: failed to write " + mapName + ".bin: " + e.getMessage());
+			}
+		}
+
+		// Remove leftover txt files for maps that already have a bin
+		for (String mapName : mapNames) {
+			if (new File("saves/" + mapName + ".bin").exists()) {
+				new File("saves/" + mapName + ".txt").delete();
+				new File("saves/" + mapName + "_items.txt").delete();
+			}
+		}
+
+		// Remove legacy inventory.txt if player.bin already exists
+		File playerBin = new File("saves/player.bin");
+		File inventoryTxt = new File("saves/inventory.txt");
+		if (playerBin.exists() && inventoryTxt.exists()) {
+			inventoryTxt.delete();
+		}
+	}
+
 	public void setMapFromMultiplayer(String[] map) {
 		for(int i=0;i<maxScreenCol;i++) {
 			for(int j=0;j<maxScreenRow;j++) {
@@ -466,10 +536,16 @@ public class TilesManager {
 	    }
 	
 	public void addDrop(int mapI, int mapJ, int itemId) {
+		addDrop(mapI, mapJ, itemId, 1);
+	}
+
+	public void addDrop(int mapI, int mapJ, int itemId, int quantity) {
 		int px = mapJ * tileSize;
 		int py = mapI * tileSize;
-		Main.tilesManager.addItemDrop(new Item(itemId), px, py);
-		ServerClientHandler.sendDataToServer("add_drop " + itemId + " 1 " + px + " " + py);
+		Item item = new Item(itemId);
+		item.setQuantity(quantity);
+		Main.tilesManager.addItemDrop(item, px, py);
+		ServerClientHandler.sendDataToServer("add_drop " + itemId + " " + quantity + " " + px + " " + py);
 	}
 
 	

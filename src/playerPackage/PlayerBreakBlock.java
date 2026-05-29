@@ -7,9 +7,10 @@ import MainPackage.TilesManager;
 import regeneration.RegenerationManager;
 import mapRender.ObjectIds;
 import mapRender.ObjectPropertiesManager;
+import storage.ChestStorage;
 
 public class PlayerBreakBlock {
-	
+
 	public static void breakBlock() {
 	    long timeDelta = System.currentTimeMillis() - PlayerInteraction.timeOfFirstHitToObject;
 	    int objId = PlayerInteraction.objectToBreakId;
@@ -17,14 +18,14 @@ public class PlayerBreakBlock {
 	    int j = PlayerInteraction.objectJ;
 	    int handItemId = Main.inventory.getItemInHand().getId();
 	    ArrayList<Integer> itemWhenBroken = ObjectPropertiesManager.getObject(objId).getItemWhenBroken();
-	    
+
 	    if (objId == ObjectIds.ROCK || objId == ObjectIds.ROCK_MAX) {
 	        boolean canBreak = (handItemId == 10 && timeDelta >= PlayerInteraction.BreakTime / 2)
 	                         || timeDelta >= PlayerInteraction.rockBreakTime;
 	        if (canBreak) {
 	            Main.tilesManager.updateBlock(i, j, objId + 1);
 	            RegenerationManager.insertToGrowthList(Main.tilesManager.getObjects()[i][j], j * TilesManager.tileSize, i * TilesManager.tileSize);
-	            
+
 	            for(Integer k:itemWhenBroken) {
 	            	Main.tilesManager.addDrop(i, j, k);
 	            }
@@ -33,45 +34,54 @@ public class PlayerBreakBlock {
 	    } else if (objId == ObjectIds.TREE_TRUNK) {
 	        boolean canBreak = (handItemId == 2 && timeDelta >= PlayerInteraction.BreakTime / 2)
 	        		|| timeDelta >= PlayerInteraction.BreakTime;
-            if (canBreak) {
-            	for(Integer k:itemWhenBroken) {
-            		Main.tilesManager.addDrop(i, j, k);
-            		}
-            	cutTree(i,j);
-            	resetInteraction();
-            	}
-	    	
+	        if (canBreak) {
+	        	for(Integer k:itemWhenBroken) {
+	        		Main.tilesManager.addDrop(i, j, k);
+	        		}
+	        	cutTree(i,j);
+	        	resetInteraction();
+	        	}
+
 	    } else if (objId == ObjectIds.TREE_SAPLING) {
 	        boolean canBreak = (handItemId == 2 && timeDelta >= PlayerInteraction.BreakTime / 2)
 	        		|| timeDelta >= PlayerInteraction.BreakTime;
-            if (canBreak) {
-            	for(Integer k:itemWhenBroken) {
-            		Main.tilesManager.addDrop(i, j, k);
-            		}
-            	 Main.tilesManager.updateBlock(i, j, 0);
-            	 Main.tilesManager.updateBlock(i-1, j, 0);
-            	resetInteraction();
-            }
-            
+	        if (canBreak) {
+	        	for(Integer k:itemWhenBroken) {
+	        		Main.tilesManager.addDrop(i, j, k);
+	        		}
+	        	 Main.tilesManager.updateBlock(i, j, 0);
+	        	 Main.tilesManager.updateBlock(i-1, j, 0);
+	        	resetInteraction();
+	        }
+
 	    }else if (ObjectPropertiesManager.getObject(objId).isBreakable()) {
 	        boolean canBreak = (handItemId == 2 && timeDelta >= PlayerInteraction.BreakTime / 2)
 	                         || timeDelta >= PlayerInteraction.BreakTime;
 	        if (canBreak) {
-	        	 Main.tilesManager.updateBlock(i, j, 0);
+	        	// Drop chest contents before removing the object
+	        	if (objId == ObjectIds.CHEST) {
+	        		storage.Item[][] contents = Main.chestStorage.getChest(i, j);
+	        		for (int r = 0; r < ChestStorage.ROWS; r++)
+	        			for (int c = 0; c < ChestStorage.COLS; c++)
+	        				if (contents[r][c] != null && contents[r][c].getId() != 0)
+	        					Main.tilesManager.addDrop(i, j, contents[r][c].getId(), contents[r][c].getQuantity());
+	        		Main.chestStorage.removeChest(i, j);
+	        	}
+	        	Main.tilesManager.updateBlock(i, j, 0);
 	            for(Integer k:itemWhenBroken) {
-	            	 Main.tilesManager.addDrop(i, j, k);
+	            	Main.tilesManager.addDrop(i, j, k);
 	            }
 	            resetInteraction();
 	        }
 	    }
 	}
-	
+
 	private static void cutTree(int rootMapI,int rootMapJ) {
 		//tree base
     	Main.tilesManager.updateBlock(rootMapI, rootMapJ, 0);
     	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ, 0);
-		
-		//left tree 
+
+		//left tree
 		if(ObjectPropertiesManager.getObject(Main.tilesManager.getObjects(rootMapI, rootMapJ-2).getId()).isTree()) {
         	Main.tilesManager.updateBlock(rootMapI, rootMapJ-1, 15);
         	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ-1, 3);
@@ -90,11 +100,11 @@ public class PlayerBreakBlock {
         	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ+1, 0);
 		}
 	}
-	
-	
+
+
 	private static void resetInteraction() {
 	    PlayerInteraction.objectToBreakId = 0;
 	    PlayerInteraction.timeOfFirstHitToObject = 0;
 	}
-	
+
 }

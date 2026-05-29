@@ -126,7 +126,7 @@ public class Inventory implements MouseWheelListener{
 			}
 			
 			crafting.render(g2d);
-			if(hoverItem != null) {
+			if(hoverItem != null && !Main.chestUI.isOpen()) {
 				hoverItem.render(g2d);
 			}
 			
@@ -203,6 +203,7 @@ public class Inventory implements MouseWheelListener{
 		} else {
 			loadInventoryText();
 			saveInventory(); // migrate to binary
+			new File("saves/inventory.txt").delete();
 		}
 	}
 
@@ -479,6 +480,31 @@ public class Inventory implements MouseWheelListener{
 
 	public int getMouseX() { return mouseX; }
 	public int getMouseY() { return mouseY; }
+
+	public void setMousePosition(int mx, int my) {
+		mouseX = mx;
+		mouseY = my;
+	}
+
+	public boolean hasHoverItem() {
+		return hoverItem != null;
+	}
+
+	public void renderHoverItem(Graphics2D g2d) {
+		if (hoverItem != null) hoverItem.render(g2d);
+	}
+
+	public void dropHoverItemOnFloor(int mouseButton) {
+		if (hoverItem == null) return;
+		if (mouseButton == 1) {
+			Main.player.dropOnFloor(hoverItem.item);
+			hoverItem = null;
+		} else if (mouseButton == 3) {
+			Main.player.dropOnFloor(new Item(hoverItem.item.id));
+			hoverItem.item.quantity--;
+			if (hoverItem.item.quantity <= 0) hoverItem = null;
+		}
+	}
 	
 	
 	public boolean isOpen() {
