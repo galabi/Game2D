@@ -4,8 +4,15 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Formatter;
@@ -13,6 +20,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import regeneration.RegenerationManager;
+import storage.ChestStorage;
 import storage.Item;
 import entity.GameObject;
 import entity.GameTextures;
@@ -191,94 +199,142 @@ public class TilesManager {
 		}
 	}
 	
-	//read from the file
+	static final int MAGIC = 0x47414D45;
+	static final int VERSION = 1;
+
 	public void readFile() {
 		mapIsReady = false;
 		RegenerationManager.resetList();
-		
-		if(map.equals("cave") || map.equals("")) {
+
+		if (map.equals("cave") || map.equals("")) {
 			map = "map";
 			cameraY = 1000;
 			cameraX = 900;
 			Main.player.setLocation(1470, 1330);
-		}else {
+		} else {
 			map = "cave";
 			Main.player.setLocation(1534, 702);
-			cameraX =1064;
-			cameraY =494;
-		}
-		
-		try {
-			s = new Scanner(new File("saves/" + map + ".txt"));
-			for(int i = 0; i < maxScreenCol; i++) {
-				for(int j = 0; j < maxScreenRow; j++) {
-					tiles[i][j] = new Tile(s.nextInt(), j * tileSize, i * tileSize, tileSize);
-				}
-			}
-			s.close();
-		} catch(FileNotFoundException e) {
-			System.err.println("Map file not found: saves/" + map + ".txt");
-			initDefaultTiles();
-		} catch(Exception e) {
-			e.printStackTrace();
+			cameraX = 1064;
+			cameraY = 494;
 		}
 
-		try {
-			s = new Scanner(new File("saves/" + map + "_items.txt"));
-			for(int i = 0; i < maxScreenCol; i++) {
-				for(int j = 0; j < maxScreenRow; j++) {
-					objects[i][j] = new GameObject(s.nextInt(), j * tileSize, i * tileSize, tileSize);
-					int objId = objects[i][j].getId();
-					if(objId == ObjectIds.TREE_SAPLING || objId == ObjectIds.ROCK) {
-						RegenerationManager.insertToGrowthList(objects[i][j], j * tileSize, i * tileSize);
-					}
-				}
-			}
-			s.close();
-		} catch(FileNotFoundException e) {
-			System.err.println("Objects file not found: saves/" + map + "_items.txt");
-			initDefaultObjects();
-		} catch(Exception e) {
-			e.printStackTrace();
+		Main.chestStorage.setMap(map);
+		Main.chestStorage.clearCurrentMap();
+
+		File binFile = new File("saves/" + map + ".bin");
+		if (binFile.exists()) {
+			loadBinary(map);
+		} else {
+			loadText(map);
+			saveMap(); // migrate to binary
 		}
 
 		mapIsReady = true;
 		if (Main.minimap != null) Main.minimap.markDirty();
 	}
 
+	private void loadBinary(String mapName) {
+		try (DataInputStream dis = new DataInputStream(
+				new BufferedInputStream(new FileInputStream("saves/" + mapName + ".bin")))) {
+
+			if (dis.readInt() != MAGIC) throw new IOException("Invalid save file magic");
+			dis.readUnsignedByte(); // version
+
+			for (int i = 0; i < maxScreenCol; i++)
+				for (int j = 0; j < maxScreenRow; j++)
+					tiles[i][j] = new Tile(dis.readUnsignedByte(), j * tileSize, i * tileSize, tileSize);
+
+			for (int i = 0; i < maxScreenCol; i++) {
+				for (int j = 0; j < maxScreenRow; j++) {
+					int id = dis.readUnsignedByte();
+					objects[i][j] = new GameObject(id, j * tileSize, i * tileSize, tileSize);
+					if (id == ObjectIds.TREE_SAPLING || id == ObjectIds.ROCK)
+						RegenerationManager.insertToGrowthList(objects[i][j], j * tileSize, i * tileSize);
+				}
+			}
+
+			int chestCount = dis.readUnsignedShort();
+			for (int c = 0; c < chestCount; c++) {
+				int ci = dis.readUnsignedByte();
+				int cj = dis.readUnsignedByte();
+				storage.Item[][] grid = new storage.Item[ChestStorage.ROWS][ChestStorage.COLS];
+				for (int si = 0; si < ChestStorage.ROWS; si++)
+					for (int sj = 0; sj < ChestStorage.COLS; sj++) {
+						int itemId = dis.readUnsignedByte();
+						int qty    = dis.readUnsignedByte();
+						grid[si][sj] = itemId == 0 ? new storage.Item() : new storage.Item(itemId);
+						if (itemId != 0) grid[si][sj].setQuantity(qty);
+					}
+				Main.chestStorage.setChest(ci, cj, grid);
+			}
+
+		} catch (Exception e) {
+			System.err.println("Failed to load binary save for " + mapName + ": " + e.getMessage());
+			initDefaultTiles();
+			initDefaultObjects();
+		}
+	}
+
+	private void loadText(String mapName) {
+		try {
+			s = new Scanner(new File("saves/" + mapName + ".txt"));
+			for (int i = 0; i < maxScreenCol; i++)
+				for (int j = 0; j < maxScreenRow; j++)
+					tiles[i][j] = new Tile(s.nextInt(), j * tileSize, i * tileSize, tileSize);
+			s.close();
+		} catch (FileNotFoundException e) {
+			System.err.println("Map file not found: saves/" + mapName + ".txt");
+			initDefaultTiles();
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try {
+			s = new Scanner(new File("saves/" + mapName + "_items.txt"));
+			for (int i = 0; i < maxScreenCol; i++) {
+				for (int j = 0; j < maxScreenRow; j++) {
+					objects[i][j] = new GameObject(s.nextInt(), j * tileSize, i * tileSize, tileSize);
+					int id = objects[i][j].getId();
+					if (id == ObjectIds.TREE_SAPLING || id == ObjectIds.ROCK)
+						RegenerationManager.insertToGrowthList(objects[i][j], j * tileSize, i * tileSize);
+				}
+			}
+			s.close();
+		} catch (FileNotFoundException e) {
+			System.err.println("Objects file not found: saves/" + mapName + "_items.txt");
+			initDefaultObjects();
+		} catch (Exception e) { e.printStackTrace(); }
+	}
 
 	public void saveMap() {
-		try {
-			x = new Formatter("saves/"+map+".txt");
-			
-		} catch (FileNotFoundException e) {
+		try (DataOutputStream dos = new DataOutputStream(
+				new BufferedOutputStream(new FileOutputStream("saves/" + map + ".bin")))) {
+
+			dos.writeInt(MAGIC);
+			dos.writeByte(VERSION);
+
+			for (int i = 0; i < maxScreenCol; i++)
+				for (int j = 0; j < maxScreenRow; j++)
+					dos.writeByte(tiles[i][j].getId());
+
+			for (int i = 0; i < maxScreenCol; i++)
+				for (int j = 0; j < maxScreenRow; j++)
+					dos.writeByte(objects[i][j].getId());
+
+			List<int[]> positions = Main.chestStorage.getChestPositions();
+			dos.writeShort(positions.size());
+			for (int[] pos : positions) {
+				dos.writeByte(pos[0]);
+				dos.writeByte(pos[1]);
+				storage.Item[][] grid = Main.chestStorage.getChest(pos[0], pos[1]);
+				for (int si = 0; si < ChestStorage.ROWS; si++)
+					for (int sj = 0; sj < ChestStorage.COLS; sj++) {
+						dos.writeByte(grid[si][sj].getId());
+						dos.writeByte(grid[si][sj].getQuantity());
+					}
+			}
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		for(int i=0;i<maxScreenCol;i++) {
-			for(int j=0;j<maxScreenRow;j++) {
-				x.format("%s ",tiles[i][j].getId());
-			}
-			x.format("%n");
-		}			
-		x.close();
-		
-		try {
-			x = new Formatter("saves/"+map+"_items.txt");
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		for(int i=0;i<maxScreenCol;i++) {
-			for(int j=0;j<maxScreenRow;j++) {
-				x.format("%s ",objects[i][j].getId());
-			}
-			x.format("%n");
-		}			
-
-
-		x.close();
 	}
 	
 	

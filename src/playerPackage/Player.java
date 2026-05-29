@@ -48,7 +48,7 @@ public class Player extends Entity implements KeyListener {
 	private long lastRegenTime = System.currentTimeMillis();
 	private static final long REGEN_INTERVAL_MS = 8000;
 	private long lastHungerDecayTime = System.currentTimeMillis();
-	private static final long HUNGER_DECAY_INTERVAL_MS = 10000;
+	private static final long HUNGER_DECAY_INTERVAL_MS = 60000;
 	private long lastStarveTime = System.currentTimeMillis();
 	 
 	
@@ -352,6 +352,10 @@ public class Player extends Entity implements KeyListener {
 
 		if(key == KeyEvent.VK_ESCAPE) {
 			if(Main.gameState == Main.GameState.GAME) {
+				if(Main.chestUI.isOpen()) {
+					Main.chestUI.close();
+					return;
+				}
 				if(Main.inventory.isOpen()) {
 					Main.inventory.setOpen(false);
 					return;
@@ -410,9 +414,13 @@ public class Player extends Entity implements KeyListener {
 			return;
 		}
 		
-		//E - open/close inventory
+		//E - open/close inventory or close chest
 		if(key == KeyEvent.VK_E) {
-			Main.inventory.setOpen(!Main.inventory.isOpen());
+			if (Main.chestUI.isOpen()) {
+				Main.chestUI.close();
+			} else {
+				Main.inventory.setOpen(!Main.inventory.isOpen());
+			}
 		}
 	}
 	

@@ -305,6 +305,11 @@
     "solidInTile": [
       { "x": 26, "y": 28, "width": 14, "height": 36 },
       { "x": 0, "y": 28, "width": 40, "height": 14 }
-    ] 
+    ]
+  },
+  {
+    "id": 83, "objectName": "Chest", "solid": true, "breakable": true,
+    "solidInTile": [{ "x": 8, "y": 16, "width": 48, "height": 40 }],
+    "itemWhenBroken": [12]
   }
 ]

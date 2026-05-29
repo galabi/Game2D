@@ -12,8 +12,14 @@ import java.awt.event.MouseWheelListener;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.Formatter;
 import java.util.Scanner;
 import java.util.Stack;
@@ -187,30 +193,55 @@ public class Inventory implements MouseWheelListener{
 		}
 	}
 	
+	static final int PLAYER_MAGIC = 0x504C5952;
+	static final int PLAYER_VERSION = 1;
+
 	public void loadInventory() {
-		int itemId, quantity;
 		items = new Item[toolbarLength][toolbarLength];
+		if (new File("saves/player.bin").exists()) {
+			loadInventoryBinary();
+		} else {
+			loadInventoryText();
+			saveInventory(); // migrate to binary
+		}
+	}
+
+	private void loadInventoryBinary() {
+		try (DataInputStream dis = new DataInputStream(
+				new BufferedInputStream(new FileInputStream("saves/player.bin")))) {
+			if (dis.readInt() != PLAYER_MAGIC) throw new java.io.IOException("Invalid player save");
+			dis.readUnsignedByte(); // version
+			for (int i = 0; i < toolbarLength; i++) {
+				for (int j = 0; j < toolbarLength; j++) {
+					int id  = dis.readUnsignedByte();
+					int qty = dis.readUnsignedByte();
+					items[i][j] = id == 0 ? new Item() : new Item(id);
+					if (id != 0) items[i][j].quantity = qty;
+				}
+			}
+			MainPackage.Main.player.setHunger(dis.readUnsignedByte());
+		} catch (Exception e) {
+			System.err.println("Failed to load player.bin: " + e.getMessage());
+			initBlankInventory();
+		}
+	}
+
+	private void loadInventoryText() {
 		try {
 			s = new Scanner(new File("saves/inventory.txt"));
-			for(int i = 0; i < toolbarLength; i++) {
-				for(int j = 0; j < toolbarLength; j++) {
-					itemId = s.nextInt();
-					quantity = s.nextInt();
-					if(itemId == 0) {
-						items[i][j] = new Item();
-					} else {
-						items[i][j] = new Item(itemId);
-						items[i][j].quantity = quantity;
-					}
+			for (int i = 0; i < toolbarLength; i++) {
+				for (int j = 0; j < toolbarLength; j++) {
+					int id  = s.nextInt();
+					int qty = s.nextInt();
+					items[i][j] = id == 0 ? new Item() : new Item(id);
+					if (id != 0) items[i][j].quantity = qty;
 				}
 			}
 			s.close();
-		} catch(FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			System.err.println("Inventory file not found.");
 			initBlankInventory();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) { e.printStackTrace(); }
 	}
 
 	private void initBlankInventory() {
@@ -223,20 +254,20 @@ public class Inventory implements MouseWheelListener{
 	
 	
 	public void saveInventory() {
-		try {
-			x = new Formatter("saves/inventory.txt");
-			
-		} catch (FileNotFoundException e) {
+		try (DataOutputStream dos = new DataOutputStream(
+				new BufferedOutputStream(new FileOutputStream("saves/player.bin")))) {
+			dos.writeInt(PLAYER_MAGIC);
+			dos.writeByte(PLAYER_VERSION);
+			for (int i = 0; i < toolbarLength; i++)
+				for (int j = 0; j < toolbarLength; j++) {
+					dos.writeByte(items[i][j].id);
+					dos.writeByte(items[i][j].quantity);
+				}
+			int hunger = MainPackage.Main.player != null ? MainPackage.Main.player.getHunger() : 10;
+			dos.writeByte(hunger);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		for(int i = 0;i<toolbarLength;i++) {
-			for(int j = 0;j<toolbarLength;j++) {
-				x.format("%s %s ",items[i][j].id,items[i][j].quantity);
-			}
-			x.format("%n ");
-		}
-		x.close();
 	}
 	
 	private void addItem(Item item) {
@@ -402,6 +433,46 @@ public class Inventory implements MouseWheelListener{
 			items[0][selectedSlot] = new Item();
 		}
 	}
+
+	public void clearItemInHand() {
+		items[0][selectedSlot] = new Item();
+	}
+
+	// Returns and removes the item at the clicked screen position (hotbar or inventory grid).
+	// Returns null if no item was found at that position.
+	public Item takeItemAt(int mx, int my) {
+		// hotbar
+		if (mx > HotBarX && mx < HotBarX + toolbarLength * slotSize
+				&& my > HotBarY && my < HotBarY + slotSize) {
+			int col = (mx - HotBarX) / slotSize;
+			Item item = items[0][col];
+			if (item.getId() != 0) {
+				items[0][col] = new Item();
+				return item;
+			}
+		}
+		// inventory grid (rows 1-4)
+		if (mx > inventoryX && mx < inventoryX + slotSize * toolbarLength
+				&& my > inventoryY && my < inventoryY + slotSize * (toolbarLength - 1)) {
+			int row = 1 + (my - inventoryY) / slotSize;
+			int col = (mx - inventoryX) / slotSize;
+			if (row >= 1 && row < toolbarLength && col >= 0 && col < toolbarLength) {
+				Item item = items[row][col];
+				if (item.getId() != 0) {
+					items[row][col] = new Item();
+					return item;
+				}
+			}
+		}
+		return null;
+	}
+
+	public int getInventoryX() { return inventoryX; }
+	public int getInventoryY() { return inventoryY; }
+	public int getHotBarX()    { return HotBarX; }
+	public int getHotBarY()    { return HotBarY; }
+	public int getSlotSize()   { return slotSize; }
+	public int getToolbarLength() { return toolbarLength; }
 	public void addToItemStack(Item item) {
 		AddItemList.add(item);
 	}

@@ -12,6 +12,7 @@ public final class ItemIds {
     public static final int STONE       = 9;
     public static final int PICKAXE     = 10;
     public static final int SWORD       = 11;
+    public static final int CHEST       = 12;
 
     private ItemIds() {}
 }

@@ -6,6 +6,7 @@ import creature.CreatureManager;
 import storage.Item;
 import storage.ItemIds;
 import mapRender.ObjectIds;
+import storage.ChestUI;
 import mapRender.TilePropertiesManager;
 
 public class PlayerInteraction {
@@ -74,8 +75,13 @@ public class PlayerInteraction {
 		boolean isCookFish = (objId == ObjectIds.CAMPFIRE_ON && itemInHand.getId() == ItemIds.FISH) ||
 				(objId == ObjectIds.CAMPFIRE && itemInHand.getId() == ItemIds.WOOD);
 		
+		// open chest
+		if (objId == ObjectIds.CHEST) {
+			Main.chestUI.open(pressBlockI, pressBlockJ);
+			return;
+
 		//place block
-		if(itemInHand.isPlaceable()) {
+		} else if(itemInHand.isPlaceable()) {
 			Main.player.placeBlock(pressBlockI, pressBlockJ,itemInHand);
 			
 		//cook a fish

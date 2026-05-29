@@ -12,6 +12,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import storage.ChestStorage;
+import storage.ChestUI;
 import storage.Inventory;
 import creature.CreatureManager;
 import entity.GameTextures;
@@ -39,7 +41,9 @@ public class Main extends Canvas implements Runnable{
 	public static Player player ,player2;
 	public static Inventory inventory;
 	public static TilesManager tilesManager;
-	public static MouseManager mouseManager; 
+	public static MouseManager mouseManager;
+	public static ChestStorage chestStorage = new ChestStorage();
+	public static ChestUI chestUI = new ChestUI(); 
 	public static BufferedImage tempScreen;
 	
 	public static StartScreen startscreen;
@@ -165,6 +169,7 @@ public class Main extends Canvas implements Runnable{
 				tilesManager.renderObjects(g2);
 				tilesManager.renderDrops(g2);
 				inventory.render(g2);
+				chestUI.render(g2);
 				minimap.render(g2);
 			}else {
 				StartScreen.renderBackScreen(g2);
