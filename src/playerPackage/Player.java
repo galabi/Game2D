@@ -462,6 +462,9 @@ public class Player extends Entity implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+		if (Main.gameState == Main.GameState.START) {
+			Main.startscreen.keyTyped(e);
+		}
 	}
 	
 	private Tile getNearTile(int playerPosition) {

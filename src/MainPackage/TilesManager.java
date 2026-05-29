@@ -122,8 +122,8 @@ public class TilesManager {
 			
 		//Add Players to the list
 		if (Main.player != null) renderList.add(Main.player);
-		if (Main.player2 != null) renderList.add(Main.player2);
-		renderList.addAll(creature.CreatureManager.getCreatures()); 
+		renderList.addAll(Main.remotePlayers.values());
+		renderList.addAll(creature.CreatureManager.getCreatures());
 
 		// Sort the list based on Y depth
 		renderList.sort((e1, e2) -> {
@@ -184,10 +184,12 @@ public class TilesManager {
 	}
 	
 	public int isPlayersClose() {
-		if(Main.player2 == null || Main.player2.playerI != Main.player.playerI) {
-			return 2;
+		for (playerPackage.Player rp : Main.remotePlayers.values()) {
+			if (rp.playerI == Main.player.playerI) {
+				return Math.abs(rp.playerJ - Main.player.playerJ);
+			}
 		}
-		return(Math.abs( Main.player2.playerJ - Main.player.playerJ));
+		return 2;
 	}
 	
 	
@@ -229,6 +231,7 @@ public class TilesManager {
 			saveMap(); // migrate to binary
 		}
 
+		if (Main.host) creature.CreatureManager.loadCreatures(map);
 		mapIsReady = true;
 		if (Main.minimap != null) Main.minimap.markDirty();
 	}
@@ -332,12 +335,14 @@ public class TilesManager {
 					}
 			}
 
+			if (Main.host) creature.CreatureManager.saveCreatures(map);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 	public void migrateSaves() {
 		String[] mapNames = {"map", "cave"};
 		for (String mapName : mapNames) {

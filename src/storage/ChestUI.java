@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import MainPackage.Main;
 import entity.FontLoader;
 import entity.GameColors;
+import multiplayer.ServerClientHandler;
 
 public class ChestUI {
 
@@ -116,6 +117,8 @@ public class ChestUI {
                     if (mx >= sx && mx < sx + SLOT_SIZE && my >= sy && my < sy + SLOT_SIZE) {
                         // Reuse inventory's drag-drop logic on the chest slot item
                         Main.inventory.dragAndDrop(slots[row][col], sx, sy, e.getButton());
+                        ServerClientHandler.sendDataToServer(
+                                Main.chestStorage.chestToSyncString(chestI, chestJ));
                         return;
                     }
                 }
@@ -136,6 +139,8 @@ public class ChestUI {
 
         if (inInventory || inHotbar) {
             Main.inventory.mousePressed(e);
+            ServerClientHandler.sendDataToServer(
+                    Main.chestStorage.chestToSyncString(chestI, chestJ));
             return;
         }
 

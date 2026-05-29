@@ -54,10 +54,9 @@ public class GameOverScreen {
 	private void restart() {
 		CreatureManager.getCreatures().clear();
 		SpawnManager.reset();
-		Main.player.setHealth(Main.player.getMaxHealth());
-		Main.player.setHunger(Main.player.getMaxHunger());
 		Main.tilesManager.resetMap();
 		Main.tilesManager.readFile();
+		Main.inventory.loadInventory(); // restores position/health/hunger from named save
 		Main.gameState = Main.GameState.GAME;
 		Main.host = true;
 	}

@@ -36,6 +36,7 @@ public class Client implements Runnable{
             t1.start();
             
         	
+        	sendToServer("join " + Main.playerName);
         	String response;
     		sendToServer(Main.player.toString());
 

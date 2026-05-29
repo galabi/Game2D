@@ -2,6 +2,13 @@ package creature;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -173,5 +180,50 @@ public class CreatureManager {
 
 	public static ArrayList<Creature> getCreatures() {
 		return creatureList;
+	}
+
+	private static final int CREATURE_MAGIC   = 0x43525452;
+	private static final int CREATURE_VERSION = 1;
+
+	public static void saveCreatures(String mapName) {
+		File f = new File("saves/" + mapName + "_creatures.bin");
+		try (DataOutputStream dos = new DataOutputStream(
+				new BufferedOutputStream(new FileOutputStream(f)))) {
+			dos.writeInt(CREATURE_MAGIC);
+			dos.writeByte(CREATURE_VERSION);
+			dos.writeShort(creatureList.size());
+			for (Creature c : creatureList) {
+				dos.writeByte(c.typeCode);
+				dos.writeShort(c.getX());
+				dos.writeShort(c.getY());
+				dos.writeByte(Math.max(0, c.getHealth()));
+			}
+		} catch (Exception e) {
+			System.err.println("CreatureManager: failed to save creatures: " + e.getMessage());
+		}
+	}
+
+	public static void loadCreatures(String mapName) {
+		File f = new File("saves/" + mapName + "_creatures.bin");
+		if (!f.exists()) return;
+		try (DataInputStream dis = new DataInputStream(
+				new BufferedInputStream(new FileInputStream(f)))) {
+			if (dis.readInt() != CREATURE_MAGIC) return;
+			dis.readUnsignedByte(); // version
+			int count = dis.readUnsignedShort();
+			for (int i = 0; i < count; i++) {
+				int type   = dis.readUnsignedByte();
+				int cx     = dis.readShort();
+				int cy     = dis.readShort();
+				int health = dis.readUnsignedByte();
+				Creature c = createCreatureInternal(type, cx, cy);
+				if (c != null) {
+					c.setHealth(health);
+					creatureList.add(c);
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("CreatureManager: failed to load creatures: " + e.getMessage());
+		}
 	}
 }

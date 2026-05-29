@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import java.util.concurrent.ConcurrentHashMap;
 import storage.ChestStorage;
 import storage.ChestUI;
 import storage.Inventory;
@@ -38,7 +39,9 @@ public class Main extends Canvas implements Runnable{
 	public static JFrame Frame;
 	boolean preLoad = false;
 	
-	public static Player player ,player2;
+	public static Player player;
+	public static ConcurrentHashMap<Integer, Player> remotePlayers = new ConcurrentHashMap<>();
+	public static String playerName = "";
 	public static Inventory inventory;
 	public static TilesManager tilesManager;
 	public static MouseManager mouseManager;
@@ -128,8 +131,8 @@ public class Main extends Canvas implements Runnable{
 				CreatureManager.tick();
 			}
 
-			if(host && System.currentTimeMillis() >lastSave+10000) {
-				tilesManager.saveMap();
+			if(System.currentTimeMillis() >lastSave+10000) {
+				if(host) tilesManager.saveMap();
 				inventory.saveInventory();
 				lastSave = System.currentTimeMillis();
 			}
@@ -246,10 +249,8 @@ public void window(int width,int height,String title,Main main){
 	    public void windowClosing(WindowEvent e) {
 	        // אם יש שמירת מצב שדורשת זמן, תעשה אותה בצורה אסינכרונית (ברקע) או שתנסה ללכוד חריגות
 	        try {
-	            if(host) {
-	                tilesManager.saveMap();
-	                inventory.saveInventory();
-	            }
+	            if(host) tilesManager.saveMap();
+	            inventory.saveInventory();
 	            ServerClientHandler.sendDataToServer("stop");
 	        } catch (Exception ex) {
 	            ex.printStackTrace();

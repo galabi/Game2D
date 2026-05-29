@@ -6,132 +6,134 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import MainPackage.Main;
+import playerPackage.Player;
 
-public class Server implements Runnable{
-	ServerSocket ss;
-	BufferedReader in;
-	PrintWriter out;
-	String response = "start";
-	boolean serverUP = false;
-	int port = 1000;
-	Queue<String> queue = new ConcurrentLinkedQueue<>();
+public class Server implements Runnable {
 
-	@Override
-	public void run() {
-	    serverUP = true;
-	    
-	    try {
-	    	openServer();
-	        
-	        System.out.println("[server] Listening on port "+port);
-	        Thread t1 = null;
-	        while (true) {
-	            Socket s = null;
+    private ServerSocket ss;
+    private int port = 1000;
+    private boolean serverUP = false;
+    private final List<ClientHandler> clients = new CopyOnWriteArrayList<>();
+    private final AtomicInteger nextId = new AtomicInteger(1);
 
-	            try {
-	                s = ss.accept();
-	                System.out.println("[server] Client connected: " + s.getInetAddress());
+    @Override
+    public void run() {
+        serverUP = true;
+        openServerSocket();
+        System.out.println("[server] Listening on port " + port);
+        try {
+            while (true) {
+                try {
+                    Socket s = ss.accept();
+                    int id = nextId.getAndIncrement();
+                    ClientHandler ch = new ClientHandler(s, id);
+                    clients.add(ch);
+                    System.out.println("[server] Client " + id + " connected: " + s.getInetAddress());
+                    // Send initial world state
+                    ch.send(Main.tilesManager.toString());
+                    ch.send(Main.tilesManager.ObjectsToString());
+                    ch.send(Main.tilesManager.DropsToString());
+                    ch.send(Main.chestStorage.toSyncString());
+                    // Send positions of all currently connected players
+                    ch.send(Main.player.toString());
+                    for (ClientHandler other : clients) {
+                        if (other == ch) continue;
+                        Player rp = Main.remotePlayers.get(other.id);
+                        if (rp != null)
+                            ch.send(rp.toString().replace("player:", "player_" + other.id + ":"));
+                    }
+                    new Thread(ch).start();
+                } catch (Exception e) {
+                    if (!"Socket closed".equals(e.getMessage())) e.printStackTrace();
+                }
+            }
+        } finally {
+            try { if (ss != null && !ss.isClosed()) ss.close(); } catch (IOException ignored) {}
+        }
+    }
 
-	                in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-	                out = new PrintWriter(s.getOutputStream(), true);
-	                
-	                
-	                t1 = new Thread(new ServerOut());
-	                t1.start();
-	                
-	                sendToClient(Main.tilesManager.toString());
-	                sendToClient(Main.player.toString());
-	                sendToClient(Main.tilesManager.ObjectsToString());
-	                sendToClient(Main.tilesManager.DropsToString());
-	                response = in.readLine();
+    private void openServerSocket() {
+        while (ss == null) {
+            try {
+                ss = new ServerSocket(port);
+            } catch (Exception e) {
+                port++;
+                if (!"Address already in use".equals(e.getLocalizedMessage())) e.printStackTrace();
+            }
+        }
+    }
 
-	                if ("test".equals(response)) {
-	                    System.out.println("[server] Ping (test) received. Closing connection.");
-	                    continue;
-	                }
+    /** Broadcast to all clients except the sender (null sender = broadcast to all). */
+    public void broadcast(String msg, ClientHandler sender) {
+        for (ClientHandler c : clients) {
+            if (c != sender) c.send(msg);
+        }
+    }
 
-	                do {
-	                    if (response != null) {
-	                		ServerClientHandler.responseHandler(response);
-	                		
-	                    	if ("stop".equals(response)) {
-	                            break;
-	                        }
+    /** Send to all clients (host → everyone). */
+    public void sendToClient(String msg) {
+        for (ClientHandler c : clients) c.send(msg);
+    }
 
-	                    }
-	                    response = in.readLine();
-	                } while (!"stop".equals(response));
-                    Main.player2 = null;
-	                System.out.println("[server] Client disconnected.");
-	                
-	            } catch (Exception e) {
-	                if ("Connection reset".equals(e.getLocalizedMessage())) {
-	                    Main.player2 = null;
-	                } else {
-	                    e.printStackTrace();
-	                }
-	            } finally {
-	                try {
-	                    if (in != null) in.close();
-	                    if (out != null) out.close();
-	                    if (s != null && !s.isClosed()) s.close();
-	                } catch (IOException e) {
-	                    e.printStackTrace();
-	                }
-	            }
-	        }
+    public int getPort() { return port; }
+    public boolean isServerUp() { return serverUP; }
 
-	    } finally {
-	        try {
-	            if (ss != null && !ss.isClosed()) ss.close();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	    }
-	}
-	
-	private void openServer() {
-		while(ss == null) {
-			try {
-				ss = new ServerSocket(port);
-			}catch (Exception e) {
-				port++;
-				if(!e.getLocalizedMessage().equals("Address already in use")) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
-	public void sendToClient(String str) {
-		queue.add(str);
-	}
-	
-	public boolean isServerUp() {
-		return serverUP;
-	}
-	
-	private class ServerOut implements Runnable{
-		
-		@Override
-		public void run() {
-			while(true) {
-				if(!queue.isEmpty()) {
-					out.println(queue.poll());
-				}
-				
-				try {
-					Thread.sleep(5);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		
-	}
+    // -------------------------------------------------------------------------
+    class ClientHandler implements Runnable {
+
+        final int id;
+        final Socket socket;
+        private final PrintWriter out;
+        private final BufferedReader in;
+        final Queue<String> queue = new ConcurrentLinkedQueue<>();
+        String playerName = "Player";
+
+        ClientHandler(Socket s, int id) throws IOException {
+            this.id     = id;
+            this.socket = s;
+            this.out    = new PrintWriter(s.getOutputStream(), true);
+            this.in     = new BufferedReader(new InputStreamReader(s.getInputStream()));
+        }
+
+        void send(String msg) {
+            queue.add(msg);
+        }
+
+        @Override
+        public void run() {
+            new Thread(new ClientOut()).start();
+            try {
+                String line;
+                while ((line = in.readLine()) != null) {
+                    if ("stop".equals(line)) break;
+                    ServerClientHandler.responseHandler(line, this);
+                }
+            } catch (Exception e) {
+                if (!"Connection reset".equals(e.getLocalizedMessage())) e.printStackTrace();
+            } finally {
+                clients.remove(this);
+                Main.remotePlayers.remove(id);
+                broadcast("player_left " + id, null);
+                System.out.println("[server] Client " + id + " disconnected.");
+                try { socket.close(); } catch (IOException ignored) {}
+            }
+        }
+
+        private class ClientOut implements Runnable {
+            @Override
+            public void run() {
+                while (!socket.isClosed()) {
+                    if (!queue.isEmpty()) out.println(queue.poll());
+                    try { Thread.sleep(5); } catch (InterruptedException ignored) {}
+                }
+            }
+        }
+    }
 }

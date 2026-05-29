@@ -198,6 +198,12 @@ public class Inventory implements MouseWheelListener{
 
 	public void loadInventory() {
 		items = new Item[toolbarLength][toolbarLength];
+		if (!MainPackage.Main.playerName.isEmpty()) {
+			boolean loaded = PlayerSaveManager.load(MainPackage.Main.playerName, MainPackage.Main.player, this);
+			if (!loaded) initBlankInventory();
+			return;
+		}
+		// legacy single-player fallback
 		if (new File("saves/player.bin").exists()) {
 			loadInventoryBinary();
 		} else {
@@ -255,6 +261,11 @@ public class Inventory implements MouseWheelListener{
 	
 	
 	public void saveInventory() {
+		if (!MainPackage.Main.playerName.isEmpty()) {
+			PlayerSaveManager.save(MainPackage.Main.playerName, MainPackage.Main.player, this);
+			return;
+		}
+		// legacy single-player fallback
 		try (DataOutputStream dos = new DataOutputStream(
 				new BufferedOutputStream(new FileOutputStream("saves/player.bin")))) {
 			dos.writeInt(PLAYER_MAGIC);

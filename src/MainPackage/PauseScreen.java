@@ -41,7 +41,7 @@ public class PauseScreen {
 		g2d.fillRect(0, 0, Main.width, Main.height);
 
 		drawButton(g2d, resumeButtonY, !resumePressed, "Resume", resumeTextX, resumeTextY);
-		drawButton(g2d, lanButtonY,    !lanPressed,    "Open-lan", lanTextX, lanTextY);
+		if (Main.host) drawButton(g2d, lanButtonY, !lanPressed, "Open-lan", lanTextX, lanTextY);
 		drawButton(g2d, quitButtonY,   !quitPressed,   "Quit", quitTextX, quitTextY);
 	}
 
@@ -61,8 +61,10 @@ public class PauseScreen {
 			mouseReleased();
 			Main.gameState = Main.GameState.GAME;
 		} else if (hitTest(mx, my, lanButtonY)) {
-			lanPressed = true;
-			ServerClientHandler.openServer();
+			if (Main.host && ServerClientHandler.server == null) {
+				lanPressed = true;
+				ServerClientHandler.openServer();
+			}
 		} else if (hitTest(mx, my, quitButtonY)) {
 			mouseReleased();
 			Main.gameState = Main.GameState.START;

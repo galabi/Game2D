@@ -136,6 +136,10 @@ public class Creature extends Entity{
 		return health;
 	}
 
+	public void setHealth(int h) {
+		health = h;
+	}
+
 	public int getCreatureDirection() {
 		return creatureDirection;
 	}

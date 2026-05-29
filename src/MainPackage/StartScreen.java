@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
@@ -23,7 +24,8 @@ public class StartScreen{
 	Font font = FontLoader.getPixelFont(24);
 	public static ImageIcon backgraond;
 	ServerSelectScreen serverSelect;
-	
+	NameInputBox nameInput = new NameInputBox(450, 440, 300, 45);
+
 	FontMetrics metrics;
 	
 	public StartScreen(){
@@ -46,6 +48,14 @@ public class StartScreen{
 			
 			g2d.setFont(font);
 			g2d.drawImage(backgraond.getImage(),0, 0, Main.width, Main.height,null);
+
+			// name label + input box
+			g2d.setFont(FontLoader.getPixelFont(16));
+			g2d.setColor(Color.WHITE);
+			g2d.drawString("Name:", 450, 430);
+			nameInput.render(g2d);
+
+			g2d.setFont(font);
 			g2d.setColor(Color.decode("#b8dfff"));
 			g2d.fill3DRect(startButtonX, startButtonY, buttonSizeX, buttonSizeY,startButton);
 			g2d.fill3DRect(multiButtonX, multiButtonY, buttonSizeX, buttonSizeY, multiButton);
@@ -73,16 +83,25 @@ public class StartScreen{
 	}
 	
 
+	public void keyTyped(KeyEvent e) {
+		nameInput.keyTyped(e.getKeyChar());
+	}
+
 	public void mousePressed(MouseEvent e) {
 
 		int mouseX = e.getX()*Main.width/Main.screenWidth ,mouseY = e.getY()*Main.height/Main.screenHeight;
+		nameInput.mousePressed(mouseX, mouseY);
+
 		//start game
 		if(mouseX > startButtonX && mouseX < (startButtonX + buttonSizeX) && mouseY > startButtonY && mouseY < startButtonY + buttonSizeY) {
+			if(nameInput.getText().isEmpty()) return;
 			startButton = false;
+			Main.playerName = nameInput.getText();
 			CreatureManager.getCreatures().clear();
 			SpawnManager.reset();
 			Main.tilesManager.resetMap();
 			Main.tilesManager.readFile();
+			Main.inventory.loadInventory();
 
 			try {
 				Thread.sleep(100);
@@ -92,9 +111,11 @@ public class StartScreen{
 
 			Main.gameState = Main.GameState.GAME;
 			Main.host = true;
-				
+
 		//multi-player button
 		}else if(mouseX > multiButtonX && mouseX < (multiButtonX + buttonSizeX) && mouseY > multiButtonY && mouseY < multiButtonY + buttonSizeY) {
+			if(nameInput.getText().isEmpty()) return;
+			Main.playerName = nameInput.getText();
 			multiButton = false;
 			serverScreen = true;
 			new Client().checkAvailablePorts(serverSelect);
