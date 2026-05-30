@@ -118,7 +118,6 @@ public class Item {
 			strength = 1;
 			placeable = true;
 			idToPlace = 83;
-			logo = GameTextures.getItemIcon(1); // placeholder until chest icon is added to items.png
 			break;
 		default:
 			name = " ";

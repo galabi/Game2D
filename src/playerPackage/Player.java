@@ -58,6 +58,7 @@ public class Player extends Entity implements KeyListener {
 	PlayerAnimation playeranimation;
 	ImageIcon[][] playerImage;
 	ImageIcon heartImage = null;
+	ImageIcon breadImage = null;
 	FishingRod rod;
 	
 	final static Color playerShadowColor = GameColors.playerShadowColor;
@@ -152,16 +153,33 @@ public class Player extends Entity implements KeyListener {
 			rod.render(g2d);
 		}
 		
-		for(int i = 0;i < health;i++) {
-			g2d.drawImage(heartImage.getImage(), 30 + 40*i , 30, heartImage.getIconWidth()*2, heartImage.getIconHeight()*2, null);
+		if (heartImage != null) {
+			int heartSize = heartImage.getIconWidth() * 2;
+			int heartSpacing = 6;
+			for (int i = 0; i < maxHealth; i++) {
+				if (i < health) {
+					g2d.drawImage(heartImage.getImage(), 30 + i * (heartSize + heartSpacing), 30, heartSize, heartSize, null);
+				} else {
+					g2d.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, 0.3f));
+					g2d.drawImage(heartImage.getImage(), 30 + i * (heartSize + heartSpacing), 30, heartSize, heartSize, null);
+					g2d.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, 1.0f));
+				}
+			}
 		}
 
 		// hunger bar
-		int hungerSquare = 20;
-		int hungerSpacing = 6;
-		for (int i = 0; i < maxHunger; i++) {
-			g2d.setColor(i < hunger ? new Color(220, 130, 20) : new Color(70, 70, 70, 180));
-			g2d.fillRoundRect(30 + i * (hungerSquare + hungerSpacing), 80, hungerSquare, hungerSquare, 6, 6);
+		if (breadImage != null) {
+			int breadSize = breadImage.getIconWidth() * 2;
+			int breadSpacing = 6;
+			for (int i = 0; i < maxHunger; i++) {
+				if (i < hunger) {
+					g2d.drawImage(breadImage.getImage(), 30 + i * (breadSize + breadSpacing), 80, breadSize, breadSize, null);
+				} else {
+					g2d.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, 0.3f));
+					g2d.drawImage(breadImage.getImage(), 30 + i * (breadSize + breadSpacing), 80, breadSize, breadSize, null);
+					g2d.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, 1.0f));
+				}
+			}
 		}
 	}
 	
@@ -516,6 +534,7 @@ public class Player extends Entity implements KeyListener {
 				}
 			}
 			heartImage = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/heart.png")));
+			breadImage = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/hanger.png")));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
