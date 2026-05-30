@@ -67,6 +67,8 @@ public class PauseScreen {
 			}
 		} else if (hitTest(mx, my, quitButtonY)) {
 			mouseReleased();
+			if (Main.host) Main.tilesManager.saveMap();
+			Main.inventory.saveInventory();
 			Main.gameState = Main.GameState.START;
 		}
 	}

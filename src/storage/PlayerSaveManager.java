@@ -33,7 +33,7 @@ public class PlayerSaveManager {
             dos.writeByte(VERSION);
             dos.writeInt(player.getX());
             dos.writeInt(player.getY());
-            dos.writeByte(player.getHealth());
+            dos.writeByte(Math.max(1, player.getHealth()));
             dos.writeByte(player.getHunger());
             for (int i = 0; i < SLOTS; i++)
                 for (int j = 0; j < SLOTS; j++) {

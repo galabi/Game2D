@@ -183,7 +183,7 @@ public class CreatureManager {
 	}
 
 	private static final int CREATURE_MAGIC   = 0x43525452;
-	private static final int CREATURE_VERSION = 1;
+	private static final int CREATURE_VERSION = 2;
 
 	public static void saveCreatures(String mapName) {
 		File f = new File("saves/" + mapName + "_creatures.bin");
@@ -197,6 +197,9 @@ public class CreatureManager {
 				dos.writeShort(c.getX());
 				dos.writeShort(c.getY());
 				dos.writeByte(Math.max(0, c.getHealth()));
+				dos.writeByte(c.creatureDirection);
+				dos.writeShort(c.targetX);
+				dos.writeShort(c.targetY);
 			}
 		} catch (Exception e) {
 			System.err.println("CreatureManager: failed to save creatures: " + e.getMessage());
@@ -210,16 +213,26 @@ public class CreatureManager {
 		try (DataInputStream dis = new DataInputStream(
 				new BufferedInputStream(new FileInputStream(f)))) {
 			if (dis.readInt() != CREATURE_MAGIC) return;
-			dis.readUnsignedByte(); // version
+			int version = dis.readUnsignedByte();
 			int count = dis.readUnsignedShort();
 			for (int i = 0; i < count; i++) {
 				int type   = dis.readUnsignedByte();
 				int cx     = dis.readShort();
 				int cy     = dis.readShort();
 				int health = dis.readUnsignedByte();
+				int dir = 0, tx = cx, ty = cy;
+				if (version >= 2) {
+					dir = dis.readUnsignedByte();
+					tx  = dis.readShort();
+					ty  = dis.readShort();
+				}
 				Creature c = createCreatureInternal(type, cx, cy);
 				if (c != null) {
 					c.setHealth(health);
+					c.creatureDirection = dir;
+					c.targetX = tx;
+					c.targetY = ty;
+					c.nextMoveTime = System.currentTimeMillis() + 2000 + (long)(Math.random() * 3000);
 					creatureList.add(c);
 				}
 			}
