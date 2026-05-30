@@ -8,7 +8,6 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -47,9 +46,8 @@ public class Main extends Canvas implements Runnable{
 	public static TilesManager tilesManager;
 	public static MouseManager mouseManager;
 	public static ChestStorage chestStorage = new ChestStorage();
-	public static ChestUI chestUI = new ChestUI(); 
-	public static BufferedImage tempScreen;
-	
+	public static ChestUI chestUI = new ChestUI();
+
 	public static StartScreen startscreen;
 	public static PauseScreen pausescreen;
 	public static GameOverScreen gameOverScreen;
@@ -150,19 +148,41 @@ public class Main extends Canvas implements Runnable{
 	
 	public void render() {
 		BufferStrategy bs = this.getBufferStrategy();
-		
+
 		if(bs == null) {
 			this.createBufferStrategy(3);
 			return;
 		}
 
-		
+		//resize the screen
+		screenHeight = Frame.getHeight();
+		screenWidth = Frame.getWidth();
+
+		Graphics2D g = (Graphics2D) bs.getDrawGraphics();
+
+		// Clear the full window, then scale logical (width x height) -> device resolution.
+		// Rendering straight onto the device buffer keeps text/shapes crisp instead of
+		// rasterizing them into a fixed-size buffer and upscaling the whole image.
+		g.setColor(java.awt.Color.black);
+		g.fillRect(0, 0, screenWidth, screenHeight);
+		g.scale((double) screenWidth / width, (double) screenHeight / height);
+
+		// Pixel art stays crisp; text/shapes antialias at the true window resolution.
+		g.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION,
+				java.awt.RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+		g.setRenderingHint(java.awt.RenderingHints.KEY_TEXT_ANTIALIASING,
+				java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING,
+				java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+
+		g2 = g;
+
 		//pre-load all the items
 		if(!preLoad) {
 			preLoad = true;
 			GameTextures.preloadImages(g2);
 		}
-		
+
 		switch (gameState) {
 		case START:
 			startscreen.render(g2);
@@ -189,15 +209,6 @@ public class Main extends Canvas implements Runnable{
 			gameOverScreen.render(g2);
 			break;
 		}
-
-
-		//resize the screen
-		screenHeight = Frame.getHeight();
-		screenWidth = Frame.getWidth();
-		
-		Graphics2D g = (Graphics2D) bs.getDrawGraphics();
-		
-		g.drawImage(tempScreen, 0, 0, screenWidth, screenHeight, null);
 
 		g.dispose();
 		bs.show();
@@ -236,9 +247,7 @@ public void window(int width,int height,String title,Main main){
 	mouseManager = new MouseManager();
 	player = new Player(1470, 1330,64);
 	inventory = new Inventory(450, 630, 64);
-	tempScreen = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB_PRE);
-	g2 = (Graphics2D)tempScreen.getGraphics();
-	
+
 
 	
 	main.start();
