@@ -43,11 +43,13 @@ public class Server implements Runnable {
                     ch.send(Main.chestStorage.toSyncString());
                     // Send positions of all currently connected players
                     ch.send(Main.player.toString());
+                    ch.send("player_name 0 " + Main.playerName);
                     for (ClientHandler other : clients) {
                         if (other == ch) continue;
                         Player rp = Main.remotePlayers.get(other.id);
                         if (rp != null)
                             ch.send(rp.toString().replace("player:", "player_" + other.id + ":"));
+                        ch.send("player_name " + other.id + " " + other.playerName);
                     }
                     new Thread(ch).start();
                 } catch (Exception e) {
@@ -84,6 +86,7 @@ public class Server implements Runnable {
 
     public int getPort() { return port; }
     public boolean isServerUp() { return serverUP; }
+    public List<ClientHandler> getClients() { return clients; }
 
     // -------------------------------------------------------------------------
     class ClientHandler implements Runnable {

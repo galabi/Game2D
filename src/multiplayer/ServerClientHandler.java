@@ -31,8 +31,13 @@ public class ServerClientHandler {
         String[] arr = response.split(" ");
         switch (arr[0]) {
         case "join":
-            // Client registers its player name
-            if (arr.length > 1) sender.playerName = arr[1];
+            if (arr.length > 1) {
+                sender.playerName = arr[1];
+                server.broadcast("player_name " + sender.id + " " + sender.playerName, sender);
+                Main.remotePlayerNames.put(sender.id, sender.playerName);
+                Player rp = Main.remotePlayers.get(sender.id);
+                if (rp != null) rp.setName(sender.playerName);
+            }
             break;
         case "player:":
             // Re-broadcast with sender's ID so all other clients and host can track this player
@@ -99,8 +104,19 @@ public class ServerClientHandler {
         case "chest_update":
             Main.chestStorage.applyChestUpdate(arr);
             break;
+        case "player_name":
+            if (arr.length > 2) {
+                int nameId = Integer.parseInt(arr[1]);
+                String pname = arr[2];
+                Main.remotePlayerNames.put(nameId, pname);
+                Player named = Main.remotePlayers.get(nameId);
+                if (named != null) named.setName(pname);
+            }
+            break;
         case "player_left":
-            Main.remotePlayers.remove(Integer.parseInt(arr[1]));
+            int leftId = Integer.parseInt(arr[1]);
+            Main.remotePlayers.remove(leftId);
+            Main.remotePlayerNames.remove(leftId);
             break;
         default:
             // Handle "player_N:" messages for other remote players
@@ -122,6 +138,8 @@ public class ServerClientHandler {
                     Main.player.getSizeX());
             Main.remotePlayers.put(id, rp);
         }
+        String pendingName = Main.remotePlayerNames.get(id);
+        if (pendingName != null) rp.setName(pendingName);
         rp.setX(Integer.parseInt(arr[offset]));
         rp.setY(Integer.parseInt(arr[offset + 1]));
         rp.setImageDirection(Integer.parseInt(arr[offset + 2]));

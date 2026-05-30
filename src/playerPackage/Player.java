@@ -1,6 +1,7 @@
 package playerPackage;
 
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -12,6 +13,7 @@ import javax.swing.ImageIcon;
 
 import MainPackage.Main;
 import MainPackage.TilesManager;
+import entity.FontLoader;
 import regeneration.RegenerationManager;
 import storage.Item;
 import entity.Entity;
@@ -52,6 +54,7 @@ public class Player extends Entity implements KeyListener, FocusListener {
 	private long lastHungerDecayTime = System.currentTimeMillis();
 	private static final long HUNGER_DECAY_INTERVAL_MS = 60000;
 	private long lastStarveTime = System.currentTimeMillis();
+	private String name = "";
 	 
 	
 	boolean fishing = false;
@@ -143,6 +146,18 @@ public class Player extends Entity implements KeyListener, FocusListener {
 			}
 		} catch (Exception e) {
 			System.out.println("problem in player animation:" + imageDirection + " " + imagePosture);
+		}
+
+		if (this != Main.player && !name.isEmpty()) {
+			g2d.setFont(FontLoader.getPixelFont(8));
+			FontMetrics fm = g2d.getFontMetrics();
+			int nameW = fm.stringWidth(name);
+			int nameX = x - Main.tilesManager.getCameraX(false) + (sizeX - nameW) / 2;
+			int nameY = y - Main.tilesManager.getCameraY(false) +6;
+			g2d.setColor(new Color(0, 0, 0, 140));
+			g2d.fillRoundRect(nameX - 3, nameY - fm.getAscent(), nameW + 6, fm.getHeight(), 4, 4);
+			g2d.setColor(Color.WHITE);
+			g2d.drawString(name, nameX, nameY);
 		}
 
 		//debug
@@ -604,7 +619,8 @@ public class Player extends Entity implements KeyListener, FocusListener {
 		return sprint;
 	}
 	
-	@Override
+	public void setName(String name) { this.name = name; }
+
 	public String toString() {
 		return "player: " + x + " " + y + " " +imageDirection + " " + imagePosture +" "+ speedX +" "+ speedY + " " + playerI + " "+ playerJ;
 	}

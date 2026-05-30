@@ -41,6 +41,7 @@ public class Main extends Canvas implements Runnable{
 	
 	public static Player player;
 	public static ConcurrentHashMap<Integer, Player> remotePlayers = new ConcurrentHashMap<>();
+	public static ConcurrentHashMap<Integer, String> remotePlayerNames = new ConcurrentHashMap<>();
 	public static String playerName = "";
 	public static Inventory inventory;
 	public static TilesManager tilesManager;
