@@ -11,7 +11,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -47,7 +46,6 @@ public class Inventory implements MouseWheelListener{
 	int selectedSlot = 0;
 	FontMetrics metrics;
 	
-	BufferedImage inventoryImage = null;
 	 
 	int mouseHaloX=-100,mouseHaloY=-100,mouseX=0,mouseY=0;
 	int inventoryX,inventoryY,craftingX = 800,craftingY = 350,textX=-1;
@@ -100,17 +98,10 @@ public class Inventory implements MouseWheelListener{
 		
 		//draw the full inventory
 		if(open) {
-			
-			//first create the inventory background
-			if(inventoryImage == null) {
-				inventoryImage = new BufferedImage(Main.screenWidth,Main.screenHeight, BufferedImage.TYPE_INT_ARGB_PRE);
-				Graphics2D g = (Graphics2D) inventoryImage.getGraphics();
-				drawInventory(g);
-			}else {
-			//draw to screen the inventory background
-				g2d.drawImage(inventoryImage, 0, 0, Main.screenWidth,Main.screenHeight, null);
-			}
-			
+
+			//draw the inventory background (drawn in logical coords, scaled with everything else)
+			drawInventory(g2d);
+
 			//mouse enter the inventory
 			g2d.setColor(hoverColor);
 			if(mouseHaloX >=0) {
