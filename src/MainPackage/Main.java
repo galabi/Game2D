@@ -262,6 +262,7 @@ public void window(int width,int height,String title,Main main){
 	});
 	
 	main.addKeyListener(player);
+	main.addFocusListener(player);
 	main.addMouseWheelListener(inventory);
 	main.addMouseMotionListener(mouseManager);
 	main.addMouseListener(mouseManager);

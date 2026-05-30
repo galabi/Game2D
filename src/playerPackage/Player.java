@@ -2,6 +2,8 @@ package playerPackage;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -21,7 +23,7 @@ import mapRender.TilePropertiesManager;
 import storage.ItemIds;
 import multiplayer.ServerClientHandler;
 
-public class Player extends Entity implements KeyListener {
+public class Player extends Entity implements KeyListener, FocusListener {
 	
 	int tilesize = TilesManager.tileSize;
 	
@@ -29,7 +31,7 @@ public class Player extends Entity implements KeyListener {
 	public final static int playerCollisionBoxY = 50;
 	public final static int playerCollisionBoxWidth = 24;
 	public final static int playerCollisionBoxHeight = 14;
-	final static int playerSpritSize = 64;		
+	final static int playerSpritSize = 64;
 	
 	public int playerI = 0, playerJ = 0;
 	int speedX, speedY;
@@ -378,6 +380,10 @@ public class Player extends Entity implements KeyListener {
 					Main.inventory.setOpen(false);
 					return;
 				}
+				speedX = 0;
+				speedY = 0;
+				sprint = false;
+				playeranimation.setRunningAnimationSpeed(false);
 				Main.gameState = Main.GameState.PAUSE;
 			}else if(Main.gameState == Main.GameState.PAUSE) {
 				Main.gameState = Main.GameState.GAME;
@@ -484,6 +490,17 @@ public class Player extends Entity implements KeyListener {
 			Main.startscreen.keyTyped(e);
 		}
 	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		speedX = 0;
+		speedY = 0;
+		sprint = false;
+		playeranimation.setRunningAnimationSpeed(false);
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {}
 	
 	private Tile getNearTile(int playerPosition) {
 		float offsetX=0,offsetY=0;

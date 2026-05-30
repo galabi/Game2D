@@ -204,6 +204,7 @@ public class CreatureManager {
 	}
 
 	public static void loadCreatures(String mapName) {
+		creatureList.clear();
 		File f = new File("saves/" + mapName + "_creatures.bin");
 		if (!f.exists()) return;
 		try (DataInputStream dis = new DataInputStream(

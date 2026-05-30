@@ -8,17 +8,19 @@ public class CreatureImage {
 	
 	final static ImageIcon[] slimeImage = new ImageIcon[4];
 	final static ImageIcon[] cowImage = new ImageIcon[4];
+	final static ImageIcon[][] cowAnimImage = new ImageIcon[4][4];
 	final static ImageIcon[] chickenImage = new ImageIcon[4];
 	final static ImageIcon[] sheepImage = new ImageIcon[4];
-	
+
 	final static int imageSize = 32;
-	
+
 	static {
 		loadImage(slimeImage,"/slime.png");
 		loadImage(cowImage,"/cow.png");
+		loadAnimImage(cowAnimImage,"/cowWalk.png");
 		loadImage(chickenImage,"/chicken.png");
 		loadImage(sheepImage,"/sheep.png");
-		
+
 	}
 	
 	private static void loadImage(ImageIcon[] Creacture , String fileLoaction) {
@@ -34,10 +36,25 @@ public class CreatureImage {
 			for(int i = 0;i<4;i++) {
 				Creacture[i] = new ImageIcon(temp.getSubimage(i*imageSize, 0, imageSize, imageSize));
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(fileLoaction);
+		}
+	}
+
+	private static void loadAnimImage(ImageIcon[][] creature, String fileLocation) {
+		try {
+			// rows: 0=down, 1=left, 2=right, 3=up  |  cols: animation frames 0-3
+			BufferedImage temp = ImageIO.read(CreatureImage.class.getResourceAsStream(fileLocation));
+			for (int row = 0; row < 4; row++) {
+				for (int col = 0; col < 4; col++) {
+					creature[row][col] = new ImageIcon(temp.getSubimage(col * imageSize, row * imageSize, imageSize, imageSize));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(fileLocation);
 		}
 	}
 	
@@ -47,6 +64,10 @@ public class CreatureImage {
 	
 	public static ImageIcon[] getCowImage() {
 		return cowImage;
+	}
+
+	public static ImageIcon[][] getCowAnimImage() {
+		return cowAnimImage;
 	}
 	public static ImageIcon[] getChickenImage() {
 		return chickenImage;

@@ -102,6 +102,8 @@ public class StartScreen{
 			Main.tilesManager.resetMap();
 			Main.tilesManager.readFile();
 			Main.inventory.loadInventory();
+			Main.tilesManager.setCameraX(Main.player.getX() - Main.width / 2 + Main.player.getSizeX() / 2);
+			Main.tilesManager.setCameraY(Main.player.getY() - Main.height / 2 + Main.player.getSizeY() / 2);
 
 			try {
 				Thread.sleep(100);
