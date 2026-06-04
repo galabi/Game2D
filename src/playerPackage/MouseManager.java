@@ -35,6 +35,9 @@ public class MouseManager implements MouseListener,MouseMotionListener, MouseWhe
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		setMouselocation(e);
+		if (Main.gameState == Main.GameState.START) {
+			Main.startscreen.mouseMoved(mouseX, mouseY);
+		}
 		if(Main.chestUI.isOpen()) {
 			Main.chestUI.mouseMoved(e);
 		}
