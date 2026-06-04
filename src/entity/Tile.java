@@ -12,23 +12,25 @@ import mapRender.ObjectPropertiesManager;
 import mapRender.TilePropertiesManager;
 
 public class Tile extends Entity{
-	
+
 	int id;
-	
+	private final ArrayList<Rectangle> cachedSolidAreas;
+
 	public Tile(int id,int x, int y, int size) {
 		super(x, y, size,size);
 		this.id = id;
+		var props = TilePropertiesManager.getTile(id);
+		cachedSolidAreas = (props != null) ? props.getSolidInTile() : new ArrayList<>();
 	}
-	
+
 	@Override
 	public void render(Graphics2D g2d) {
 		int screenX = Main.tilesManager.getCameraX(false),screenY = Main.tilesManager.getCameraY(false);
 		g2d.drawImage(GameTextures.getTileIcon(id).getImage(), x-screenX,y-screenY, sizeX,sizeY,null);
 		if(Main.devmode) {
 			g2d.setColor(Color.white);
-			ArrayList<Rectangle> solidInTile = TilePropertiesManager.getTile(id).getSolidInTile();
 			g2d.drawRect(x-screenX, y-screenY, sizeX,sizeY);
-			for(Rectangle i: solidInTile) {
+			for(Rectangle i: cachedSolidAreas) {
 				g2d.drawRect(x+i.x - screenX,y+i.y- screenY, i.width, i.height);
 			}
 		}

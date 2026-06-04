@@ -98,13 +98,15 @@ public class Main extends Canvas implements Runnable{
 		delta += (currentTime - lastTime) / drawInterval;
 		timer += (currentTime - lastTime);
 		lastTime = currentTime;
-		
+
+		if (delta > 5) delta = 5; // prevent spiral of death
+
 		while(delta >= 1) {
 			tick();
 			render();
 			delta--;
 			drawCount++;
-		}	
+		}
 		
 		if(timer >= 1000000000) {
 			Frame.setTitle("FPS: "+drawCount);
