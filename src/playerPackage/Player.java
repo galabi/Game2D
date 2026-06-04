@@ -546,9 +546,18 @@ public class Player extends Entity implements KeyListener, FocusListener {
 	
 	
 	public void dropOnFloor(Item item) {
-		Tile temp = getNearTile(imageDirection);
-		Main.tilesManager.addItemDrop(item.Clone(),temp.getX(),temp.getY());
-		ServerClientHandler.sendDataToServer("add_drop " + item.getId()+" "+item.getQuantity()+" "+temp.getX()+" "+temp.getY());
+		int startX = x + sizeX / 2 - TilesManager.tileSize / 2;
+		int startY = y + sizeY / 2 - TilesManager.tileSize / 2;
+		float throwSpeed = 4.5f;
+		float vx = 0, vy = 0;
+		switch (imageDirection) {
+			case 0: vy =  throwSpeed; break; // down
+			case 1: vx = -throwSpeed; break; // left
+			case 2: vx =  throwSpeed; break; // right
+			case 3: vy = -throwSpeed; break; // up
+		}
+		Main.tilesManager.addItemDrop(item.Clone(), startX, startY, vx, vy);
+		ServerClientHandler.sendDataToServer("add_drop " + item.getId() + " " + item.getQuantity() + " " + startX + " " + startY);
 	}
 	
 	private void loadImg() {

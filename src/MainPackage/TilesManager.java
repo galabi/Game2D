@@ -65,11 +65,12 @@ public class TilesManager {
 		
 		//check if the player pick up item from the floor
 		if(!drops.isEmpty()) {
-			
+			for(ItemOnFloor i:drops) i.tick();
+
 			int playerX = Main.player.getX()+(Main.player.getSizeX()/2),playerY = Main.player.getY()+(Main.player.getSizeY()/2);
 			for(ItemOnFloor i:drops) {
-				if(playerX >= i.getTileX()*tileSize && playerX <= i.getTileX()*tileSize+tileSize
-						&& playerY >= i.getTileY()*tileSize && playerY <= i.getTileY()*tileSize+tileSize) {
+				if(!i.isAirborne() && playerX >= i.getX() && playerX <= i.getX()+tileSize
+						&& playerY >= i.getY() && playerY <= i.getY()+tileSize) {
 					Main.inventory.addToItemStack(i.getItem().Clone());
 					ServerClientHandler.sendDataToServer("remove_drop "+ i.getItem().getId()+" "+ i.getItem().getQuantity());
 					drops.remove(i);
@@ -435,7 +436,7 @@ public class TilesManager {
 		int n = map.length;
 		for(int i = 1;i<n;i+=4) {
 			if(map[i] == null)return;
-			ItemOnFloor temp = new ItemOnFloor(new Item(Integer.parseInt(map[i])),Integer.parseInt(map[i+2]),Integer.parseInt(map[i+3]));
+			ItemOnFloor temp = new ItemOnFloor(new Item(Integer.parseInt(map[i])),Integer.parseInt(map[i+2]),Integer.parseInt(map[i+3]), false);
 			temp.getItem().setQuantity(Integer.parseInt(map[i+1]));
 			drops.add(temp);
 		}
@@ -498,8 +499,16 @@ public class TilesManager {
 	public GameObject getObjects(int objectI,int objectJ){
 		return objects[objectI][objectJ];
 	}
-	public void addItemDrop(Item item,int x,int y) {
-		drops.add(new ItemOnFloor(item, x/tileSize, y/tileSize));
+	public void addItemDrop(Item item, int x, int y) {
+		drops.add(new ItemOnFloor(item, x, y));
+	}
+
+	public void addItemDrop(Item item, int x, int y, float vx, float vy) {
+		drops.add(new ItemOnFloor(item, x, y, vx, vy));
+	}
+
+	public void addItemDropNoAnim(Item item, int x, int y) {
+		drops.add(new ItemOnFloor(item, x, y, false));
 	}
 	public List<ItemOnFloor> getItemOnFloorList() {
 		return drops;
@@ -570,8 +579,8 @@ public class TilesManager {
 		for(ItemOnFloor i : drops) {
 			sb.append(i.getItem().getId()).append(' ')
 			  .append(i.getItem().getQuantity()).append(' ')
-			  .append(i.getTileX()).append(' ')
-			  .append(i.getTileY()).append(' ');
+			  .append(i.getX()).append(' ')
+			  .append(i.getY()).append(' ');
 		}
 		return sb.toString();
 	}
