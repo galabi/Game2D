@@ -474,6 +474,10 @@ public class TilesManager {
 		if(border) return cameraY+Main.height;
 		return cameraY;
 	}
+	public String getMap() {
+		return map;
+	}
+
 	public int getMapWidth() {
 		return maxScreenRow*tileSize;
 	}

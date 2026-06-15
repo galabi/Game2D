@@ -18,7 +18,7 @@ out/
 gen/
 
 # Project planning
-plan.md
+PLAN.md
 
 # macOS
 .DS_Store

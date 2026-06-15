@@ -117,7 +117,7 @@ public class Inventory implements MouseWheelListener{
 			}
 			
 			crafting.render(g2d);
-			if(hoverItem != null && !Main.chestUI.isOpen()) {
+			if(hoverItem != null && !Main.chestUI.isOpen() && !Main.workbenchUI.isOpen()) {
 				hoverItem.render(g2d);
 			}
 			

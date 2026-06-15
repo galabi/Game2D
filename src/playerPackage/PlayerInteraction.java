@@ -6,7 +6,6 @@ import creature.CreatureManager;
 import storage.Item;
 import storage.ItemIds;
 import mapRender.ObjectIds;
-import storage.ChestUI;
 import mapRender.TilePropertiesManager;
 
 public class PlayerInteraction {
@@ -78,6 +77,11 @@ public class PlayerInteraction {
 		// open chest
 		if (objId == ObjectIds.CHEST) {
 			Main.chestUI.open(pressBlockI, pressBlockJ);
+			return;
+
+		// open workbench
+		} else if (objId == ObjectIds.WORKBENCH) {
+			Main.workbenchUI.open(pressBlockI, pressBlockJ);
 			return;
 
 		//place block

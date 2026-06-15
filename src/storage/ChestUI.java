@@ -65,7 +65,7 @@ public class ChestUI {
         g2d.setFont(FontLoader.getPixelFont(14));
         FontMetrics fm = g2d.getFontMetrics();
         g2d.setColor(Color.WHITE);
-        g2d.drawString("Chest", panelX + (panelW - fm.stringWidth("Chest")) / 2, panelY + 22);
+        g2d.drawString("Chest", panelX + (panelW - fm.stringWidth("Chest")) / 2, panelY + 30);
 
         // slots
         for (int row = 0; row < ROWS; row++) {

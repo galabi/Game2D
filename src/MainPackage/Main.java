@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import storage.ChestStorage;
 import storage.ChestUI;
 import storage.Inventory;
+import storage.WorkbenchUI;
 import creature.CreatureManager;
 import entity.GameTextures;
 import entity.Text;
@@ -47,6 +48,7 @@ public class Main extends Canvas implements Runnable{
 	public static MouseManager mouseManager;
 	public static ChestStorage chestStorage = new ChestStorage();
 	public static ChestUI chestUI = new ChestUI();
+	public static WorkbenchUI workbenchUI = new WorkbenchUI();
 
 	public static StartScreen startscreen;
 	public static PauseScreen pausescreen;
@@ -128,6 +130,7 @@ public class Main extends Canvas implements Runnable{
 
 				player.tick();
 				inventory.tick();
+				workbenchUI.tick();
 				tilesManager.tick();
 				CreatureManager.tick();
 			}
@@ -196,7 +199,9 @@ public class Main extends Canvas implements Runnable{
 				tilesManager.renderDrops(g2);
 				inventory.render(g2);
 				chestUI.render(g2);
+				workbenchUI.render(g2);
 				if (chestUI.isOpen()) inventory.renderHoverItem(g2);
+				if (workbenchUI.isOpen()) inventory.renderHoverItem(g2);
 				minimap.render(g2);
 			}else {
 				StartScreen.renderBackScreen(g2);

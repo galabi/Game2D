@@ -9,6 +9,7 @@ public final class ObjectIds {
     public static final int CAMPFIRE_ON   = 7;  // active campfire (cooking state)
     public static final int CAMPFIRE      = 19; // inactive campfire
     public static final int CHEST         = 83; // storage chest
+    public static final int WORKBENCH     = 84; // crafting workbench
 
     private ObjectIds() {}
 }

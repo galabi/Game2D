@@ -53,8 +53,8 @@
     "itemWhenBroken": [6] 
   },
   { 
-    "id": 20, "objectName": "Well", "solid": true, 
-    "solidInTile": [{ "x": 10, "y": 0, "width": 46, "height": 30 }] 
+    "id": 20, "objectName": "Well", "solid": true,"renderOffSet": -1.0,
+    "solidInTile": [{ "x": 10, "y": 0, "width": 46, "height": 30 }]
   },
   { 
     "id": 21, "objectName": "Up ladder", "solid": true, "gate": true, 
@@ -311,5 +311,10 @@
     "id": 83, "objectName": "Chest", "solid": true, "breakable": true,
     "solidInTile": [{ "x": 8, "y": 16, "width": 48, "height": 40 }],
     "itemWhenBroken": [12]
+  },
+  {
+    "id": 84, "objectName": "Workbench", "solid": true, "breakable": true,
+    "solidInTile": [{ "x": 8, "y": 16, "width": 48, "height": 40 }],
+    "itemWhenBroken": [13]
   }
 ]

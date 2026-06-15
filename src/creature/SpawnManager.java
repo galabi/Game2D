@@ -30,10 +30,15 @@ public class SpawnManager {
 		if (System.currentTimeMillis() - lastSpawnTime < SPAWN_INTERVAL_MS) return;
 		lastSpawnTime = System.currentTimeMillis();
 
-		if (countByType(Slime.class)   < MAX_SLIMES)   trySpawn("slime",   false);
-		if (countByType(Cow.class)     < MAX_COWS)     trySpawn("cow",     true);
-		if (countByType(Sheep.class)   < MAX_SHEEP)    trySpawn("sheep",   true);
-		if (countByType(Chicken.class) < MAX_CHICKENS) trySpawn("chicken", true);
+		boolean inCave = Main.tilesManager != null && "cave".equals(Main.tilesManager.getMap());
+
+		if (inCave) {
+			if (countByType(Slime.class) < MAX_SLIMES) trySpawn("slime", false);
+		} else {
+			if (countByType(Cow.class)     < MAX_COWS)     trySpawn("cow",     true);
+			if (countByType(Sheep.class)   < MAX_SHEEP)    trySpawn("sheep",   true);
+			if (countByType(Chicken.class) < MAX_CHICKENS) trySpawn("chicken", true);
+		}
 	}
 
 	public static void reset() {

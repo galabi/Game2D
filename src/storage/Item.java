@@ -119,6 +119,27 @@ public class Item {
 			placeable = true;
 			idToPlace = 83;
 			break;
+		case 13:
+			name = "Workbench";
+			stackable = false;
+			strength = 1;
+			placeable = true;
+			idToPlace = 84;
+			break;
+		case 14:
+			name = "Strong Axe";
+			stackable = false;
+			strength = 3;
+			placeable = false;
+			idToPlace = 0;
+			break;
+		case 15:
+			name = "Broad Sword";
+			stackable = false;
+			strength = 3;
+			placeable = false;
+			idToPlace = 0;
+			break;
 		default:
 			name = " ";
 			id = 0;

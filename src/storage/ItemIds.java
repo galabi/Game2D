@@ -13,6 +13,9 @@ public final class ItemIds {
     public static final int PICKAXE     = 10;
     public static final int SWORD       = 11;
     public static final int CHEST       = 12;
+    public static final int WORKBENCH   = 13;
+    public static final int STRONG_AXE  = 14;
+    public static final int BROAD_SWORD = 15;
 
     private ItemIds() {}
 }

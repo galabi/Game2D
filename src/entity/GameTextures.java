@@ -15,7 +15,7 @@ public class GameTextures {
 	static final int TileSize = 32;
 	
 	static{
-		int itemIconSize = 13,tileIconSize = 85,objectIconSize = 84;
+		int itemIconSize = 16,tileIconSize = 85,objectIconSize = 85;
 		itemIcons = new ImageIcon[itemIconSize];
 		tileIcons = new ImageIcon[tileIconSize];
 		objectIcons = new ImageIcon[objectIconSize];
@@ -43,7 +43,7 @@ public class GameTextures {
 	        loadSheet(tileIcons, "/tiles.png", 11, 8, tileIconSize,TileSize);
 
 	        // loading objects.png
-	        loadSheet(objectIcons, "/objects.png", 7, 12, objectIconSize,TileSize);
+	        loadSheet(objectIcons, "/objects.png", 8, 12, objectIconSize,TileSize);
 
 			
 			

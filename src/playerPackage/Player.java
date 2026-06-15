@@ -391,6 +391,10 @@ public class Player extends Entity implements KeyListener, FocusListener {
 					Main.chestUI.close();
 					return;
 				}
+				if(Main.workbenchUI.isOpen()) {
+					Main.workbenchUI.close();
+					return;
+				}
 				if(Main.inventory.isOpen()) {
 					Main.inventory.setOpen(false);
 					return;

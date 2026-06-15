@@ -41,6 +41,9 @@ public class MouseManager implements MouseListener,MouseMotionListener, MouseWhe
 		if(Main.chestUI.isOpen()) {
 			Main.chestUI.mouseMoved(e);
 		}
+		if(Main.workbenchUI.isOpen()) {
+			Main.workbenchUI.mouseMoved(e);
+		}
 		if(Main.inventory.isOpen()) {
 			Main.inventory.mouseMoved(e);
 		}
@@ -63,6 +66,8 @@ public class MouseManager implements MouseListener,MouseMotionListener, MouseWhe
 		case GAME:
 			if (Main.chestUI.isOpen()) {
 				Main.chestUI.mousePressed(e);
+			} else if (Main.workbenchUI.isOpen()) {
+				Main.workbenchUI.mousePressed(e);
 			} else if(!Main.inventory.isOpen()) {
 				PlayerInteraction.mousePress(mouseX, mouseY,e.getButton());
 			}else {
