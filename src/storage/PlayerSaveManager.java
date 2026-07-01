@@ -17,7 +17,7 @@ public class PlayerSaveManager {
     private static final int SLOTS   = 5;
 
     private static File fileFor(String name) {
-        File dir = new File("saves/players");
+        File dir = new File(MainPackage.WorldManager.path() + "players");
         dir.mkdirs();
         return new File(dir, sanitize(name) + ".bin");
     }

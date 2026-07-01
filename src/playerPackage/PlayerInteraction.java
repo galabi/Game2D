@@ -6,7 +6,6 @@ import creature.CreatureManager;
 import storage.Item;
 import storage.ItemIds;
 import mapRender.ObjectIds;
-import mapRender.TilePropertiesManager;
 
 public class PlayerInteraction {
 	
@@ -69,7 +68,6 @@ public class PlayerInteraction {
 	private static void rightMousePress(int pressBlockI,int pressBlockJ) {
 		Item itemInHand = Main.inventory.getItemInHand();
 		int objId = Main.tilesManager.getObjects()[pressBlockI][pressBlockJ].getId();
-		int tileId = Main.tilesManager.getTiles()[pressBlockI][pressBlockJ].getId();
 		
 		boolean isCookFish = (objId == ObjectIds.CAMPFIRE_ON && itemInHand.getId() == ItemIds.FISH) ||
 				(objId == ObjectIds.CAMPFIRE && itemInHand.getId() == ItemIds.WOOD);
@@ -103,7 +101,7 @@ public class PlayerInteraction {
 			Main.inventory.decreaseItemInHand();
 
 		//fishing
-		}else if(itemInHand.getId() == 3 && TilePropertiesManager.getTile(tileId).isWater(Main.mouseManager.getMouseX(),Main.mouseManager.getMouseY())) {
+		}else if(itemInHand.getId() == 3 && Main.tilesManager.getTiles()[pressBlockI][pressBlockJ].isWater()) {
 			Main.player.startFishing(pressBlockI,pressBlockJ);
 
 		}

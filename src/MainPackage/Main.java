@@ -250,7 +250,6 @@ public void window(int width,int height,String title,Main main){
 	minimap = new MinimapRenderer();
 	
 	tilesManager = new TilesManager();
-	tilesManager.migrateSaves();
 	mouseManager = new MouseManager();
 	player = new Player(1470, 1330,64);
 	inventory = new Inventory(450, 630, 64);

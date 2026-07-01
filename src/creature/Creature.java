@@ -11,8 +11,6 @@ import MainPackage.Main;
 import MainPackage.TilesManager;
 import entity.Entity;
 import entity.GameColors;
-import mapRender.TilePropertiesManager;
-
 public class Creature extends Entity{
 	
 	ImageIcon[] image;
@@ -254,7 +252,7 @@ public class Creature extends Entity{
 
 	private boolean isWaterTile(int i, int j) {
 		if (i < 0 || i >= Main.tilesManager.getmaxScreenCol() || j < 0 || j >= Main.tilesManager.getmaxScreenRow()) return false;
-		return TilePropertiesManager.getTile(Main.tilesManager.getTiles(i, j).getId()).isWater();
+		return Main.tilesManager.getTiles(i, j).isWater();
 	}
 	
 	public boolean isInTarget() {

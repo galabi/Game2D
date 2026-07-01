@@ -7,7 +7,6 @@ import javax.swing.ImageIcon;
 
 import mapRender.MapEntity;
 import mapRender.MapObject;
-import mapRender.MapTile;
 
 public class GameTextures {
 	private static ImageIcon[] itemIcons,tileIcons,objectIcons;
@@ -15,7 +14,7 @@ public class GameTextures {
 	static final int TileSize = 32;
 	
 	static{
-		int itemIconSize = 16,tileIconSize = 85,objectIconSize = 85;
+		int itemIconSize = 16,tileIconSize = 32,objectIconSize = 85;
 		itemIcons = new ImageIcon[itemIconSize];
 		tileIcons = new ImageIcon[tileIconSize];
 		objectIcons = new ImageIcon[objectIconSize];
@@ -40,7 +39,7 @@ public class GameTextures {
 	        loadSheet(itemIcons, "/items.png", 4, 4, itemIconSize,64);
 
 	        // loading tiles.png
-	        loadSheet(tileIcons, "/tiles.png", 11, 8, tileIconSize,TileSize);
+	        loadSheet(tileIcons, "/tiles.png", 4, 8, tileIconSize,TileSize);
 
 	        // loading objects.png
 	        loadSheet(objectIcons, "/objects.png", 8, 12, objectIconSize,TileSize);
@@ -73,6 +72,7 @@ public class GameTextures {
 	
 	
 	public static ImageIcon getTileIcon(int id) {
+		if (id < 0 || id >= tileIcons.length || tileIcons[id] == null) return tileIcons[0];
 		return tileIcons[id];
 	}
 	
@@ -82,12 +82,9 @@ public class GameTextures {
 	}
 	
 	public static ImageIcon getMapRenderImage(MapEntity e) {
-		if(e instanceof MapTile) {
-			return getTileIcon(e.getId());
-		}else if(e instanceof MapObject) {
+		if(e instanceof MapObject) {
 			return getObjectIcon(e.getId());
 		}else return null;
-		
 	}
 	
 	public static void preloadImages(Graphics2D g2d) {

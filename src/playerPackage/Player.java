@@ -21,7 +21,6 @@ import entity.FishingRod;
 import entity.GameColors;
 import entity.GameObject;
 import entity.Tile;
-import mapRender.TilePropertiesManager;
 import storage.ItemIds;
 import multiplayer.ServerClientHandler;
 
@@ -37,7 +36,7 @@ public class Player extends Entity implements KeyListener, FocusListener {
 	
 	public int playerI = 0, playerJ = 0;
 	int speedX, speedY;
-	final int walkSpeed = 2,runSpeed = 4;
+	final int walkSpeed = 2,runSpeed = 40;
 	int maxHealth = 10;
 	int health = maxHealth;
 	int maxHunger = 10;
@@ -238,7 +237,6 @@ public class Player extends Entity implements KeyListener, FocusListener {
 	private boolean checkTileCollision(int tileI, int tileJ, int xInTile, int yInTile, int w, int h) {
 		Tile tile = Main.tilesManager.getTiles()[tileI][tileJ];
 		if(tile.isSolid(xInTile, yInTile, w, h)) {
-			tile.triggerGate();
 			return true;
 		}
 		return false;
@@ -316,7 +314,7 @@ public class Player extends Entity implements KeyListener, FocusListener {
 
 			
 		//general case
-		}else if(obj.getId() == 0 && ! TilePropertiesManager.getTile(tile.getId()).isSolid()) {
+		}else if(obj.getId() == 0 && !tile.isWater()) {
 			Main.player.imagePosture = 2;
 			Main.player.animationTimer = System.currentTimeMillis();
 			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,itemToPlace.getIdToPlace());
@@ -383,6 +381,11 @@ public class Player extends Entity implements KeyListener, FocusListener {
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
+		if (Main.gameState == Main.GameState.START) {
+			Main.startscreen.keyPressed(e);
+			return;
+		}
+
 		int key = e.getKeyCode();
 
 		if(key == KeyEvent.VK_ESCAPE) {

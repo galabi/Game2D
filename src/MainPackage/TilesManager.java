@@ -15,9 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Formatter;
 import java.util.List;
-import java.util.Scanner;
 
 import regeneration.RegenerationManager;
 import storage.ChestStorage;
@@ -29,7 +27,6 @@ import entity.Tile;
 import mapRender.MapEntity;
 import mapRender.ObjectIds;
 import mapRender.ObjectPropertiesManager;
-import mapRender.TilePropertiesManager;
 import multiplayer.ServerClientHandler;
 
 public class TilesManager {
@@ -37,23 +34,18 @@ public class TilesManager {
 //this class has sub-class named itemOnFloor
 	
 	public final static int tileSize = 64;
-	final int maxScreenCol = 50;
-	final int maxScreenRow = 50;
+	final int maxScreenCol = 1000;
+	final int maxScreenRow = 1000;
 	int borderX=20,borderY=13,cameraY = 1000,cameraX = 900;
 	Tile[][] tiles;
 	GameObject[][] objects;
-	private Scanner s;
-	private Formatter x;
 	List<ItemOnFloor> drops;
 	private ArrayList<entity.Entity> renderList = new ArrayList<>();
 	boolean mapIsReady = false;
-	
-	
-	String map = "";
-	
+	String map = "map";
+
 	public TilesManager() {
 		ObjectPropertiesManager.loadObjects();
-		TilePropertiesManager.loadTiles();
 		tiles = new Tile[maxScreenCol][maxScreenRow];
 		objects = new GameObject[maxScreenCol][maxScreenRow];
 		drops = Collections.synchronizedList(new ArrayList<>());
@@ -209,27 +201,19 @@ public class TilesManager {
 		mapIsReady = false;
 		RegenerationManager.resetList();
 
-		if (map.equals("cave") || map.equals("")) {
-			map = "map";
-			cameraY = 1000;
-			cameraX = 900;
-			Main.player.setLocation(1470, 1330);
-		} else {
-			map = "cave";
-			Main.player.setLocation(1534, 702);
-			cameraX = 1064;
-			cameraY = 494;
-		}
+		Main.chestStorage.clear();
 
-		Main.chestStorage.setMap(map);
-		Main.chestStorage.clearCurrentMap();
-
-		File binFile = new File("saves/" + map + ".bin");
+		File binFile = new File(WorldManager.path() + "map.bin");
 		if (binFile.exists()) {
-			loadBinary(map);
+			loadBinary();
 		} else {
-			loadText(map);
-			saveMap(); // migrate to binary
+			// First visit — generate overworld procedurally
+			long seed = WorldManager.readSeed();
+			int[] spawn = MapGenerator.generate(tiles, objects, seed);
+			Main.player.setLocation(spawn[1] * tileSize, spawn[0] * tileSize);
+			cameraX = Main.player.getX() - Main.width / 2 + Main.player.getSizeX() / 2;
+			cameraY = Main.player.getY() - Main.height / 2 + Main.player.getSizeY() / 2;
+			saveMap();
 		}
 
 		if (Main.host) creature.CreatureManager.loadCreatures(map);
@@ -237,9 +221,9 @@ public class TilesManager {
 		if (Main.minimap != null) Main.minimap.markDirty();
 	}
 
-	private void loadBinary(String mapName) {
+	private void loadBinary() {
 		try (DataInputStream dis = new DataInputStream(
-				new BufferedInputStream(new FileInputStream("saves/" + mapName + ".bin")))) {
+				new BufferedInputStream(new FileInputStream(WorldManager.path() + "map.bin")))) {
 
 			if (dis.readInt() != MAGIC) throw new IOException("Invalid save file magic");
 			dis.readUnsignedByte(); // version
@@ -259,8 +243,8 @@ public class TilesManager {
 
 			int chestCount = dis.readUnsignedShort();
 			for (int c = 0; c < chestCount; c++) {
-				int ci = dis.readUnsignedByte();
-				int cj = dis.readUnsignedByte();
+				int ci = dis.readUnsignedShort();
+				int cj = dis.readUnsignedShort();
 				storage.Item[][] grid = new storage.Item[ChestStorage.ROWS][ChestStorage.COLS];
 				for (int si = 0; si < ChestStorage.ROWS; si++)
 					for (int sj = 0; sj < ChestStorage.COLS; sj++) {
@@ -273,44 +257,16 @@ public class TilesManager {
 			}
 
 		} catch (Exception e) {
-			System.err.println("Failed to load binary save for " + mapName + ": " + e.getMessage());
+			System.err.println("Failed to load binary save: " + e.getMessage());
 			initDefaultTiles();
 			initDefaultObjects();
 		}
 	}
 
-	private void loadText(String mapName) {
-		try {
-			s = new Scanner(new File("saves/" + mapName + ".txt"));
-			for (int i = 0; i < maxScreenCol; i++)
-				for (int j = 0; j < maxScreenRow; j++)
-					tiles[i][j] = new Tile(s.nextInt(), j * tileSize, i * tileSize, tileSize);
-			s.close();
-		} catch (FileNotFoundException e) {
-			System.err.println("Map file not found: saves/" + mapName + ".txt");
-			initDefaultTiles();
-		} catch (Exception e) { e.printStackTrace(); }
-
-		try {
-			s = new Scanner(new File("saves/" + mapName + "_items.txt"));
-			for (int i = 0; i < maxScreenCol; i++) {
-				for (int j = 0; j < maxScreenRow; j++) {
-					objects[i][j] = new GameObject(s.nextInt(), j * tileSize, i * tileSize, tileSize);
-					int id = objects[i][j].getId();
-					if (id == ObjectIds.TREE_SAPLING || id == ObjectIds.ROCK)
-						RegenerationManager.insertToGrowthList(objects[i][j], j * tileSize, i * tileSize);
-				}
-			}
-			s.close();
-		} catch (FileNotFoundException e) {
-			System.err.println("Objects file not found: saves/" + mapName + "_items.txt");
-			initDefaultObjects();
-		} catch (Exception e) { e.printStackTrace(); }
-	}
 
 	public void saveMap() {
 		try (DataOutputStream dos = new DataOutputStream(
-				new BufferedOutputStream(new FileOutputStream("saves/" + map + ".bin")))) {
+				new BufferedOutputStream(new FileOutputStream(WorldManager.path() + map + ".bin")))) {
 
 			dos.writeInt(MAGIC);
 			dos.writeByte(VERSION);
@@ -326,8 +282,8 @@ public class TilesManager {
 			List<int[]> positions = Main.chestStorage.getChestPositions();
 			dos.writeShort(positions.size());
 			for (int[] pos : positions) {
-				dos.writeByte(pos[0]);
-				dos.writeByte(pos[1]);
+				dos.writeShort(pos[0]);
+				dos.writeShort(pos[1]);
 				storage.Item[][] grid = Main.chestStorage.getChest(pos[0], pos[1]);
 				for (int si = 0; si < ChestStorage.ROWS; si++)
 					for (int sj = 0; sj < ChestStorage.COLS; sj++) {
@@ -343,76 +299,6 @@ public class TilesManager {
 		}
 	}
 
-
-	public void migrateSaves() {
-		String[] mapNames = {"map", "cave"};
-		for (String mapName : mapNames) {
-			File binFile = new File("saves/" + mapName + ".bin");
-			if (binFile.exists()) continue;
-
-			File txtFile   = new File("saves/" + mapName + ".txt");
-			File itemsFile = new File("saves/" + mapName + "_items.txt");
-			if (!txtFile.exists() || !itemsFile.exists()) continue;
-
-			Tile[][]       tempTiles   = new Tile[maxScreenCol][maxScreenRow];
-			GameObject[][] tempObjects = new GameObject[maxScreenCol][maxScreenRow];
-
-			try {
-				Scanner sc = new Scanner(txtFile);
-				for (int i = 0; i < maxScreenCol; i++)
-					for (int j = 0; j < maxScreenRow; j++)
-						tempTiles[i][j] = new Tile(sc.nextInt(), j * tileSize, i * tileSize, tileSize);
-				sc.close();
-			} catch (Exception e) {
-				System.err.println("Migration: failed to read " + mapName + ".txt: " + e.getMessage());
-				continue;
-			}
-
-			try {
-				Scanner sc = new Scanner(itemsFile);
-				for (int i = 0; i < maxScreenCol; i++)
-					for (int j = 0; j < maxScreenRow; j++)
-						tempObjects[i][j] = new GameObject(sc.nextInt(), j * tileSize, i * tileSize, tileSize);
-				sc.close();
-			} catch (Exception e) {
-				System.err.println("Migration: failed to read " + mapName + "_items.txt: " + e.getMessage());
-				continue;
-			}
-
-			try (DataOutputStream dos = new DataOutputStream(
-					new BufferedOutputStream(new FileOutputStream(binFile)))) {
-				dos.writeInt(MAGIC);
-				dos.writeByte(VERSION);
-				for (int i = 0; i < maxScreenCol; i++)
-					for (int j = 0; j < maxScreenRow; j++)
-						dos.writeByte(tempTiles[i][j].getId());
-				for (int i = 0; i < maxScreenCol; i++)
-					for (int j = 0; j < maxScreenRow; j++)
-						dos.writeByte(tempObjects[i][j].getId());
-				dos.writeShort(0); // no chests
-				txtFile.delete();
-				itemsFile.delete();
-				System.out.println("Migration: converted " + mapName + " to binary.");
-			} catch (Exception e) {
-				System.err.println("Migration: failed to write " + mapName + ".bin: " + e.getMessage());
-			}
-		}
-
-		// Remove leftover txt files for maps that already have a bin
-		for (String mapName : mapNames) {
-			if (new File("saves/" + mapName + ".bin").exists()) {
-				new File("saves/" + mapName + ".txt").delete();
-				new File("saves/" + mapName + "_items.txt").delete();
-			}
-		}
-
-		// Remove legacy inventory.txt if player.bin already exists
-		File playerBin = new File("saves/player.bin");
-		File inventoryTxt = new File("saves/inventory.txt");
-		if (playerBin.exists() && inventoryTxt.exists()) {
-			inventoryTxt.delete();
-		}
-	}
 
 	public void setMapFromMultiplayer(String[] map) {
 		for(int i=0;i<maxScreenCol;i++) {
@@ -521,7 +407,7 @@ public class TilesManager {
 	private void initDefaultTiles() {
 		for(int i = 0; i < maxScreenCol; i++) {
 			for(int j = 0; j < maxScreenRow; j++) {
-				tiles[i][j] = new Tile(1, j * tileSize, i * tileSize, tileSize);
+				tiles[i][j] = new Tile(Tile.GRASS, j * tileSize, i * tileSize, tileSize);
 			}
 		}
 	}
@@ -533,6 +419,52 @@ public class TilesManager {
 			}
 		}
 	}
+
+	public int computeVisualId(int i, int j) {
+		byte self  = tiles[i][j].getTerrainType();
+		byte right = (j + 1 < maxScreenRow) ? tiles[i][j + 1].getTerrainType() : self;
+		byte below = (i + 1 < maxScreenCol) ? tiles[i + 1][j].getTerrainType() : self;
+		byte diag  = (i + 1 < maxScreenCol && j + 1 < maxScreenRow) ? tiles[i + 1][j + 1].getTerrainType() : self;
+
+		byte gravelBit = 0;
+		if (self  == Tile.GRAVEL) gravelBit |= 1;
+		if (right == Tile.GRAVEL) gravelBit |= 2;
+		if (below == Tile.GRAVEL) gravelBit |= 4;
+		if (diag  == Tile.GRAVEL) gravelBit |= 8;
+		int id = calculateID(gravelBit);
+
+		byte waterBit = 0;
+		if (self  == Tile.WATER) waterBit |= 1;
+		if (right == Tile.WATER) waterBit |= 2;
+		if (below == Tile.WATER) waterBit |= 4;
+		if (diag  == Tile.WATER) waterBit |= 8;
+		if (waterBit != 0) id = 4 + calculateID(waterBit);
+
+		return id;
+	}
+
+	private static int calculateID(byte b) {
+		switch (b) {
+			case 0:  return 10;
+			case 1:  return 9;
+			case 2:  return 2;
+			case 3:  return 3;
+			case 4:  return 18;
+			case 5:  return 1;
+			case 6:  return 8;
+			case 7:  return 25;
+			case 8:  return 11;
+			case 9:  return 26;
+			case 10: return 19;
+			case 11: return 0;
+			case 12: return 17;
+			case 13: return 16;
+			case 14: return 27;
+			case 15: return 24;
+			default: return 10;
+		}
+	}
+
 	public int getBorderX() {
 		return borderX;
 	}

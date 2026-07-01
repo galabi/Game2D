@@ -6,9 +6,7 @@ import MainPackage.Main;
 import MainPackage.TilesManager;
 import entity.GameObject;
 import entity.Tile;
-import mapRender.MapTile;
 import mapRender.ObjectPropertiesManager;
-import mapRender.TilePropertiesManager;
 import playerPackage.Player;
 
 public class SpawnManager {
@@ -21,7 +19,7 @@ public class SpawnManager {
 	private static final int MIN_SPAWN_TILES = 8;
 	private static final int MAX_SPAWN_TILES = 14;
 	private static final int MAX_TRIES = 15;
-	private static final int MAP_SIZE = 50;
+	private static final int MAP_SIZE = 1000;
 
 	private static final Random RANDOM = new Random();
 	private static long lastSpawnTime = 0;
@@ -30,15 +28,9 @@ public class SpawnManager {
 		if (System.currentTimeMillis() - lastSpawnTime < SPAWN_INTERVAL_MS) return;
 		lastSpawnTime = System.currentTimeMillis();
 
-		boolean inCave = Main.tilesManager != null && "cave".equals(Main.tilesManager.getMap());
-
-		if (inCave) {
-			if (countByType(Slime.class) < MAX_SLIMES) trySpawn("slime", false);
-		} else {
-			if (countByType(Cow.class)     < MAX_COWS)     trySpawn("cow",     true);
-			if (countByType(Sheep.class)   < MAX_SHEEP)    trySpawn("sheep",   true);
-			if (countByType(Chicken.class) < MAX_CHICKENS) trySpawn("chicken", true);
-		}
+		if (countByType(Cow.class)     < MAX_COWS)     trySpawn("cow",     true);
+		if (countByType(Sheep.class)   < MAX_SHEEP)    trySpawn("sheep",   true);
+		if (countByType(Chicken.class) < MAX_CHICKENS) trySpawn("chicken", true);
 	}
 
 	public static void reset() {
@@ -60,10 +52,8 @@ public class SpawnManager {
 
 			Tile tile = Main.tilesManager.getTiles(ti, tj);
 			GameObject obj = Main.tilesManager.getObjects(ti, tj);
-			MapTile mapTile = TilePropertiesManager.getTile(tile.getId());
-
 			if (tile.isSolid(0, 0, 64, 64)) continue;
-			if (grassOnly && mapTile.isWater()) continue;
+			if (grassOnly && tile.isWater()) continue;
 			if (obj.getId() != 0 && ObjectPropertiesManager.getObject(obj.getId()).isSolid()) continue;
 
 			CreatureManager.createCreature(tj * TilesManager.tileSize, ti * TilesManager.tileSize, type);

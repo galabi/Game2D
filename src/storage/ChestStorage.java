@@ -10,11 +10,6 @@ public class ChestStorage {
     public static final int ROWS = 3, COLS = 3;
 
     private final Map<String, Item[][]> chests = new HashMap<>();
-    private String currentMap = "";
-
-    public void setMap(String mapName) {
-        currentMap = mapName;
-    }
 
     public Item[][] getChest(int i, int j) {
         return chests.computeIfAbsent(key(i, j), k -> emptyGrid());
@@ -32,17 +27,14 @@ public class ChestStorage {
         chests.remove(key(i, j));
     }
 
-    public void clearCurrentMap() {
-        String prefix = currentMap + "_";
-        chests.keySet().removeIf(k -> k.startsWith(prefix));
+    public void clear() {
+        chests.clear();
     }
 
     public List<int[]> getChestPositions() {
         List<int[]> positions = new ArrayList<>();
-        String prefix = currentMap + "_";
         for (String k : chests.keySet()) {
-            if (!k.startsWith(prefix)) continue;
-            String[] parts = k.substring(prefix.length()).split("_");
+            String[] parts = k.split("_");
             positions.add(new int[]{Integer.parseInt(parts[0]), Integer.parseInt(parts[1])});
         }
         return positions;
@@ -115,7 +107,7 @@ public class ChestStorage {
     }
 
     private String key(int i, int j) {
-        return currentMap + "_" + i + "_" + j;
+        return i + "_" + j;
     }
 
     private Item[][] emptyGrid() {

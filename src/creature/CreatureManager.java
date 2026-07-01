@@ -186,7 +186,7 @@ public class CreatureManager {
 	private static final int CREATURE_VERSION = 2;
 
 	public static void saveCreatures(String mapName) {
-		File f = new File("saves/" + mapName + "_creatures.bin");
+		File f = new File(MainPackage.WorldManager.path() + mapName + "_creatures.bin");
 		try (DataOutputStream dos = new DataOutputStream(
 				new BufferedOutputStream(new FileOutputStream(f)))) {
 			dos.writeInt(CREATURE_MAGIC);
@@ -208,7 +208,7 @@ public class CreatureManager {
 
 	public static void loadCreatures(String mapName) {
 		creatureList.clear();
-		File f = new File("saves/" + mapName + "_creatures.bin");
+		File f = new File(MainPackage.WorldManager.path() + mapName + "_creatures.bin");
 		if (!f.exists()) return;
 		try (DataInputStream dis = new DataInputStream(
 				new BufferedInputStream(new FileInputStream(f)))) {

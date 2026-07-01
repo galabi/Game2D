@@ -195,18 +195,18 @@ public class Inventory implements MouseWheelListener{
 			return;
 		}
 		// legacy single-player fallback
-		if (new File("saves/player.bin").exists()) {
+		if (new File(MainPackage.WorldManager.path() + "player.bin").exists()) {
 			loadInventoryBinary();
 		} else {
 			loadInventoryText();
 			saveInventory(); // migrate to binary
-			new File("saves/inventory.txt").delete();
+			new File(MainPackage.WorldManager.path() + "inventory.txt").delete();
 		}
 	}
 
 	private void loadInventoryBinary() {
 		try (DataInputStream dis = new DataInputStream(
-				new BufferedInputStream(new FileInputStream("saves/player.bin")))) {
+				new BufferedInputStream(new FileInputStream(MainPackage.WorldManager.path() + "player.bin")))) {
 			if (dis.readInt() != PLAYER_MAGIC) throw new java.io.IOException("Invalid player save");
 			dis.readUnsignedByte(); // version
 			for (int i = 0; i < toolbarLength; i++) {
@@ -226,7 +226,7 @@ public class Inventory implements MouseWheelListener{
 
 	private void loadInventoryText() {
 		try {
-			s = new Scanner(new File("saves/inventory.txt"));
+			s = new Scanner(new File(MainPackage.WorldManager.path() + "inventory.txt"));
 			for (int i = 0; i < toolbarLength; i++) {
 				for (int j = 0; j < toolbarLength; j++) {
 					int id  = s.nextInt();
@@ -258,7 +258,7 @@ public class Inventory implements MouseWheelListener{
 		}
 		// legacy single-player fallback
 		try (DataOutputStream dos = new DataOutputStream(
-				new BufferedOutputStream(new FileOutputStream("saves/player.bin")))) {
+				new BufferedOutputStream(new FileOutputStream(MainPackage.WorldManager.path() + "player.bin")))) {
 			dos.writeInt(PLAYER_MAGIC);
 			dos.writeByte(PLAYER_VERSION);
 			for (int i = 0; i < toolbarLength; i++)
