@@ -18,8 +18,10 @@ public class PlayerInteraction {
 	static int objectI,objectJ;
 	
 	public static void mousePress(int mouseX,int mouseY,int mouseButton) {
-		int pressBlockJ = (Main.tilesManager.getCameraX(false) + mouseX)/tileSize;
-		int pressBlockI = (Main.tilesManager.getCameraY(false) + mouseY)/tileSize;
+		// Round to the nearest grid corner so the targeted cell matches the cursor box,
+		// which is centered on the marching-squares corner (see TilesManager cursor draw).
+		int pressBlockJ = (Main.tilesManager.getCameraX(false) + mouseX + tileSize/2)/tileSize;
+		int pressBlockI = (Main.tilesManager.getCameraY(false) + mouseY + tileSize/2)/tileSize;
 		if(Math.abs(pressBlockJ - Main.player.playerJ) <= 2 && Math.abs(pressBlockI - Main.player.playerI) <= 2) {
 			switch (mouseButton) {
 			case 1: 
@@ -35,8 +37,8 @@ public class PlayerInteraction {
 	}
 	
 	public static void mouseReleased(int mouseX,int mouseY,int mouseButton) {
-		int pressBlockJ = (Main.tilesManager.getCameraX(false) + mouseX)/tileSize;
-		int pressBlockI = (Main.tilesManager.getCameraY(false) + mouseY)/tileSize;
+		int pressBlockJ = (Main.tilesManager.getCameraX(false) + mouseX + tileSize/2)/tileSize;
+		int pressBlockI = (Main.tilesManager.getCameraY(false) + mouseY + tileSize/2)/tileSize;
 		if(Math.abs(pressBlockJ - Main.player.playerJ) <= 2 && Math.abs(pressBlockI - Main.player.playerI) <= 2) {
 			switch (mouseButton) {
 			case 1: 

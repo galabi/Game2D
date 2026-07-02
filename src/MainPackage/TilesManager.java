@@ -134,9 +134,13 @@ public class TilesManager {
 		if(!Main.inventory.isOpen() && Main.gameState == Main.GameState.GAME) {
 			g2d.setColor(Color.black);
 			g2d.setStroke(new BasicStroke(2));
-			g2d.drawRect(((cameraX + Main.mouseManager.getMouseX())/tileSize)*tileSize - cameraX, 
-					((cameraY + Main.mouseManager.getMouseY())/tileSize)*tileSize - cameraY,
-					tileSize, tileSize);
+			// A visual tile is centered on the grid corner shared by 4 data cells, so the cursor
+			// snaps to the nearest corner (round, not floor) and draws a tile-sized box centered
+			// on it — matching the rendered terrain rather than the raw data grid.
+			int ts = tileSize;
+			int cornerX = ((cameraX + Main.mouseManager.getMouseX() + ts/2)/ts)*ts;
+			int cornerY = ((cameraY + Main.mouseManager.getMouseY() + ts/2)/ts)*ts;
+			g2d.drawRect(cornerX - ts/2 - cameraX, cornerY - ts/2 - cameraY, ts, ts);
 		}
 	}
 
@@ -147,14 +151,12 @@ public class TilesManager {
 	    // Default sort Y is the bottom of the sprite (the feet)
 		int sortY = e.getY() + e.getSizeY();
 
-		// Special handling for multi-tile objects (like Trees)
+		// Objects are drawn shifted up by tileSize/2 to align with the marching-squares
+		// terrain corner, so sort by the shifted visual bottom.
 		if (e instanceof entity.GameObject) {
 			entity.GameObject obj = (entity.GameObject) e;
-				
-			// If this object is a "Top" part of a tree (Leaves) or "Low" part (Fence)
-	        // we treat its depth as if it were one tile lower (at the Trunk level)
+			sortY -= tileSize / 2;
 			sortY = (int) (sortY + ObjectPropertiesManager.getObject(obj.getId()).getObjectRenderOffSet()*tileSize);
-				
 		}
 			
 		return sortY;
@@ -236,7 +238,7 @@ public class TilesManager {
 				for (int j = 0; j < maxScreenRow; j++) {
 					int id = dis.readUnsignedByte();
 					objects[i][j] = new GameObject(id, j * tileSize, i * tileSize, tileSize);
-					if (id == ObjectIds.TREE_SAPLING || id == ObjectIds.ROCK)
+					if (id == ObjectIds.TREE_SAPLING || (ObjectIds.isOre(id) && !ObjectIds.isOreMax(id)))
 						RegenerationManager.insertToGrowthList(objects[i][j], j * tileSize, i * tileSize);
 				}
 			}
@@ -335,12 +337,9 @@ public class TilesManager {
 	
 	//check if the player can place a tree in the location
 	public boolean canPlaceTree(int objectI,int objectJ) {
-		boolean cantPlace = objects[objectI][objectJ].getId() == 0 && objects[objectI-1][objectJ].getId() == 0 && //middle
-				(objects[objectI][objectJ+1].getId() == 0 || objects[objectI][objectJ+1].getId() == 17) && // right
-				(objects[objectI-1][objectJ+1].getId() == 0 || objects[objectI-1][objectJ+1].getId() == 5) && // right
-				(objects[objectI][objectJ-1].getId() == 0 || objects[objectI][objectJ-1].getId() == 17) && // left
-				(objects[objectI-1][objectJ-1].getId() == 0 || objects[objectI-1][objectJ-1].getId() == 5); // left
-		return !cantPlace;
+		// single-tile tree: target must be empty and on grass
+		return objects[objectI][objectJ].getId() == 0
+				&& tiles[objectI][objectJ].getTerrainType() == entity.Tile.GRASS;
 	}
 	
 	public int getTileSize() {
@@ -388,6 +387,18 @@ public class TilesManager {
 	}
 	public GameObject getObjects(int objectI,int objectJ){
 		return objects[objectI][objectJ];
+	}
+
+	// Returns the tile that should be interacted with at (i,j). If no object is there,
+	// checks one row up — handles tall sprites (e.g. trees) whose visual bottom renders
+	// into the tile below their data tile.
+	public int[] resolveInteractTile(int i, int j) {
+		if (i >= 0 && i < maxScreenCol && j >= 0 && j < maxScreenRow && objects[i][j].getId() != 0)
+			return new int[]{i, j};
+		int up = i - 1;
+		if (up >= 0 && j >= 0 && j < maxScreenRow && objects[up][j].getId() != 0)
+			return new int[]{up, j};
+		return new int[]{i, j};
 	}
 	public void addItemDrop(Item item, int x, int y) {
 		drops.add(new ItemOnFloor(item, x, y));

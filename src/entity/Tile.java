@@ -51,10 +51,21 @@ public class Tile extends Entity {
         if (playerXInTile < half && py1   > half && neighborTerrain(tileI + 1, tileJ) == WATER) return true;
         if (px1 > half && py1   > half && neighborTerrain(tileI + 1, tileJ + 1) == WATER) return true;
 
-        Rectangle r = new Rectangle(playerXInTile, playerYInTile, width, height);
-        MapObject topObj = ObjectPropertiesManager.getObject(Main.tilesManager.getObjects(tileI, tileJ).id);
-        for (Rectangle rect : topObj.getSolidInTile()) {
-            if (rect.intersects(r)) return true;
+        // Objects render shifted up-left by half a tile to sit on the marching-squares terrain,
+        // so their collision is tested in that same shifted frame (world coordinates).
+        int ts = sizeX;
+        Rectangle player = new Rectangle(tileJ * ts + playerXInTile, tileI * ts + playerYInTile, width, height);
+        // A shifted solid rect reaches up-left, so an object in this cell or the cell below/right
+        // of the player can overlap it.
+        for (int oi = tileI; oi <= tileI + 1 && oi < Main.tilesManager.getmaxScreenCol(); oi++) {
+            for (int oj = tileJ; oj <= tileJ + 1 && oj < Main.tilesManager.getmaxScreenRow(); oj++) {
+                MapObject obj = ObjectPropertiesManager.getObject(Main.tilesManager.getObjects(oi, oj).id);
+                for (Rectangle rect : obj.getSolidInTile()) {
+                    Rectangle world = new Rectangle(oj * ts + rect.x - ts / 2, oi * ts + rect.y - ts / 2,
+                            rect.width, rect.height);
+                    if (world.intersects(player)) return true;
+                }
+            }
         }
         return false;
     }

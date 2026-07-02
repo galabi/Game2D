@@ -33,6 +33,7 @@ public class Item {
 		this.id = id;
 		quantity = 1;
 		logo = GameTextures.getItemIcon(id);
+		if (logo == null) logo = GameTextures.getItemIcon(0); // blank fallback (e.g. icon not yet in items.png)
 		
 		switch(id) {
 		case 1:
@@ -75,14 +76,14 @@ public class Item {
 			stackable = false;
 			strength = 1;
 			placeable = true;
-			idToPlace = 19;
+			idToPlace = 6; // CAMPFIRE object
 			break;
 		case 7:
 			name = "Tree sapling";
 			stackable = true;
 			strength = 1;
 			placeable = true;
-			idToPlace = 16;
+			idToPlace = 2; // TREE_SAPLING object
 			break;
 		case 8:
 			name = "Stick";
@@ -117,14 +118,14 @@ public class Item {
 			stackable = false;
 			strength = 1;
 			placeable = true;
-			idToPlace = 83;
+			idToPlace = 3; // CHEST object
 			break;
 		case 13:
 			name = "Workbench";
 			stackable = false;
 			strength = 1;
 			placeable = true;
-			idToPlace = 84;
+			idToPlace = 4; // WORKBENCH object
 			break;
 		case 14:
 			name = "Strong Axe";
@@ -137,6 +138,20 @@ public class Item {
 			name = "Broad Sword";
 			stackable = false;
 			strength = 3;
+			placeable = false;
+			idToPlace = 0;
+			break;
+		case 16:
+			name = "Iron Ore";
+			stackable = true;
+			strength = 1;
+			placeable = false;
+			idToPlace = 0;
+			break;
+		case 17:
+			name = "Gold Ore";
+			stackable = true;
+			strength = 1;
 			placeable = false;
 			idToPlace = 0;
 			break;

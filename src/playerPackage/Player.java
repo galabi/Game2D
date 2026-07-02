@@ -36,7 +36,7 @@ public class Player extends Entity implements KeyListener, FocusListener {
 	
 	public int playerI = 0, playerJ = 0;
 	int speedX, speedY;
-	final int walkSpeed = 2,runSpeed = 40;
+	final int walkSpeed = 2,runSpeed = 4;
 	int maxHealth = 10;
 	int health = maxHealth;
 	int maxHunger = 10;
@@ -303,16 +303,15 @@ public class Player extends Entity implements KeyListener, FocusListener {
 		
 		GameObject obj = Main.tilesManager.getObjects(pressBlockI,pressBlockJ);
 		Tile tile = Main.tilesManager.getTiles(pressBlockI,pressBlockJ);		
-		//sapling case (grow Tree)
+		//sapling case (grow Tree) — single tile, grass only
 		if(itemToPlace.getId() == 7 && Main.tilesManager.canPlaceTree(pressBlockI, pressBlockJ)) {
 			Main.player.imagePosture = 2;
 			Main.player.animationTimer = System.currentTimeMillis();
 			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,itemToPlace.getIdToPlace());
-			Main.tilesManager.updateBlock(pressBlockI-1,pressBlockJ,4);
 			RegenerationManager.insertToGrowthList(obj,pressBlockJ*tilesize,pressBlockI*tilesize);
 			Main.inventory.decreaseItemInHand();
 
-			
+
 		//general case
 		}else if(obj.getId() == 0 && !tile.isWater()) {
 			Main.player.imagePosture = 2;
@@ -347,10 +346,10 @@ public class Player extends Entity implements KeyListener, FocusListener {
 	//player interaction with camp Fire
 	public void cookFish(int pressBlockI,int pressBlockJ,Item itemInhand) {
 		if(itemInhand.getId() == ItemIds.FISH) {
-			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,19);
+			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,mapRender.ObjectIds.CAMPFIRE);
 			Main.inventory.addToItemStack(new Item(5));
 		}else {
-			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,7);
+			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,mapRender.ObjectIds.CAMPFIRE_ON);
 		}
 		Main.inventory.decreaseItemInHand();
 	}

@@ -16,6 +16,8 @@ public final class ItemIds {
     public static final int WORKBENCH   = 13;
     public static final int STRONG_AXE  = 14;
     public static final int BROAD_SWORD = 15;
+    public static final int IRON_ORE    = 16;
+    public static final int GOLD_ORE    = 17;
 
     private ItemIds() {}
 }

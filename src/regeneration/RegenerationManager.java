@@ -33,8 +33,10 @@ public class RegenerationManager {
 		GrowthType growthType = null;
 		if (id == ObjectIds.TREE_SAPLING) {
 			growthType = GrowthType.TREE;
-		} else if (id == ObjectIds.ROCK) {
+		} else if (ObjectIds.isOre(id) && !ObjectIds.isOreMax(id)) {
 			growthType = GrowthType.ROCK;
+		} else {
+			return; // nothing to regrow
 		}
 		regenerationList.add(new RegenerationBlock(nextObject, x, y, growthType));
 	}
@@ -49,37 +51,17 @@ public class RegenerationManager {
 	
 	
 	private static void GrowTree(int rootMapI,int rootMapJ,GameObject[][] objectsMap) {
-		//tree base
-    	Main.tilesManager.updateBlock(rootMapI, rootMapJ, 14);
-    	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ, 2);
-		
-		//left tree 
-		if(ObjectPropertiesManager.getObject(objectsMap[rootMapI][rootMapJ-1].getId()).isTree()) {
-        	Main.tilesManager.updateBlock(rootMapI, rootMapJ-1, 17);
-        	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ-1, 5);
-
-		}else {
-        	Main.tilesManager.updateBlock(rootMapI, rootMapJ-1, 13);
-        	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ-1, 1);
-		}
-
-		//right tree
-		if(ObjectPropertiesManager.getObject(objectsMap[rootMapI][rootMapJ+1].getId()).isTree()) {
-        	Main.tilesManager.updateBlock(rootMapI, rootMapJ+1, 17);
-        	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ+1, 5);
-		}else {
-        	Main.tilesManager.updateBlock(rootMapI, rootMapJ+1, 15);
-        	Main.tilesManager.updateBlock(rootMapI-1, rootMapJ+1, 3);
-		}
-		
+    	// single-tile tree: sapling matures into a tree in place
+    	Main.tilesManager.updateBlock(rootMapI, rootMapJ, ObjectIds.TREE);
 	}
-	
+
 	private static void GrowRock(int rockMapI,int rockMapJ,GameObject[][] objectsMap) {
+    	// grow the ore back one stage toward its MAX (mining advanced it with +1)
     	Main.tilesManager.updateBlock(rockMapI, rockMapJ, objectsMap[rockMapI][rockMapJ].getId()-1);
-    	
-		if(objectsMap[rockMapI][rockMapJ].getId() != ObjectIds.ROCK_MAX) {
+
+		if(!ObjectIds.isOreMax(objectsMap[rockMapI][rockMapJ].getId())) {
 			insertToGrowthList(objectsMap[rockMapI][rockMapJ],rockMapJ*TilesManager.tileSize,rockMapI*TilesManager.tileSize);
 		}
-	
+
 	}
 }
