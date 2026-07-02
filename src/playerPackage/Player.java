@@ -236,11 +236,8 @@ public class Player extends Entity implements KeyListener, FocusListener {
 	
 	private boolean checkTileCollision(int tileI, int tileJ, int xInTile, int yInTile, int w, int h) {
 		Tile tile = Main.tilesManager.getTiles()[tileI][tileJ];
-		if(tile.isSolid(xInTile, yInTile, w, h)) {
-			return true;
-		}
-		return false;
-	}
+        return tile.isSolid(xInTile, yInTile, w, h);
+    }
 
 	private void collision(){
 		int playerXInTile = (x + playerCollisionBoxX + speedX) % tilesize;
@@ -355,7 +352,7 @@ public class Player extends Entity implements KeyListener, FocusListener {
 	}
 	
 	//player fishing
-	public void startFishing(int BlockI,int BlockJ) {		
+	public void startFishing() {
 		rod.startFishingAtClosestDirection();
 	
 		if(!fishing) {
@@ -567,11 +564,11 @@ public class Player extends Entity implements KeyListener, FocusListener {
 	}
 	
 	private void loadImg() {
-		/**
-		 * 0 = down
-		 * 1 = left
-		 * 2 = right
-		 * 3 = up
+		/*
+		  0 = down
+		  1 = left
+		  2 = right
+		  3 = up
 			*/
 		try {
 			BufferedImage temp = ImageIO.read(getClass().getResourceAsStream("/player.png"));

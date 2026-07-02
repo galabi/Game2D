@@ -57,8 +57,8 @@ public class Tile extends Entity {
         Rectangle player = new Rectangle(tileJ * ts + playerXInTile, tileI * ts + playerYInTile, width, height);
         // A shifted solid rect reaches up-left, so an object in this cell or the cell below/right
         // of the player can overlap it.
-        for (int oi = tileI; oi <= tileI + 1 && oi < Main.tilesManager.getmaxScreenCol(); oi++) {
-            for (int oj = tileJ; oj <= tileJ + 1 && oj < Main.tilesManager.getmaxScreenRow(); oj++) {
+        for (int oi = tileI; oi <= tileI + 1 && oi < Main.tilesManager.getMaxScreenCol(); oi++) {
+            for (int oj = tileJ; oj <= tileJ + 1 && oj < Main.tilesManager.getMaxScreenRow(); oj++) {
                 MapObject obj = ObjectPropertiesManager.getObject(Main.tilesManager.getObjects(oi, oj).id);
                 for (Rectangle rect : obj.getSolidInTile()) {
                     Rectangle world = new Rectangle(oj * ts + rect.x - ts / 2, oi * ts + rect.y - ts / 2,
@@ -71,8 +71,8 @@ public class Tile extends Entity {
     }
 
     private byte neighborTerrain(int i, int j) {
-        if (i < 0 || i >= Main.tilesManager.getmaxScreenCol()) return (byte) id;
-        if (j < 0 || j >= Main.tilesManager.getmaxScreenRow()) return (byte) id;
+        if (i < 0 || i >= Main.tilesManager.getMaxScreenCol()) return (byte) id;
+        if (j < 0 || j >= Main.tilesManager.getMaxScreenRow()) return (byte) id;
         return Main.tilesManager.getTiles(i, j).getTerrainType();
     }
 

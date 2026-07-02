@@ -104,7 +104,7 @@ public class PlayerInteraction {
 
 		//fishing
 		}else if(itemInHand.getId() == 3 && Main.tilesManager.getTiles()[pressBlockI][pressBlockJ].isWater()) {
-			Main.player.startFishing(pressBlockI,pressBlockJ);
+			Main.player.startFishing();
 
 		}
 		

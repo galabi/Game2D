@@ -10,7 +10,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,9 +29,7 @@ import mapRender.ObjectPropertiesManager;
 import multiplayer.ServerClientHandler;
 
 public class TilesManager {
-	
-//this class has sub-class named itemOnFloor
-	
+
 	public final static int tileSize = 64;
 	final int maxScreenCol = 1000;
 	final int maxScreenRow = 1000;
@@ -370,10 +367,10 @@ public class TilesManager {
 		return maxScreenCol*tileSize;
 	}
 	
-	public int getmaxScreenCol() {
+	public int getMaxScreenCol() {
 		return maxScreenCol;
 	}
-	public int getmaxScreenRow() {
+	public int getMaxScreenRow() {
 		return maxScreenRow;
 	}
 	public Tile[][] getTiles() {

@@ -29,7 +29,7 @@ public class MinimapRenderer {
         int tileSize  = TilesManager.tileSize;
         int playerTileI = Main.player.getY() / tileSize;
         int playerTileJ = Main.player.getX() / tileSize;
-        int mapMax    = Main.tilesManager.getmaxScreenCol();
+        int mapMax    = Main.tilesManager.getMaxScreenCol();
 
         // Position: top-right corner
         int drawX = Main.width - MINIMAP_SIZE - MARGIN;

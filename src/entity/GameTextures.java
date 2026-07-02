@@ -9,7 +9,7 @@ import mapRender.MapEntity;
 import mapRender.MapObject;
 
 public class GameTextures {
-	private static ImageIcon[] itemIcons,tileIcons,objectIcons;
+	private static final ImageIcon[] itemIcons,tileIcons,objectIcons;
 	
 	static final int TileSize = 32;
 	
@@ -41,7 +41,7 @@ public class GameTextures {
 	        // loading tiles.png
 	        loadSheet(tileIcons, "/tiles.png", 4, 8, tileIconSize,TileSize);
 
-	        // loading objects.png (irregularly packed — explicit source rects per object id)
+	        // loading objects.png (irregularly packed — explicit source reacts per object id)
 	        loadObjectSprites();
 
 	        // trees and saplings are standalone images, loaded into their object slots
@@ -71,7 +71,7 @@ public class GameTextures {
 					int id = OBJECT_SHEET_FIRST_ID + row * OBJECT_SHEET_COLS + col;
 					int x = col * OBJECT_SHEET_TILE, y = row * OBJECT_SHEET_TILE;
 					int w = Math.min(OBJECT_SHEET_TILE, W - x), h = Math.min(OBJECT_SHEET_TILE, H - y);
-					if (id >= 0 && id < objectIcons.length && w > 0 && h > 0)
+					if (id < objectIcons.length && w > 0 && h > 0)
 						objectIcons[id] = new ImageIcon(sheet.getSubimage(x, y, w, h));
 				}
 			}

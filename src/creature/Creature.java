@@ -251,7 +251,7 @@ public class Creature extends Entity{
 	}
 
 	private boolean isWaterTile(int i, int j) {
-		if (i < 0 || i >= Main.tilesManager.getmaxScreenCol() || j < 0 || j >= Main.tilesManager.getmaxScreenRow()) return false;
+		if (i < 0 || i >= Main.tilesManager.getMaxScreenCol() || j < 0 || j >= Main.tilesManager.getMaxScreenRow()) return false;
 		return Main.tilesManager.getTiles(i, j).isWater();
 	}
 	
