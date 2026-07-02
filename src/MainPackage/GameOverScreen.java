@@ -56,7 +56,10 @@ public class GameOverScreen {
 		SpawnManager.reset();
 		Main.tilesManager.resetMap();
 		Main.tilesManager.readFile();
-		Main.inventory.loadInventory(); // restores position/health/hunger from named save
+		Main.inventory.loadInventory(); // restores position/inventory from named save (emptied on death)
+		// Respawn fresh: always full health and food.
+		Main.player.setHealth(Main.player.getMaxHealth());
+		Main.player.setHunger(Main.player.getMaxHunger());
 		Main.gameState = Main.GameState.GAME;
 		Main.host = true;
 	}

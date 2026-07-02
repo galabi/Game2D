@@ -296,8 +296,25 @@ public void window(int width,int height,String title,Main main){
 	}
 
 
+	/**
+	 * Client-side: apply the host's world to this player. Sets the world so per-player saves land
+	 * in the host world's players/ folder, restores our saved inventory + position if we've played
+	 * here before, otherwise blanks the inventory and spawns us at the world's spawn point.
+	 */
+	public static void joinWorld(String worldName, int spawnI, int spawnJ) {
+		WorldManager.setWorld(worldName);
+		boolean restored = inventory.loadInventory();
+		if (!restored) {
+			player.setLocation(spawnJ * TilesManager.tileSize, spawnI * TilesManager.tileSize);
+		}
+		tilesManager.setCameraX(player.getX() - width / 2 + player.getSizeX() / 2);
+		tilesManager.setCameraY(player.getY() - height / 2 + player.getSizeY() / 2);
+		// Tell the host (and other clients) our real position now that it's restored.
+		ServerClientHandler.sendDataToServer(player.toString());
+	}
+
 	public static void main(String[] args) {
-		
+
 		new Main();
 	}
 

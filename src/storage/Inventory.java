@@ -187,12 +187,14 @@ public class Inventory implements MouseWheelListener{
 	static final int PLAYER_MAGIC = 0x504C5952;
 	static final int PLAYER_VERSION = 1;
 
-	public void loadInventory() {
+	/** @return true if a per-player save was restored (position + inventory + health/hunger),
+	 *  false if the inventory was blanked (no save found). */
+	public boolean loadInventory() {
 		items = new Item[toolbarLength][toolbarLength];
 		if (!MainPackage.Main.playerName.isEmpty()) {
 			boolean loaded = PlayerSaveManager.load(MainPackage.Main.playerName, MainPackage.Main.player, this);
 			if (!loaded) initBlankInventory();
-			return;
+			return loaded;
 		}
 		// legacy single-player fallback
 		if (new File(MainPackage.WorldManager.path() + "player.bin").exists()) {
@@ -202,6 +204,7 @@ public class Inventory implements MouseWheelListener{
 			saveInventory(); // migrate to binary
 			new File(MainPackage.WorldManager.path() + "inventory.txt").delete();
 		}
+		return true;
 	}
 
 	private void loadInventoryBinary() {
@@ -246,6 +249,22 @@ public class Inventory implements MouseWheelListener{
 		for(int i = 0; i < toolbarLength; i++) {
 			for(int j = 0; j < toolbarLength; j++) {
 				items[i][j] = new Item();
+			}
+		}
+	}
+
+	/** Scatters every non-empty stack on the floor around (x,y) and empties the inventory. Used on death. */
+	public void dropAllOnFloor(int x, int y) {
+		java.util.Random rng = new java.util.Random();
+		for (int i = 0; i < toolbarLength; i++) {
+			for (int j = 0; j < toolbarLength; j++) {
+				Item it = items[i][j];
+				if (it != null && it.getId() != 0) {
+					float vx = (rng.nextFloat() - 0.5f) * 6f;
+					float vy = (rng.nextFloat() - 0.5f) * 6f;
+					Main.tilesManager.addItemDrop(it, x, y, vx, vy);
+					items[i][j] = new Item();
+				}
 			}
 		}
 	}

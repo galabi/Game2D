@@ -5,8 +5,6 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import MainPackage.Main;
-
 public class PlayerAnimation {
 	ImageIcon[][] runningAnimation ;
 	int runningFrameSize = 12,currentFrame; 
@@ -20,9 +18,11 @@ public class PlayerAnimation {
 		loadImg();
 	}
 	
-	public void render(Graphics2D g2d,int x,int y ,int sizeX,int sizeY) {
-		
-		g2d.drawImage(runningAnimation[Main.player.getImageDirection()][currentFrame].getImage(), x,
+	public void render(Graphics2D g2d,int direction,int x,int y ,int sizeX,int sizeY) {
+
+		// Use the owning player's facing direction — not Main.player's — so each remote player's
+		// walk animation faces the way *that* player is moving.
+		g2d.drawImage(runningAnimation[direction][currentFrame].getImage(), x,
 				y, sizeX, sizeY,null);
 		
 		

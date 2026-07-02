@@ -3,7 +3,6 @@ package playerPackage;
 import java.util.ArrayList;
 
 import MainPackage.Main;
-import MainPackage.TilesManager;
 import regeneration.RegenerationManager;
 import mapRender.ObjectIds;
 import mapRender.ObjectPropertiesManager;
@@ -24,7 +23,7 @@ public class PlayerBreakBlock {
 	                         || timeDelta >= PlayerInteraction.rockBreakTime;
 	        if (canBreak) {
 	            Main.tilesManager.updateBlock(i, j, objId + 1);
-	            RegenerationManager.insertToGrowthList(Main.tilesManager.getObjects()[i][j], j * TilesManager.tileSize, i * TilesManager.tileSize);
+	            RegenerationManager.insertToGrowthList(Main.tilesManager.getObjectId(i, j), i, j);
 
 	            for(Integer k:itemWhenBroken) {
 	            	Main.tilesManager.addDrop(i, j, k);

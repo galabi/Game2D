@@ -35,7 +35,11 @@ public class TilesManager {
 	final int maxScreenRow = 1000;
 	int borderX=20,borderY=13,cameraY = 1000,cameraX = 900;
 	Tile[][] tiles;
-	GameObject[][] objects;
+	// Object grid stores only the object id per cell (0 = empty). The map is ~99% empty and
+	// GameObject carries no per-cell state (chest contents live in ChestStorage), so a flat
+	// int grid replaces a million GameObject instances. GameObject is now a per-frame render
+	// flyweight built only for the visible, non-empty cells (see renderObjects).
+	int[][] objectIds;
 	List<ItemOnFloor> drops;
 	private ArrayList<entity.Entity> renderList = new ArrayList<>();
 	// Reused every frame instead of reallocating.
@@ -48,7 +52,7 @@ public class TilesManager {
 	public TilesManager() {
 		ObjectPropertiesManager.loadObjects();
 		tiles = new Tile[maxScreenCol][maxScreenRow];
-		objects = new GameObject[maxScreenCol][maxScreenRow];
+		objectIds = new int[maxScreenCol][maxScreenRow];
 		drops = Collections.synchronizedList(new ArrayList<>());
 		
 	}
@@ -106,10 +110,11 @@ public class TilesManager {
 			
 		for (int i = startCol; i < endCol && i < maxScreenCol; i++) {
 			for (int j = startRow; j < endRow && j < maxScreenRow; j++) {
-					
-				// Only add objects that exist (ID != 0)
-				if (objects[i][j].getId() != 0) {
-					renderList.add(objects[i][j]);
+
+				// Build a render flyweight only for non-empty cells in view (a few dozen at most).
+				int id = objectIds[i][j];
+				if (id != 0) {
+					renderList.add(new GameObject(id, j * tileSize, i * tileSize, tileSize));
 				}
 			}
 		}
@@ -208,7 +213,7 @@ public class TilesManager {
 		} else {
 			// First visit — generate overworld procedurally
 			long seed = WorldManager.readSeed();
-			int[] spawn = MapGenerator.generate(tiles, objects, seed);
+			int[] spawn = MapGenerator.generate(tiles, objectIds, seed);
 			Main.player.setLocation(spawn[1] * tileSize, spawn[0] * tileSize);
 			cameraX = Main.player.getX() - Main.width / 2 + Main.player.getSizeX() / 2;
 			cameraY = Main.player.getY() - Main.height / 2 + Main.player.getSizeY() / 2;
@@ -234,9 +239,9 @@ public class TilesManager {
 			for (int i = 0; i < maxScreenCol; i++) {
 				for (int j = 0; j < maxScreenRow; j++) {
 					int id = dis.readUnsignedByte();
-					objects[i][j] = new GameObject(id, j * tileSize, i * tileSize, tileSize);
+					objectIds[i][j] = id;
 					if (id == ObjectIds.TREE_SAPLING || (ObjectIds.isOre(id) && !ObjectIds.isOreMax(id)))
-						RegenerationManager.insertToGrowthList(objects[i][j], j * tileSize, i * tileSize);
+						RegenerationManager.insertToGrowthList(id, i, j);
 				}
 			}
 
@@ -276,7 +281,7 @@ public class TilesManager {
 
 			for (int i = 0; i < maxScreenCol; i++)
 				for (int j = 0; j < maxScreenRow; j++)
-					dos.writeByte(objects[i][j].getId());
+					dos.writeByte(objectIds[i][j]);
 
 			List<int[]> positions = Main.chestStorage.getChestPositions();
 			dos.writeShort(positions.size());
@@ -311,7 +316,7 @@ public class TilesManager {
 	public void setItemsOnTilesFromMultiplayer(String[] map) {
 		for(int i=0;i<maxScreenCol;i++) {
 			for(int j=0;j<maxScreenRow;j++) {
-				objects[i][j] = new GameObject(Integer.parseInt(map[i*maxScreenRow + j + 1]), j*tileSize, i*tileSize, tileSize); 
+				objectIds[i][j] = Integer.parseInt(map[i*maxScreenRow + j + 1]);
 			}
 		}
 	}
@@ -335,7 +340,7 @@ public class TilesManager {
 	//check if the player can place a tree in the location
 	public boolean canPlaceTree(int objectI,int objectJ) {
 		// single-tile tree: target must be empty and on grass
-		return objects[objectI][objectJ].getId() == 0
+		return objectIds[objectI][objectJ] == 0
 				&& tiles[objectI][objectJ].getTerrainType() == entity.Tile.GRASS;
 	}
 	
@@ -367,6 +372,12 @@ public class TilesManager {
 		return maxScreenCol*tileSize;
 	}
 	
+	/** Central spawn tile {i,j} for the current world, recomputed deterministically from the
+	 *  loaded terrain (used to tell a joining client where to spawn on their first visit). */
+	public int[] getSpawnPoint() {
+		return MapGenerator.findSpawn(tiles);
+	}
+
 	public int getMaxScreenCol() {
 		return maxScreenCol;
 	}
@@ -379,21 +390,21 @@ public class TilesManager {
 	public Tile getTiles(int TileI,int TileJ) {
 		return tiles[TileI][TileJ];
 	}
-	public GameObject[][] getObjects(){
-		return objects;
+	public int getObjectId(int objectI,int objectJ){
+		return objectIds[objectI][objectJ];
 	}
-	public GameObject getObjects(int objectI,int objectJ){
-		return objects[objectI][objectJ];
+	public void setObjectId(int objectI,int objectJ,int id){
+		objectIds[objectI][objectJ] = id;
 	}
 
 	// Returns the tile that should be interacted with at (i,j). If no object is there,
 	// checks one row up — handles tall sprites (e.g. trees) whose visual bottom renders
 	// into the tile below their data tile.
 	public int[] resolveInteractTile(int i, int j) {
-		if (i >= 0 && i < maxScreenCol && j >= 0 && j < maxScreenRow && objects[i][j].getId() != 0)
+		if (i >= 0 && i < maxScreenCol && j >= 0 && j < maxScreenRow && objectIds[i][j] != 0)
 			return new int[]{i, j};
 		int up = i - 1;
-		if (up >= 0 && j >= 0 && j < maxScreenRow && objects[up][j].getId() != 0)
+		if (up >= 0 && j >= 0 && j < maxScreenRow && objectIds[up][j] != 0)
 			return new int[]{up, j};
 		return new int[]{i, j};
 	}
@@ -421,11 +432,9 @@ public class TilesManager {
 	}
 
 	private void initDefaultObjects() {
-		for(int i = 0; i < maxScreenCol; i++) {
-			for(int j = 0; j < maxScreenRow; j++) {
-				objects[i][j] = new GameObject(0, j * tileSize, i * tileSize, tileSize);
-			}
-		}
+		for(int i = 0; i < maxScreenCol; i++)
+			for(int j = 0; j < maxScreenRow; j++)
+				objectIds[i][j] = 0;
 	}
 
 	public int computeVisualId(int i, int j) {
@@ -488,7 +497,7 @@ public class TilesManager {
 	}
 	
 	public void updateBlock(int mapI,int mapJ, int newId) {
-	    objects[mapI][mapJ].setId(newId);
+	    objectIds[mapI][mapJ] = newId;
 	    ServerClientHandler.sendDataToServer("update_block " + mapI + " " + mapJ + " " + newId);
 	    if (Main.minimap != null) Main.minimap.markDirty();
 	    }
@@ -533,7 +542,7 @@ public class TilesManager {
 		StringBuilder sb = new StringBuilder("items: ");
 		for(int i = 0; i < maxScreenCol; i++) {
 			for(int j = 0; j < maxScreenRow; j++) {
-				sb.append(objects[i][j].getId()).append(' ');
+				sb.append(objectIds[i][j]).append(' ');
 			}
 		}
 		return sb.toString();

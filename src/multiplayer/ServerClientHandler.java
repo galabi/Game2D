@@ -4,7 +4,6 @@ import MainPackage.Main;
 import creature.CreatureManager;
 import playerPackage.Player;
 import storage.Item;
-import entity.GameObject;
 
 public class ServerClientHandler {
 
@@ -75,8 +74,21 @@ public class ServerClientHandler {
             updateRemotePlayer(0, arr, 1);
             break;
         case "update_block":
-            ((GameObject) Main.tilesManager.getObjects()
-                [Integer.parseInt(arr[1])][Integer.parseInt(arr[2])]).setId(Integer.parseInt(arr[3]));
+            Main.tilesManager.setObjectId(Integer.parseInt(arr[1]), Integer.parseInt(arr[2]), Integer.parseInt(arr[3]));
+            break;
+        case "world":
+            // "world <spawnI> <spawnJ> <name...>" — host tells us which world we joined and where
+            // to spawn on a first visit. Name is last (may contain spaces) so rejoin arr[3..].
+            if (arr.length >= 4) {
+                int spawnI = Integer.parseInt(arr[1]);
+                int spawnJ = Integer.parseInt(arr[2]);
+                StringBuilder wn = new StringBuilder();
+                for (int k = 3; k < arr.length; k++) {
+                    if (k > 3) wn.append(' ');
+                    wn.append(arr[k]);
+                }
+                Main.joinWorld(wn.toString(), spawnI, spawnJ);
+            }
             break;
         case "map:":
             Main.tilesManager.setMapFromMultiplayer(arr);

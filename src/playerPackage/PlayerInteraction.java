@@ -57,10 +57,10 @@ public class PlayerInteraction {
 	private static void leftMousePress(int pressBlockI,int pressBlockJ) {
 		Main.player.fishing = false;
 		if (CreatureManager.attackCreatureInRange()) return;
-		if(objectToBreakId != Main.tilesManager.getObjects(pressBlockI,pressBlockJ).getId() && Main.tilesManager.getObjects(pressBlockI,pressBlockJ).getId() != 0) {
+		if(objectToBreakId != Main.tilesManager.getObjectId(pressBlockI,pressBlockJ) && Main.tilesManager.getObjectId(pressBlockI,pressBlockJ) != 0) {
 			objectI = pressBlockI;
 			objectJ = pressBlockJ;
-			objectToBreakId = Main.tilesManager.getObjects(pressBlockI,pressBlockJ).getId();
+			objectToBreakId = Main.tilesManager.getObjectId(pressBlockI,pressBlockJ);
 			timeOfFirstHitToObject = System.currentTimeMillis();
 			Main.player.imagePosture = 2;
 			Main.player.animationTimer = System.currentTimeMillis();
@@ -69,7 +69,7 @@ public class PlayerInteraction {
 	
 	private static void rightMousePress(int pressBlockI,int pressBlockJ) {
 		Item itemInHand = Main.inventory.getItemInHand();
-		int objId = Main.tilesManager.getObjects()[pressBlockI][pressBlockJ].getId();
+		int objId = Main.tilesManager.getObjectId(pressBlockI,pressBlockJ);
 		
 		boolean isCookFish = (objId == ObjectIds.CAMPFIRE_ON && itemInHand.getId() == ItemIds.FISH) ||
 				(objId == ObjectIds.CAMPFIRE && itemInHand.getId() == ItemIds.WOOD);

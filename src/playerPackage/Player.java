@@ -19,7 +19,6 @@ import storage.Item;
 import entity.Entity;
 import entity.FishingRod;
 import entity.GameColors;
-import entity.GameObject;
 import entity.Tile;
 import storage.ItemIds;
 import multiplayer.ServerClientHandler;
@@ -98,7 +97,7 @@ public class Player extends Entity implements KeyListener, FocusListener {
 		if (hunger == 0 && health > 0 && now - lastStarveTime >= REGEN_INTERVAL_MS) {
 			health = Math.max(0, health - 1);
 			lastStarveTime = now;
-			if (health <= 0) Main.gameState = Main.GameState.GAME_OVER;
+			if (health <= 0) die();
 		}
 		//check if the player need to move
 		if(speedX != 0 || speedY != 0) {
@@ -138,7 +137,7 @@ public class Player extends Entity implements KeyListener, FocusListener {
 		
 		try {
 			if(speedX != 0 || speedY != 0) {
-				playeranimation.render(g2d, x - Main.tilesManager.getCameraX(false), y - Main.tilesManager.getCameraY(false), sizeX, sizeY);
+				playeranimation.render(g2d, imageDirection, x - Main.tilesManager.getCameraX(false), y - Main.tilesManager.getCameraY(false), sizeX, sizeY);
 			}else {
 			g2d.drawImage(playerImage[imageDirection][imagePosture].getImage(), x - Main.tilesManager.getCameraX(false) ,
 					y - Main.tilesManager.getCameraY(false), sizeX, sizeY,null);
@@ -298,19 +297,19 @@ public class Player extends Entity implements KeyListener, FocusListener {
 	//player placing a block
 	public void placeBlock(int pressBlockI,int pressBlockJ,Item itemToPlace) {
 		
-		GameObject obj = Main.tilesManager.getObjects(pressBlockI,pressBlockJ);
-		Tile tile = Main.tilesManager.getTiles(pressBlockI,pressBlockJ);		
+		int objId = Main.tilesManager.getObjectId(pressBlockI,pressBlockJ);
+		Tile tile = Main.tilesManager.getTiles(pressBlockI,pressBlockJ);
 		//sapling case (grow Tree) — single tile, grass only
 		if(itemToPlace.getId() == 7 && Main.tilesManager.canPlaceTree(pressBlockI, pressBlockJ)) {
 			Main.player.imagePosture = 2;
 			Main.player.animationTimer = System.currentTimeMillis();
 			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,itemToPlace.getIdToPlace());
-			RegenerationManager.insertToGrowthList(obj,pressBlockJ*tilesize,pressBlockI*tilesize);
+			RegenerationManager.insertToGrowthList(Main.tilesManager.getObjectId(pressBlockI,pressBlockJ),pressBlockI,pressBlockJ);
 			Main.inventory.decreaseItemInHand();
 
 
 		//general case
-		}else if(obj.getId() == 0 && !tile.isWater()) {
+		}else if(objId == 0 && !tile.isWater()) {
 			Main.player.imagePosture = 2;
 			Main.player.animationTimer = System.currentTimeMillis();
 			Main.tilesManager.updateBlock(pressBlockI,pressBlockJ,itemToPlace.getIdToPlace());
@@ -335,9 +334,22 @@ public class Player extends Entity implements KeyListener, FocusListener {
 			health = Math.max(0, health - amount);
 			lastHitTime = now;
 			if (health <= 0) {
-				Main.gameState = Main.GameState.GAME_OVER;
+				die();
 			}
 		}
+	}
+
+	/** Death: scatter the whole inventory where we fell, then respawn fresh — full health & food,
+	 *  back at the world's central spawn (away from the dropped items). Persists the post-death
+	 *  state so the Restart screen's loadInventory restores an empty inventory + full stats. */
+	private void die() {
+		Main.inventory.dropAllOnFloor(x, y);
+		health = maxHealth;
+		hunger = maxHunger;
+		int[] sp = Main.tilesManager.getSpawnPoint();
+		setLocation(sp[1] * tilesize, sp[0] * tilesize);
+		Main.inventory.saveInventory();
+		Main.gameState = Main.GameState.GAME_OVER;
 	}
 
 	//player interaction with camp Fire

@@ -64,7 +64,7 @@ public class Tile extends Entity {
         // of the player can overlap it.
         for (int oi = tileI; oi <= tileI + 1 && oi < Main.tilesManager.getMaxScreenCol(); oi++) {
             for (int oj = tileJ; oj <= tileJ + 1 && oj < Main.tilesManager.getMaxScreenRow(); oj++) {
-                MapObject obj = ObjectPropertiesManager.getObject(Main.tilesManager.getObjects(oi, oj).id);
+                MapObject obj = ObjectPropertiesManager.getObject(Main.tilesManager.getObjectId(oi, oj));
                 for (Rectangle rect : obj.getSolidInTile()) {
                     Rectangle world = new Rectangle(oj * ts + rect.x - ts / 2, oi * ts + rect.y - ts / 2,
                             rect.width, rect.height);

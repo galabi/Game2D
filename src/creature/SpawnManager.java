@@ -4,7 +4,6 @@ import java.util.Random;
 
 import MainPackage.Main;
 import MainPackage.TilesManager;
-import entity.GameObject;
 import entity.Tile;
 import mapRender.ObjectPropertiesManager;
 import playerPackage.Player;
@@ -51,10 +50,10 @@ public class SpawnManager {
 			if (ti < 0 || ti >= MAP_SIZE || tj < 0 || tj >= MAP_SIZE) continue;
 
 			Tile tile = Main.tilesManager.getTiles(ti, tj);
-			GameObject obj = Main.tilesManager.getObjects(ti, tj);
+			int objId = Main.tilesManager.getObjectId(ti, tj);
 			if (tile.isSolid(0, 0, 64, 64)) continue;
 			if (grassOnly && tile.isWater()) continue;
-			if (obj.getId() != 0 && ObjectPropertiesManager.getObject(obj.getId()).isSolid()) continue;
+			if (objId != 0 && ObjectPropertiesManager.getObject(objId).isSolid()) continue;
 
 			CreatureManager.createCreature(tj * TilesManager.tileSize, ti * TilesManager.tileSize, type);
 			return;

@@ -41,6 +41,12 @@ public class Server implements Runnable {
                     ch.send(Main.tilesManager.ObjectsToString());
                     ch.send(Main.tilesManager.DropsToString());
                     ch.send(Main.chestStorage.toSyncString());
+                    // Tell the client which world this is + its spawn point (name last: may have spaces)
+                    String worldName = MainPackage.WorldManager.getCurrent();
+                    if (worldName != null) {
+                        int[] sp = Main.tilesManager.getSpawnPoint();
+                        ch.send("world " + sp[0] + " " + sp[1] + " " + worldName);
+                    }
                     // Send positions of all currently connected players
                     ch.send(Main.player.toString());
                     ch.send("player_name 0 " + Main.playerName);
