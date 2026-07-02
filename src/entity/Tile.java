@@ -14,9 +14,18 @@ public class Tile extends Entity {
 
     int id; // terrain type: GRASS, WATER, or GRAVEL
 
+    // Marching-squares visual tile id, cached. Terrain is static after map load, so this is
+    // computed once (lazily) instead of every frame. Reset via invalidateVisual() if a
+    // terrain cell ever changes at runtime (invalidate this tile and its up/left neighbours).
+    private int visualId = -1;
+
     public Tile(int terrainType, int x, int y, int size) {
         super(x, y, size, size);
         this.id = terrainType;
+    }
+
+    public void invalidateVisual() {
+        visualId = -1;
     }
 
     @Override
@@ -25,15 +34,11 @@ public class Tile extends Entity {
         int screenY = Main.tilesManager.getCameraY(false);
         int tileI = y / sizeY;
         int tileJ = x / sizeX;
-        int visualId = Main.tilesManager.computeVisualId(tileI, tileJ);
+        if (visualId < 0) visualId = Main.tilesManager.computeVisualId(tileI, tileJ);
         g2d.drawImage(GameTextures.getTileIcon(visualId).getImage(), x - screenX, y - screenY, sizeX, sizeY, null);
         if (Main.devmode) {
             g2d.setColor(Color.white);
             g2d.drawRect(x - screenX, y - screenY, sizeX, sizeY);
-            if (id == WATER) {
-                g2d.setColor(new Color(0, 100, 255, 120));
-                g2d.fillRect(x - screenX, y - screenY, sizeX, sizeY);
-            }
         }
     }
 

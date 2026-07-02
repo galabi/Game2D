@@ -103,13 +103,23 @@ public class Main extends Canvas implements Runnable{
 
 		if (delta > 5) delta = 5; // prevent spiral of death
 
+		// Fixed-timestep: tick as many times as we've fallen behind, but render only
+		// once per frame afterwards (rendering identical catch-up frames is wasted work).
+		boolean ticked = false;
 		while(delta >= 1) {
 			tick();
-			render();
 			delta--;
+			ticked = true;
+		}
+
+		if (ticked) {
+			render();
 			drawCount++;
 		}
-		
+
+		// Yield the core instead of busy-spinning until the next frame is due.
+		try { Thread.sleep(1); } catch (InterruptedException ignored) {}
+
 		if(timer >= 1000000000) {
 			Frame.setTitle("FPS: "+drawCount);
 			drawCount = 0;

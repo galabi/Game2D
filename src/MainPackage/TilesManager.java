@@ -38,6 +38,10 @@ public class TilesManager {
 	GameObject[][] objects;
 	List<ItemOnFloor> drops;
 	private ArrayList<entity.Entity> renderList = new ArrayList<>();
+	// Reused every frame instead of reallocating.
+	private static final BasicStroke STROKE_2 = new BasicStroke(2);
+	private final java.util.Comparator<entity.Entity> depthComparator =
+			(e1, e2) -> Integer.compare(getSortY(e1), getSortY(e2));
 	boolean mapIsReady = false;
 	String map = "map";
 
@@ -79,7 +83,7 @@ public class TilesManager {
 		startCol = Math.max(0,startCol);
 
 		
-		g2d.setStroke(new BasicStroke(2));
+		g2d.setStroke(STROKE_2);
 		for(int i = startCol;i<endCol && i<maxScreenCol;i++) {
 			for(int j = startRow;j<endRow  && j<maxScreenRow;j++) {
 				tiles[i][j].render(g2d);
@@ -116,11 +120,7 @@ public class TilesManager {
 		renderList.addAll(creature.CreatureManager.getCreatures());
 
 		// Sort the list based on Y depth
-		renderList.sort((e1, e2) -> {
-			int y1 = getSortY(e1);
-			int y2 = getSortY(e2);
-			return Integer.compare(y1, y2);
-		});
+		renderList.sort(depthComparator);
 
 		//Render everything in order
 		for (entity.Entity e : renderList) {
@@ -130,7 +130,7 @@ public class TilesManager {
 		// Draw mouse cursor selection box
 		if(!Main.inventory.isOpen() && Main.gameState == Main.GameState.GAME) {
 			g2d.setColor(Color.black);
-			g2d.setStroke(new BasicStroke(2));
+			g2d.setStroke(STROKE_2);
 			// A visual tile is centered on the grid corner shared by 4 data cells, so the cursor
 			// snaps to the nearest corner (round, not floor) and draws a tile-sized box centered
 			// on it — matching the rendered terrain rather than the raw data grid.
